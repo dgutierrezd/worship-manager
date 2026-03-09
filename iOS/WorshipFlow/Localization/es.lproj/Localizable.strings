@@ -1,0 +1,95 @@
+// Onboarding
+"app_tagline" = "Música, organizada.";
+"create_band" = "Crear una Banda";
+"join_band" = "Unirme a una Banda";
+"create_band_subtitle" = "Empieza y agrega a tu equipo";
+"join_band_subtitle" = "Ingresa el código de invitación";
+
+// Auth
+"sign_in" = "Iniciar Sesión";
+"sign_up" = "Crear Cuenta";
+"email" = "Correo Electrónico";
+"password" = "Contraseña";
+"full_name" = "Tu Nombre";
+"instrument" = "Tu Instrumento";
+"sign_out" = "Cerrar Sesión";
+
+// Band
+"band_name" = "Nombre de la Banda";
+"church_org" = "Iglesia / Organización (opcional)";
+"invite_code" = "Código de Invitación";
+"invite_code_hint" = "Pide el código a tu líder de banda";
+"code_copied" = "¡Código copiado!";
+"share_invite" = "Compartir Código";
+"new_member_joined" = "%@ se unió a la banda";
+"remove_member" = "Eliminar Miembro";
+"regenerate_code" = "Generar Nuevo Código";
+"band_icon" = "Icono de Banda";
+"band_color" = "Color de Banda";
+"band_settings" = "Ajustes de Banda";
+"change_photo" = "Toca para cambiar foto";
+"save_changes" = "Guardar Cambios";
+"delete_band" = "Eliminar Banda";
+"delete_band_confirm" = "¿Eliminar Banda?";
+"delete_band_warning" = "Esta acción no se puede deshacer. Todas las canciones, setlists y ensayos serán eliminados permanentemente.";
+"delete" = "Eliminar";
+"cancel" = "Cancelar";
+
+// Setlists
+"setlists" = "Setlists";
+"new_setlist" = "Nuevo Setlist";
+"setlist_name" = "Nombre del Setlist";
+"add_song" = "Agregar Canción";
+"reorder_songs" = "Reordenar";
+"no_setlists" = "Aún no hay setlists";
+"key" = "Tono";
+"transpose" = "Transponer";
+
+// Songs
+"songs" = "Canciones";
+"new_song" = "Nueva Canción";
+"song_title" = "Título de la Canción";
+"artist" = "Artista";
+"default_key" = "Tono Base";
+"tempo" = "Tempo (BPM)";
+"duration" = "Duración";
+"chords" = "Acordes";
+"my_chords" = "Mis Acordes";
+"edit_chords" = "Editar Hoja de Acordes";
+"no_chords_yet" = "Sin hoja de acordes. Toca para crear una.";
+"youtube_link" = "Enlace de YouTube";
+"spotify_link" = "Enlace de Spotify";
+
+// Practice Session
+"practice_session" = "Sesion de Practica";
+"practice_click" = "Click";
+"practice_pad" = "Pad";
+"practice_song" = "Practicar Cancion";
+"practice_stop" = "Detener";
+"time_signature" = "Tiempo";
+
+// Rehearsals
+"rehearsals" = "Ensayos";
+"new_rehearsal" = "Nuevo Ensayo";
+"rehearsal_title" = "Título del Ensayo";
+"location" = "Lugar";
+"date_time" = "Fecha y Hora";
+"linked_setlist" = "Setlist Vinculado";
+"rsvp_going" = "Voy";
+"rsvp_maybe" = "Quizás";
+"rsvp_no" = "No Puedo";
+"next_rehearsal" = "Próximo Ensayo";
+"no_rehearsals" = "Sin ensayos próximos";
+
+// Members
+"members" = "Miembros";
+"leader" = "Líder";
+"member_role" = "Miembro";
+
+// Settings
+"settings" = "Ajustes";
+"language" = "Idioma";
+"notifications" = "Notificaciones";
+"my_bands" = "Mis Bandas";
+"profile" = "Perfil";
+"premium_upgrade" = "Actualizar a Pro";

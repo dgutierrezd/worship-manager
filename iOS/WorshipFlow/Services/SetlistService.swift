@@ -1,0 +1,45 @@
+import Foundation
+
+enum SetlistService {
+    static func getSetlists(bandId: String) async throws -> [Setlist] {
+        try await APIClient.shared.get("/bands/\(bandId)/setlists")
+    }
+
+    static func createSetlist(bandId: String, name: String, date: String?, notes: String?) async throws -> Setlist {
+        var body: [String: Any] = ["name": name]
+        if let date { body["date"] = date }
+        if let notes { body["notes"] = notes }
+        return try await APIClient.shared.post("/bands/\(bandId)/setlists", body: body)
+    }
+
+    static func updateSetlist(id: String, name: String?, date: String?, notes: String?) async throws -> Setlist {
+        var body: [String: Any] = [:]
+        if let name { body["name"] = name }
+        if let date { body["date"] = date }
+        if let notes { body["notes"] = notes }
+        return try await APIClient.shared.put("/setlists/\(id)", body: body)
+    }
+
+    static func deleteSetlist(id: String) async throws {
+        try await APIClient.shared.delete("/setlists/\(id)")
+    }
+
+    static func getSetlistSongs(setlistId: String) async throws -> [SetlistSong] {
+        try await APIClient.shared.get("/setlists/\(setlistId)/songs")
+    }
+
+    static func addSongToSetlist(setlistId: String, songId: String, keyOverride: String?, notes: String?) async throws -> SetlistSong {
+        var body: [String: Any] = ["song_id": songId]
+        if let keyOverride { body["key_override"] = keyOverride }
+        if let notes { body["notes"] = notes }
+        return try await APIClient.shared.post("/setlists/\(setlistId)/songs", body: body)
+    }
+
+    static func removeSongFromSetlist(setlistId: String, songId: String) async throws {
+        try await APIClient.shared.delete("/setlists/\(setlistId)/songs/\(songId)")
+    }
+
+    static func reorderSetlistSongs(setlistId: String, positions: [[String: Any]]) async throws {
+        let _: MessageResponse = try await APIClient.shared.patch("/setlists/\(setlistId)/songs/reorder", body: ["positions": positions])
+    }
+}

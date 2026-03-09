@@ -1,0 +1,95 @@
+// Onboarding
+"app_tagline" = "Music, organized.";
+"create_band" = "Create a Band";
+"join_band" = "Join a Band";
+"create_band_subtitle" = "Start fresh and invite your team";
+"join_band_subtitle" = "Enter your band's invite code";
+
+// Auth
+"sign_in" = "Sign In";
+"sign_up" = "Sign Up";
+"email" = "Email";
+"password" = "Password";
+"full_name" = "Your Name";
+"instrument" = "Your Instrument";
+"sign_out" = "Sign Out";
+
+// Band
+"band_name" = "Band Name";
+"church_org" = "Church / Organization (optional)";
+"invite_code" = "Invite Code";
+"invite_code_hint" = "Ask your band leader for the code";
+"code_copied" = "Code copied!";
+"share_invite" = "Share Invite Code";
+"new_member_joined" = "%@ joined the band";
+"remove_member" = "Remove Member";
+"regenerate_code" = "Generate New Code";
+"band_icon" = "Band Icon";
+"band_color" = "Band Color";
+"band_settings" = "Band Settings";
+"change_photo" = "Tap to change photo";
+"save_changes" = "Save Changes";
+"delete_band" = "Delete Band";
+"delete_band_confirm" = "Delete Band?";
+"delete_band_warning" = "This action cannot be undone. All songs, setlists, and rehearsals will be permanently deleted.";
+"delete" = "Delete";
+"cancel" = "Cancel";
+
+// Setlists
+"setlists" = "Setlists";
+"new_setlist" = "New Setlist";
+"setlist_name" = "Setlist Name";
+"add_song" = "Add Song";
+"reorder_songs" = "Reorder";
+"no_setlists" = "No setlists yet";
+"key" = "Key";
+"transpose" = "Transpose";
+
+// Songs
+"songs" = "Songs";
+"new_song" = "New Song";
+"song_title" = "Song Title";
+"artist" = "Artist";
+"default_key" = "Default Key";
+"tempo" = "Tempo (BPM)";
+"duration" = "Duration";
+"chords" = "Chords";
+"my_chords" = "My Chords";
+"edit_chords" = "Edit Chord Sheet";
+"no_chords_yet" = "No chord sheet yet. Tap to create one.";
+"youtube_link" = "YouTube Link";
+"spotify_link" = "Spotify Link";
+
+// Practice Session
+"practice_session" = "Practice Session";
+"practice_click" = "Click";
+"practice_pad" = "Pad";
+"practice_song" = "Practice Song";
+"practice_stop" = "Stop";
+"time_signature" = "Time";
+
+// Rehearsals
+"rehearsals" = "Rehearsals";
+"new_rehearsal" = "New Rehearsal";
+"rehearsal_title" = "Rehearsal Title";
+"location" = "Location";
+"date_time" = "Date & Time";
+"linked_setlist" = "Linked Setlist";
+"rsvp_going" = "Going";
+"rsvp_maybe" = "Maybe";
+"rsvp_no" = "Can't Go";
+"next_rehearsal" = "Next Rehearsal";
+"no_rehearsals" = "No upcoming rehearsals";
+
+// Members
+"members" = "Members";
+"leader" = "Leader";
+"member_role" = "Member";
+
+// Settings
+"settings" = "Settings";
+"language" = "Language";
+"notifications" = "Notifications";
+"my_bands" = "My Bands";
+"profile" = "Profile";
+"premium_upgrade" = "Upgrade to Pro";

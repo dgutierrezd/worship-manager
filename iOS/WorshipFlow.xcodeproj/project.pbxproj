@@ -1,0 +1,721 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0107177AC42E9E497F6EDDF7 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C312C0E68365DF2DCDFD7FEC /* SectionHeader.swift */; };
+		01DAB81E5E6D5EF990132F6F /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEA9884E5D96F8724C2936A /* FlowLayout.swift */; };
+		03519469E19CC2315BF37C98 /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA36DE0159700DDFA30722D /* PracticeSessionView.swift */; };
+		05418EC38ECA43D382766E65 /* SongLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFA3916AE6523D02F6D838 /* SongLibraryView.swift */; };
+		09AB9862A5CE88CB773956D0 /* ChordsEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0143689E1C983DE5C2A4B89C /* ChordsEditorView.swift */; };
+		09E2F653DB777BA134EE3B97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 752805762EA5E536A529DC8F /* Assets.xcassets */; };
+		0F1A78516F37E76B8E729535 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5403BC2C20B77C4A9C9E40D2 /* EmptyStateView.swift */; };
+		12CF82CCF0CA73416DCC8613 /* RehearsalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E10DA60D1BCDEECAA416C66 /* RehearsalsView.swift */; };
+		15879EE01E644122B64D7A93 /* AddSongToSetlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6D0B19944E1C2397DCC3B0 /* AddSongToSetlistView.swift */; };
+		1AABDC8CB04A9582FC05DD48 /* SetlistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A5BB6BB1B9C22998EA95D3 /* SetlistViewModel.swift */; };
+		1EDB11C43E408155B4063E67 /* SongDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564B5D8ECB7FC06A5758C07D /* SongDetailView.swift */; };
+		29065D81129D1467C358E215 /* WorshipFlowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6469B8E211B9A01F898EB197 /* WorshipFlowApp.swift */; };
+		2F7B0B61FDD39354C7959CBF /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B79ADE0298E8FD3F598AD6 /* LocalizedString.swift */; };
+		3B3700DFEF38D4728611C18E /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D755319DA3D23CD5B9DB7E1 /* RootView.swift */; };
+		3E753EE5DCE3005F01E7FF07 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE15420AAB67916207B72502 /* SettingsView.swift */; };
+		3FE73B060D9A7E4459D78D2A /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22149CD968B95FE95AC1CE02 /* LoginView.swift */; };
+		4422B3AEB479F2824FC214D4 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56978431613149CB0FAA4453 /* AppTheme.swift */; };
+		4469F695F9E17EE76094E346 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1DA91269827C53BB3135F1 /* Member.swift */; };
+		48B1D487DE2C7BD85AE6429C /* SetlistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE0269F537F026CE05ABB80 /* SetlistService.swift */; };
+		491429C1CFCFB0F36D791F73 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873BF5146CB1576F57EEDC81 /* SongService.swift */; };
+		5529D38B088F2DCD2B2C3E08 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810159D579A346CD46081B5A /* AuthViewModel.swift */; };
+		5F4C6F057675541D66CA8B21 /* ChordSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA4B6D325EDFE9ABF08F750 /* ChordSheet.swift */; };
+		604BDB79332EE1D5C53D2D74 /* SetlistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C3A68CF9140961BEB2CD9D /* SetlistsView.swift */; };
+		63DFB3DDFFD354DD9F7AFF5B /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */; };
+		75C4265C3AD581B0928D7C4A /* RehearsalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A944E2964D971DA162342DC3 /* RehearsalDetailView.swift */; };
+		7613813444F9E31D4A60682D /* Setlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19273B2A68F35B5AFCD44E2 /* Setlist.swift */; };
+		797E49889DDFA6FA512CAA05 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39741D081C2468888DDE443D /* Localizable.strings */; };
+		7B26425E70AA35BD5D12C0D7 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFAA3CC6EB32F1D51A5B88A /* LanguageManager.swift */; };
+		7C41CF83FB7368205EFBD38D /* CreateSetlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A13830AA55E6B4FD08BF1F /* CreateSetlistView.swift */; };
+		83C8A86AB5DEFF219F39691A /* Band.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFDC0CDAE78CEAE87B1BB58 /* Band.swift */; };
+		897E3E4A1F4976480FF67B87 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A8C5938FD4B01887730D3 /* LoadingButton.swift */; };
+		9044EAD42B376FC89DAC8176 /* MemberProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344CD4776A0AC425B1490A1F /* MemberProfileView.swift */; };
+		904D04AF6EC8FEC59A265709 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F03182B1A6FBACB236954E /* Profile.swift */; };
+		90E931321E0840DD7C4DC4C3 /* BandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7B2CA4A0F09551E14DEC /* BandService.swift */; };
+		98686BDD432D1EB119725E01 /* BandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD73F9DA701E8060EACF1007 /* BandViewModel.swift */; };
+		9BD692CBBD3B920F958A1150 /* SongsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6F372629ED30C8D84646E /* SongsViewModel.swift */; };
+		9E68A4FE6A443D930F806502 /* CreateRehearsalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADB450DD057021E75C24BC6 /* CreateRehearsalView.swift */; };
+		ACE0F9445765D1EA7CB1C328 /* JoinBandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D80B74677247CD2B7A971AA /* JoinBandView.swift */; };
+		ADED0EC8D12B560DE34CCABF /* InviteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FA8F29A3760589A60C5ADA /* InviteView.swift */; };
+		B61E9AF3BED8E828ADB5CA0F /* MembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005147137F91DFE2FDD3D852 /* MembersView.swift */; };
+		B7A573F0985994FD38EE40DA /* KeyBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FC81DBADEC15EDBC9AA9AC /* KeyBadge.swift */; };
+		B852A83A9EA3FD460278C17D /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3819DF1EFAB63A2098795DD /* Song.swift */; };
+		B88440A80D522BF6AF6C9499 /* EditSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82C76E1BE661B71343D8829 /* EditSongView.swift */; };
+		BD5094971D369E3FF2985438 /* SetlistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19CB398981575C9E6426BB0C /* SetlistDetailView.swift */; };
+		BEE27E11F98D1D0BBA76C060 /* RSVPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898868EDEA36E89665121115 /* RSVPButton.swift */; };
+		C05D14DCFACA5EAC71887555 /* CreateBandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E836104D7CC9CB89C9320AB7 /* CreateBandView.swift */; };
+		C27B83165A26B0F9B06E0E79 /* PracticeAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7085479841F144A7A40A8A84 /* PracticeAudioEngine.swift */; };
+		C4B27BC9B6E4734CB1806D2D /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDA40EE7A7F65192AF211AC /* MainTabView.swift */; };
+		D2DB16843ED292B748FDEF0F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED23EFBDEB700190D9F983EB /* NotificationService.swift */; };
+		DB903E8DADFC35D6F99372FD /* LanguageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909871DBB3E4544A114AE2B2 /* LanguageView.swift */; };
+		E29E5226573E7E1B537F1DF5 /* BandHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AAC69E6BBC8403B8773156 /* BandHomeView.swift */; };
+		E38A1CE08C7006A7FA536A56 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5704527C346DC45FEEA01D8E /* Config.swift */; };
+		E749D35D361FE2360A98FE2C /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEE3DD6438E298245FE7011 /* SignUpView.swift */; };
+		E8C8060E2091DAC620B535DC /* BandSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9990B2C35FF0EFE86B19FA /* BandSettingsView.swift */; };
+		E8C88E8EF372DB5DC0C6C61A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4079F2D64EDF752DC928274 /* WelcomeView.swift */; };
+		E9F220FDCB20AC314F3B5F02 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81F9E6CB1C339DE66C77393 /* AuthService.swift */; };
+		F30D4AA291964CE038ED87B2 /* ChordProgression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FFF9574E775A195F339848 /* ChordProgression.swift */; };
+		F9FE59DE2E1AFC7D2CE64C26 /* BandAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE00E5F68547E8FCCC48A17 /* BandAvatarView.swift */; };
+		FBD94BECDB7924791522AD22 /* Rehearsal.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF5E63AC89831C59FF215CD /* Rehearsal.swift */; };
+		FC11504DCA30A885BD5AA3DB /* RehearsalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462BDCC51C0FFBF9C5DE74B5 /* RehearsalsViewModel.swift */; };
+		FC80A488F1C3A192D50A27B1 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EBE9584D2C5BECA3D8F41D /* ProfileView.swift */; };
+		FE51296F1E75D2227F723F55 /* RehearsalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40EF23443220891CF541FC6 /* RehearsalService.swift */; };
+		FF1556FAB699DD77594D3F6F /* AddSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017EED141996BC5B30286F93 /* AddSongView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		005147137F91DFE2FDD3D852 /* MembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembersView.swift; sourceTree = "<group>"; };
+		0143689E1C983DE5C2A4B89C /* ChordsEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordsEditorView.swift; sourceTree = "<group>"; };
+		017EED141996BC5B30286F93 /* AddSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSongView.swift; sourceTree = "<group>"; };
+		0D1DA91269827C53BB3135F1 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		19CB398981575C9E6426BB0C /* SetlistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistDetailView.swift; sourceTree = "<group>"; };
+		20FFF9574E775A195F339848 /* ChordProgression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordProgression.swift; sourceTree = "<group>"; };
+		22149CD968B95FE95AC1CE02 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		22B79ADE0298E8FD3F598AD6 /* LocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedString.swift; sourceTree = "<group>"; };
+		2EEE3DD6438E298245FE7011 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		32A6F372629ED30C8D84646E /* SongsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsViewModel.swift; sourceTree = "<group>"; };
+		344CD4776A0AC425B1490A1F /* MemberProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberProfileView.swift; sourceTree = "<group>"; };
+		34AAC69E6BBC8403B8773156 /* BandHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandHomeView.swift; sourceTree = "<group>"; };
+		3E10DA60D1BCDEECAA416C66 /* RehearsalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalsView.swift; sourceTree = "<group>"; };
+		3EEA9884E5D96F8724C2936A /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		462BDCC51C0FFBF9C5DE74B5 /* RehearsalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalsViewModel.swift; sourceTree = "<group>"; };
+		4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		53A5BB6BB1B9C22998EA95D3 /* SetlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistViewModel.swift; sourceTree = "<group>"; };
+		5403BC2C20B77C4A9C9E40D2 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		564B5D8ECB7FC06A5758C07D /* SongDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailView.swift; sourceTree = "<group>"; };
+		56978431613149CB0FAA4453 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		5704527C346DC45FEEA01D8E /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		577D2D9987BF181DF2190216 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5D755319DA3D23CD5B9DB7E1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		6469B8E211B9A01F898EB197 /* WorshipFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorshipFlowApp.swift; sourceTree = "<group>"; };
+		66EBE9584D2C5BECA3D8F41D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		6CDA40EE7A7F65192AF211AC /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		6D80B74677247CD2B7A971AA /* JoinBandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinBandView.swift; sourceTree = "<group>"; };
+		7085479841F144A7A40A8A84 /* PracticeAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeAudioEngine.swift; sourceTree = "<group>"; };
+		752805762EA5E536A529DC8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7DA36DE0159700DDFA30722D /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
+		810159D579A346CD46081B5A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		858D7B2CA4A0F09551E14DEC /* BandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandService.swift; sourceTree = "<group>"; };
+		873BF5146CB1576F57EEDC81 /* SongService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
+		898868EDEA36E89665121115 /* RSVPButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSVPButton.swift; sourceTree = "<group>"; };
+		8DFAA3CC6EB32F1D51A5B88A /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
+		8DFDC0CDAE78CEAE87B1BB58 /* Band.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Band.swift; sourceTree = "<group>"; };
+		909871DBB3E4544A114AE2B2 /* LanguageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageView.swift; sourceTree = "<group>"; };
+		9F6D0B19944E1C2397DCC3B0 /* AddSongToSetlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSongToSetlistView.swift; sourceTree = "<group>"; };
+		A19273B2A68F35B5AFCD44E2 /* Setlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setlist.swift; sourceTree = "<group>"; };
+		A82C76E1BE661B71343D8829 /* EditSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSongView.swift; sourceTree = "<group>"; };
+		A944E2964D971DA162342DC3 /* RehearsalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalDetailView.swift; sourceTree = "<group>"; };
+		AADB450DD057021E75C24BC6 /* CreateRehearsalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRehearsalView.swift; sourceTree = "<group>"; };
+		AFA4B6D325EDFE9ABF08F750 /* ChordSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordSheet.swift; sourceTree = "<group>"; };
+		B5FC81DBADEC15EDBC9AA9AC /* KeyBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyBadge.swift; sourceTree = "<group>"; };
+		B81F9E6CB1C339DE66C77393 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		BB9990B2C35FF0EFE86B19FA /* BandSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandSettingsView.swift; sourceTree = "<group>"; };
+		BDF5E63AC89831C59FF215CD /* Rehearsal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rehearsal.swift; sourceTree = "<group>"; };
+		BE15420AAB67916207B72502 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		C312C0E68365DF2DCDFD7FEC /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
+		C4079F2D64EDF752DC928274 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		C9F03182B1A6FBACB236954E /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		CBE00E5F68547E8FCCC48A17 /* BandAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandAvatarView.swift; sourceTree = "<group>"; };
+		D0BFA3916AE6523D02F6D838 /* SongLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLibraryView.swift; sourceTree = "<group>"; };
+		D3819DF1EFAB63A2098795DD /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		DDC7BF046D4874F51138F927 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E44A8C5938FD4B01887730D3 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
+		E7FA8F29A3760589A60C5ADA /* InviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteView.swift; sourceTree = "<group>"; };
+		E836104D7CC9CB89C9320AB7 /* CreateBandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBandView.swift; sourceTree = "<group>"; };
+		EBE0269F537F026CE05ABB80 /* SetlistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistService.swift; sourceTree = "<group>"; };
+		ED23EFBDEB700190D9F983EB /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		F40EF23443220891CF541FC6 /* RehearsalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalService.swift; sourceTree = "<group>"; };
+		F6606BE96CC0ECE873AA7327 /* WorshipFlow.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WorshipFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6C3A68CF9140961BEB2CD9D /* SetlistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistsView.swift; sourceTree = "<group>"; };
+		F8A13830AA55E6B4FD08BF1F /* CreateSetlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSetlistView.swift; sourceTree = "<group>"; };
+		FD73F9DA701E8060EACF1007 /* BandViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandViewModel.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		17362310C26046BA282FEB4A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F6606BE96CC0ECE873AA7327 /* WorshipFlow.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		174337D5976E9D7564E1FC72 /* WorshipFlow */ = {
+			isa = PBXGroup;
+			children = (
+				55545C1F969CB2FA6E822026 /* App */,
+				645EE8C3CC58C6A65B0CFC12 /* Core */,
+				AF99E620C92FCC777C602814 /* Features */,
+				7047FD4888D9B867827FCF01 /* Localization */,
+				FD8B2E6F0ED569E138C40245 /* Models */,
+				7B58FD6279182BB39DCF5C1C /* Resources */,
+				DE91C97D3057111B8D4CFB22 /* Services */,
+			);
+			path = WorshipFlow;
+			sourceTree = "<group>";
+		};
+		1993678F0A664769A2C56436 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				909871DBB3E4544A114AE2B2 /* LanguageView.swift */,
+				66EBE9584D2C5BECA3D8F41D /* ProfileView.swift */,
+				BE15420AAB67916207B72502 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		2A53A8E358EC8BE7A577FF0F /* Members */ = {
+			isa = PBXGroup;
+			children = (
+				E7FA8F29A3760589A60C5ADA /* InviteView.swift */,
+				344CD4776A0AC425B1490A1F /* MemberProfileView.swift */,
+				005147137F91DFE2FDD3D852 /* MembersView.swift */,
+			);
+			path = Members;
+			sourceTree = "<group>";
+		};
+		2AF2C95E17DC74FC9DD9B084 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				810159D579A346CD46081B5A /* AuthViewModel.swift */,
+				22149CD968B95FE95AC1CE02 /* LoginView.swift */,
+				2EEE3DD6438E298245FE7011 /* SignUpView.swift */,
+				C4079F2D64EDF752DC928274 /* WelcomeView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		2CB7C683601ADE5EA3322575 /* Songs */ = {
+			isa = PBXGroup;
+			children = (
+				017EED141996BC5B30286F93 /* AddSongView.swift */,
+				0143689E1C983DE5C2A4B89C /* ChordsEditorView.swift */,
+				A82C76E1BE661B71343D8829 /* EditSongView.swift */,
+				564B5D8ECB7FC06A5758C07D /* SongDetailView.swift */,
+				D0BFA3916AE6523D02F6D838 /* SongLibraryView.swift */,
+				32A6F372629ED30C8D84646E /* SongsViewModel.swift */,
+			);
+			path = Songs;
+			sourceTree = "<group>";
+		};
+		3D022CD5C999EF8E716B8E6D /* Practice */ = {
+			isa = PBXGroup;
+			children = (
+				7085479841F144A7A40A8A84 /* PracticeAudioEngine.swift */,
+				7DA36DE0159700DDFA30722D /* PracticeSessionView.swift */,
+			);
+			path = Practice;
+			sourceTree = "<group>";
+		};
+		55545C1F969CB2FA6E822026 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				5704527C346DC45FEEA01D8E /* Config.swift */,
+				6469B8E211B9A01F898EB197 /* WorshipFlowApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		645EE8C3CC58C6A65B0CFC12 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				2AF2C95E17DC74FC9DD9B084 /* Auth */,
+				844AC2B107A8DF30DD0658EA /* Localization */,
+				6E8391EA7D8F6FE2DB9B64C7 /* Navigation */,
+				A43719E2A317C3E9C72A5DCB /* Theme */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		6E8391EA7D8F6FE2DB9B64C7 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				6CDA40EE7A7F65192AF211AC /* MainTabView.swift */,
+				5D755319DA3D23CD5B9DB7E1 /* RootView.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		7047FD4888D9B867827FCF01 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				39741D081C2468888DDE443D /* Localizable.strings */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		7B58FD6279182BB39DCF5C1C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				752805762EA5E536A529DC8F /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		844AC2B107A8DF30DD0658EA /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				8DFAA3CC6EB32F1D51A5B88A /* LanguageManager.swift */,
+				22B79ADE0298E8FD3F598AD6 /* LocalizedString.swift */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		90C88E9F7356C251B8827B5F = {
+			isa = PBXGroup;
+			children = (
+				174337D5976E9D7564E1FC72 /* WorshipFlow */,
+				17362310C26046BA282FEB4A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A159B38D416EC8802CB6A8C9 /* Setlists */ = {
+			isa = PBXGroup;
+			children = (
+				9F6D0B19944E1C2397DCC3B0 /* AddSongToSetlistView.swift */,
+				F8A13830AA55E6B4FD08BF1F /* CreateSetlistView.swift */,
+				19CB398981575C9E6426BB0C /* SetlistDetailView.swift */,
+				F6C3A68CF9140961BEB2CD9D /* SetlistsView.swift */,
+				53A5BB6BB1B9C22998EA95D3 /* SetlistViewModel.swift */,
+			);
+			path = Setlists;
+			sourceTree = "<group>";
+		};
+		A179D152B88FA46972D9A840 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				CBE00E5F68547E8FCCC48A17 /* BandAvatarView.swift */,
+				5403BC2C20B77C4A9C9E40D2 /* EmptyStateView.swift */,
+				3EEA9884E5D96F8724C2936A /* FlowLayout.swift */,
+				B5FC81DBADEC15EDBC9AA9AC /* KeyBadge.swift */,
+				E44A8C5938FD4B01887730D3 /* LoadingButton.swift */,
+				898868EDEA36E89665121115 /* RSVPButton.swift */,
+				C312C0E68365DF2DCDFD7FEC /* SectionHeader.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A43719E2A317C3E9C72A5DCB /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				56978431613149CB0FAA4453 /* AppTheme.swift */,
+				A179D152B88FA46972D9A840 /* Components */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		AF99E620C92FCC777C602814 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				D6E095DCF3CD137F89768ADE /* Band */,
+				2A53A8E358EC8BE7A577FF0F /* Members */,
+				3D022CD5C999EF8E716B8E6D /* Practice */,
+				F8280828A3AC00BF56EF5595 /* Rehearsals */,
+				A159B38D416EC8802CB6A8C9 /* Setlists */,
+				1993678F0A664769A2C56436 /* Settings */,
+				2CB7C683601ADE5EA3322575 /* Songs */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		D6E095DCF3CD137F89768ADE /* Band */ = {
+			isa = PBXGroup;
+			children = (
+				34AAC69E6BBC8403B8773156 /* BandHomeView.swift */,
+				BB9990B2C35FF0EFE86B19FA /* BandSettingsView.swift */,
+				FD73F9DA701E8060EACF1007 /* BandViewModel.swift */,
+				E836104D7CC9CB89C9320AB7 /* CreateBandView.swift */,
+				6D80B74677247CD2B7A971AA /* JoinBandView.swift */,
+			);
+			path = Band;
+			sourceTree = "<group>";
+		};
+		DE91C97D3057111B8D4CFB22 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */,
+				B81F9E6CB1C339DE66C77393 /* AuthService.swift */,
+				858D7B2CA4A0F09551E14DEC /* BandService.swift */,
+				ED23EFBDEB700190D9F983EB /* NotificationService.swift */,
+				F40EF23443220891CF541FC6 /* RehearsalService.swift */,
+				EBE0269F537F026CE05ABB80 /* SetlistService.swift */,
+				873BF5146CB1576F57EEDC81 /* SongService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		F8280828A3AC00BF56EF5595 /* Rehearsals */ = {
+			isa = PBXGroup;
+			children = (
+				AADB450DD057021E75C24BC6 /* CreateRehearsalView.swift */,
+				A944E2964D971DA162342DC3 /* RehearsalDetailView.swift */,
+				3E10DA60D1BCDEECAA416C66 /* RehearsalsView.swift */,
+				462BDCC51C0FFBF9C5DE74B5 /* RehearsalsViewModel.swift */,
+			);
+			path = Rehearsals;
+			sourceTree = "<group>";
+		};
+		FD8B2E6F0ED569E138C40245 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8DFDC0CDAE78CEAE87B1BB58 /* Band.swift */,
+				20FFF9574E775A195F339848 /* ChordProgression.swift */,
+				AFA4B6D325EDFE9ABF08F750 /* ChordSheet.swift */,
+				0D1DA91269827C53BB3135F1 /* Member.swift */,
+				C9F03182B1A6FBACB236954E /* Profile.swift */,
+				BDF5E63AC89831C59FF215CD /* Rehearsal.swift */,
+				A19273B2A68F35B5AFCD44E2 /* Setlist.swift */,
+				D3819DF1EFAB63A2098795DD /* Song.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D9BF7C51C944F58BCD8233F0 /* WorshipFlow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 474016FBCCCEB03A3FF37784 /* Build configuration list for PBXNativeTarget "WorshipFlow" */;
+			buildPhases = (
+				EBB3782858BEA1371AE1E59B /* Sources */,
+				9F1F0A560B1BED05774257B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WorshipFlow;
+			packageProductDependencies = (
+			);
+			productName = WorshipFlow;
+			productReference = F6606BE96CC0ECE873AA7327 /* WorshipFlow.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D9BDC6EDBEA4FDE59DEC557F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 4FF83FD5B8E1D420311E3366 /* Build configuration list for PBXProject "WorshipFlow" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				es,
+			);
+			mainGroup = 90C88E9F7356C251B8827B5F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 17362310C26046BA282FEB4A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D9BF7C51C944F58BCD8233F0 /* WorshipFlow */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9F1F0A560B1BED05774257B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09E2F653DB777BA134EE3B97 /* Assets.xcassets in Resources */,
+				797E49889DDFA6FA512CAA05 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EBB3782858BEA1371AE1E59B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63DFB3DDFFD354DD9F7AFF5B /* APIClient.swift in Sources */,
+				15879EE01E644122B64D7A93 /* AddSongToSetlistView.swift in Sources */,
+				FF1556FAB699DD77594D3F6F /* AddSongView.swift in Sources */,
+				4422B3AEB479F2824FC214D4 /* AppTheme.swift in Sources */,
+				E9F220FDCB20AC314F3B5F02 /* AuthService.swift in Sources */,
+				5529D38B088F2DCD2B2C3E08 /* AuthViewModel.swift in Sources */,
+				83C8A86AB5DEFF219F39691A /* Band.swift in Sources */,
+				F9FE59DE2E1AFC7D2CE64C26 /* BandAvatarView.swift in Sources */,
+				E29E5226573E7E1B537F1DF5 /* BandHomeView.swift in Sources */,
+				90E931321E0840DD7C4DC4C3 /* BandService.swift in Sources */,
+				E8C8060E2091DAC620B535DC /* BandSettingsView.swift in Sources */,
+				98686BDD432D1EB119725E01 /* BandViewModel.swift in Sources */,
+				F30D4AA291964CE038ED87B2 /* ChordProgression.swift in Sources */,
+				5F4C6F057675541D66CA8B21 /* ChordSheet.swift in Sources */,
+				09AB9862A5CE88CB773956D0 /* ChordsEditorView.swift in Sources */,
+				E38A1CE08C7006A7FA536A56 /* Config.swift in Sources */,
+				C05D14DCFACA5EAC71887555 /* CreateBandView.swift in Sources */,
+				9E68A4FE6A443D930F806502 /* CreateRehearsalView.swift in Sources */,
+				7C41CF83FB7368205EFBD38D /* CreateSetlistView.swift in Sources */,
+				B88440A80D522BF6AF6C9499 /* EditSongView.swift in Sources */,
+				0F1A78516F37E76B8E729535 /* EmptyStateView.swift in Sources */,
+				01DAB81E5E6D5EF990132F6F /* FlowLayout.swift in Sources */,
+				ADED0EC8D12B560DE34CCABF /* InviteView.swift in Sources */,
+				ACE0F9445765D1EA7CB1C328 /* JoinBandView.swift in Sources */,
+				B7A573F0985994FD38EE40DA /* KeyBadge.swift in Sources */,
+				7B26425E70AA35BD5D12C0D7 /* LanguageManager.swift in Sources */,
+				DB903E8DADFC35D6F99372FD /* LanguageView.swift in Sources */,
+				897E3E4A1F4976480FF67B87 /* LoadingButton.swift in Sources */,
+				2F7B0B61FDD39354C7959CBF /* LocalizedString.swift in Sources */,
+				3FE73B060D9A7E4459D78D2A /* LoginView.swift in Sources */,
+				C4B27BC9B6E4734CB1806D2D /* MainTabView.swift in Sources */,
+				4469F695F9E17EE76094E346 /* Member.swift in Sources */,
+				9044EAD42B376FC89DAC8176 /* MemberProfileView.swift in Sources */,
+				B61E9AF3BED8E828ADB5CA0F /* MembersView.swift in Sources */,
+				D2DB16843ED292B748FDEF0F /* NotificationService.swift in Sources */,
+				C27B83165A26B0F9B06E0E79 /* PracticeAudioEngine.swift in Sources */,
+				03519469E19CC2315BF37C98 /* PracticeSessionView.swift in Sources */,
+				904D04AF6EC8FEC59A265709 /* Profile.swift in Sources */,
+				FC80A488F1C3A192D50A27B1 /* ProfileView.swift in Sources */,
+				BEE27E11F98D1D0BBA76C060 /* RSVPButton.swift in Sources */,
+				FBD94BECDB7924791522AD22 /* Rehearsal.swift in Sources */,
+				75C4265C3AD581B0928D7C4A /* RehearsalDetailView.swift in Sources */,
+				FE51296F1E75D2227F723F55 /* RehearsalService.swift in Sources */,
+				12CF82CCF0CA73416DCC8613 /* RehearsalsView.swift in Sources */,
+				FC11504DCA30A885BD5AA3DB /* RehearsalsViewModel.swift in Sources */,
+				3B3700DFEF38D4728611C18E /* RootView.swift in Sources */,
+				0107177AC42E9E497F6EDDF7 /* SectionHeader.swift in Sources */,
+				7613813444F9E31D4A60682D /* Setlist.swift in Sources */,
+				BD5094971D369E3FF2985438 /* SetlistDetailView.swift in Sources */,
+				48B1D487DE2C7BD85AE6429C /* SetlistService.swift in Sources */,
+				1AABDC8CB04A9582FC05DD48 /* SetlistViewModel.swift in Sources */,
+				604BDB79332EE1D5C53D2D74 /* SetlistsView.swift in Sources */,
+				3E753EE5DCE3005F01E7FF07 /* SettingsView.swift in Sources */,
+				E749D35D361FE2360A98FE2C /* SignUpView.swift in Sources */,
+				B852A83A9EA3FD460278C17D /* Song.swift in Sources */,
+				1EDB11C43E408155B4063E67 /* SongDetailView.swift in Sources */,
+				05418EC38ECA43D382766E65 /* SongLibraryView.swift in Sources */,
+				491429C1CFCFB0F36D791F73 /* SongService.swift in Sources */,
+				9BD692CBBD3B920F958A1150 /* SongsViewModel.swift in Sources */,
+				E8C88E8EF372DB5DC0C6C61A /* WelcomeView.swift in Sources */,
+				29065D81129D1467C358E215 /* WorshipFlowApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		39741D081C2468888DDE443D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DDC7BF046D4874F51138F927 /* en */,
+				577D2D9987BF181DF2190216 /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3C30630DAB98388FA34D2714 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dgutierrezd.worshipflow;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		42EE37B39C4DC1E2BD74F01C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dgutierrezd.worshipflow;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B04006A454C951A8F67FB224 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		DE8102A240C4DD9A37D664B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		474016FBCCCEB03A3FF37784 /* Build configuration list for PBXNativeTarget "WorshipFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C30630DAB98388FA34D2714 /* Debug */,
+				42EE37B39C4DC1E2BD74F01C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4FF83FD5B8E1D420311E3366 /* Build configuration list for PBXProject "WorshipFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B04006A454C951A8F67FB224 /* Debug */,
+				DE8102A240C4DD9A37D664B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D9BDC6EDBEA4FDE59DEC557F /* Project object */;
+}
