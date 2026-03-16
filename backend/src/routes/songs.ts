@@ -40,7 +40,7 @@ bandSongsRouter.post(
   authMiddleware,
   bandAccessMiddleware,
   async (req: BandRequest, res: Response): Promise<void> => {
-    const { title, artist, default_key, tempo_bpm, duration_sec, notes, youtube_url, spotify_url } =
+    const { title, artist, default_key, tempo_bpm, duration_sec, notes, lyrics, tags, theme, youtube_url, spotify_url } =
       req.body;
 
     if (!title) {
@@ -59,6 +59,9 @@ bandSongsRouter.post(
           tempo_bpm: tempo_bpm || null,
           duration_sec: duration_sec || null,
           notes: notes || null,
+          lyrics: lyrics || null,
+          tags: tags && tags.length > 0 ? tags : null,
+          theme: theme || null,
           youtube_url: youtube_url || null,
           spotify_url: spotify_url || null,
           created_by: req.userId,
