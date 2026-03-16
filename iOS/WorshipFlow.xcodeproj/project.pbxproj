@@ -316,6 +316,7 @@
 				E44A8C5938FD4B01887730D3 /* LoadingButton.swift */,
 				898868EDEA36E89665121115 /* RSVPButton.swift */,
 				C312C0E68365DF2DCDFD7FEC /* SectionHeader.swift */,
+				200101010101010101010101 /* SkeletonView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
