@@ -24,7 +24,7 @@ struct ChordsEditorView: View {
                 VStack(spacing: 20) {
                     // Key reference bar
                     if let key = songKey {
-                        keyReferenceBar(key: key)
+                        keyReferenceBar(key)
                     }
 
                     // Instrument selector
@@ -259,15 +259,17 @@ struct ChordsEditorView: View {
             }
             .frame(maxWidth: .infinity)
             .frame(height: 72)
-            .background(
-                isPass
-                    ? Color.appSurface
-                    : LinearGradient(
+            .background {
+                if isPass {
+                    Color.appSurface
+                } else {
+                    LinearGradient(
                         colors: [fnColor, fnColor.opacity(0.72)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
-            )
+                }
+            }
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
@@ -386,7 +388,7 @@ struct ChordsEditorView: View {
             Text("No Sections Yet")
                 .font(.appHeadline)
                 .foregroundColor(.appSecondary)
-            Text("Tap "Add Section" to start building\nyour chord progression")
+            Text("Tap \"Add Section\" to start building\nyour chord progression")
                 .font(.appCaption)
                 .foregroundColor(.appSecondary)
                 .multilineTextAlignment(.center)

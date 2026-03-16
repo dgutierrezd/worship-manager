@@ -489,15 +489,17 @@ struct SongDetailView: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: 56)
-        .background(
-            isPass
-                ? Color.appSurface
-                : LinearGradient(
+        .background {
+            if isPass {
+                Color.appSurface
+            } else {
+                LinearGradient(
                     colors: [fnColor, fnColor.opacity(0.72)],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
-        )
+            }
+        }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay(
             RoundedRectangle(cornerRadius: 8)
