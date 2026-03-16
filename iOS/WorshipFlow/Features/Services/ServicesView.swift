@@ -90,8 +90,14 @@ struct ServicesView: View {
     @ViewBuilder
     private var contentBody: some View {
         if vm.isLoading && vm.setlists.isEmpty {
-            ProgressView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            List {
+                SkeletonList(count: 6) { SkeletonServiceRow() }
+                    .listRowBackground(Color.appSurface)
+                    .listRowSeparatorTint(Color.appDivider)
+            }
+            .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
+            .allowsHitTesting(false)
         } else if filteredSetlists.isEmpty {
             emptyState
         } else {

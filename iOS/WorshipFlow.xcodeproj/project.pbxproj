@@ -38,6 +38,7 @@
 		7C41CF83FB7368205EFBD38D /* CreateSetlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A13830AA55E6B4FD08BF1F /* CreateSetlistView.swift */; };
 		83C8A86AB5DEFF219F39691A /* Band.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFDC0CDAE78CEAE87B1BB58 /* Band.swift */; };
 		897E3E4A1F4976480FF67B87 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A8C5938FD4B01887730D3 /* LoadingButton.swift */; };
+		200202020202020202020202 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200101010101010101010101 /* SkeletonView.swift */; };
 		9044EAD42B376FC89DAC8176 /* MemberProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344CD4776A0AC425B1490A1F /* MemberProfileView.swift */; };
 		904D04AF6EC8FEC59A265709 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F03182B1A6FBACB236954E /* Profile.swift */; };
 		90E931321E0840DD7C4DC4C3 /* BandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7B2CA4A0F09551E14DEC /* BandService.swift */; };
@@ -136,6 +137,7 @@
 		D3819DF1EFAB63A2098795DD /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		DDC7BF046D4874F51138F927 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E44A8C5938FD4B01887730D3 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
+		200101010101010101010101 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		E7FA8F29A3760589A60C5ADA /* InviteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteView.swift; sourceTree = "<group>"; };
 		E836104D7CC9CB89C9320AB7 /* CreateBandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBandView.swift; sourceTree = "<group>"; };
 		EBE0269F537F026CE05ABB80 /* SetlistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistService.swift; sourceTree = "<group>"; };
@@ -508,6 +510,7 @@
 				7B26425E70AA35BD5D12C0D7 /* LanguageManager.swift in Sources */,
 				DB903E8DADFC35D6F99372FD /* LanguageView.swift in Sources */,
 				897E3E4A1F4976480FF67B87 /* LoadingButton.swift in Sources */,
+				200202020202020202020202 /* SkeletonView.swift in Sources */,
 				2F7B0B61FDD39354C7959CBF /* LocalizedString.swift in Sources */,
 				3FE73B060D9A7E4459D78D2A /* LoginView.swift in Sources */,
 				C4B27BC9B6E4734CB1806D2D /* MainTabView.swift in Sources */,

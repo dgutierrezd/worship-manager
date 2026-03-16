@@ -50,16 +50,32 @@ class SongsViewModel: ObservableObject {
         }
     }
 
-    func updateSong(_ song: Song, title: String, artist: String?, key: String?, tempo: Int?, duration: Int?, notes: String?, youtubeUrl: String?, spotifyUrl: String?) async -> Song? {
+    func updateSong(
+        _ song: Song,
+        title: String,
+        artist: String?,
+        key: String?,
+        tempo: Int?,
+        duration: Int?,
+        notes: String?,
+        lyrics: String? = nil,
+        tags: [String]? = nil,
+        theme: String? = nil,
+        youtubeUrl: String?,
+        spotifyUrl: String?
+    ) async -> Song? {
         guard let bandId else { return nil }
         var body: [String: Any] = ["title": title]
-        body["artist"] = artist as Any
-        body["default_key"] = key as Any
-        body["tempo_bpm"] = tempo as Any
+        body["artist"]       = artist as Any
+        body["default_key"]  = key as Any
+        body["tempo_bpm"]    = tempo as Any
         body["duration_sec"] = duration as Any
-        body["notes"] = notes as Any
-        body["youtube_url"] = youtubeUrl as Any
-        body["spotify_url"] = spotifyUrl as Any
+        body["notes"]        = notes as Any
+        body["lyrics"]       = lyrics as Any
+        body["tags"]         = tags as Any
+        body["theme"]        = theme as Any
+        body["youtube_url"]  = youtubeUrl as Any
+        body["spotify_url"]  = spotifyUrl as Any
         do {
             let updated: Song = try await SongService.updateSong(bandId: bandId, songId: song.id, updates: body)
             if let idx = songs.firstIndex(where: { $0.id == song.id }) {

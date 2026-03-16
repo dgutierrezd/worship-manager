@@ -8,7 +8,21 @@ struct RehearsalsView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if vm.rehearsals.isEmpty && !vm.isLoading {
+                if vm.isLoading && vm.rehearsals.isEmpty {
+                    List {
+                        Section("Upcoming") {
+                            SkeletonList(count: 3) { SkeletonRehearsalRow() }
+                                .listRowBackground(Color.appSurface)
+                        }
+                        Section("Past") {
+                            SkeletonList(count: 4) { SkeletonRehearsalRow() }
+                                .listRowBackground(Color.appSurface)
+                        }
+                    }
+                    .listStyle(.insetGrouped)
+                    .scrollContentBackground(.hidden)
+                    .allowsHitTesting(false)
+                } else if vm.rehearsals.isEmpty {
                     EmptyStateView(
                         icon: "📅",
                         title: "no_rehearsals".localized,

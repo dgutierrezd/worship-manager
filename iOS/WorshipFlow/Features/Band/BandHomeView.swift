@@ -12,15 +12,24 @@ struct BandHomeView: View {
         setlistVM.setlists.filter { $0.isUpcoming }.prefix(4).map { $0 }
     }
 
+    private var isInitialLoading: Bool {
+        (setlistVM.isLoading || songsVM.isLoading || rehearsalVM.isLoading)
+        && setlistVM.setlists.isEmpty && songsVM.songs.isEmpty
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 0) {
                     bandHeader
-                    quickStats
-                    nextServiceSection
-                    upcomingServicesSection
-                    recentSongsSection
+                    if isInitialLoading {
+                        skeletonDashboard
+                    } else {
+                        quickStats
+                        nextServiceSection
+                        upcomingServicesSection
+                        recentSongsSection
+                    }
                     Spacer(minLength: 40)
                 }
             }
@@ -181,6 +190,77 @@ struct BandHomeView: View {
                 .padding(.horizontal, 16)
             }
             .padding(.bottom, 24)
+        }
+    }
+
+    // MARK: - Skeleton Dashboard
+
+    private var skeletonDashboard: some View {
+        VStack(spacing: 0) {
+            // Stats bar skeleton
+            HStack(spacing: 0) {
+                ForEach(0..<3) { idx in
+                    VStack(spacing: 6) {
+                        SkeletonBlock(width: 36, height: 22, cornerRadius: 6)
+                        SkeletonBlock(width: 56, height: 10)
+                    }
+                    .frame(maxWidth: .infinity)
+                    if idx < 2 {
+                        Divider().frame(height: 30).opacity(0.5)
+                    }
+                }
+            }
+            .padding(.vertical, 16)
+            .background(Color.appSurface)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 24)
+
+            // Next service skeleton card
+            VStack(alignment: .leading, spacing: 14) {
+                SkeletonBlock(width: 120, height: 12)
+                SkeletonBlock(height: 110, cornerRadius: 14)
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 24)
+
+            // Horizontal scroll skeleton
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    SkeletonBlock(width: 100, height: 12)
+                    Spacer()
+                    SkeletonBlock(width: 50, height: 10)
+                }
+                .padding(.horizontal, 16)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(0..<5, id: \.self) { _ in
+                            SkeletonBlock(width: 130, height: 76, cornerRadius: 12)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                }
+            }
+            .padding(.bottom, 24)
+
+            // Songs skeleton
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    SkeletonBlock(width: 80, height: 12)
+                    Spacer()
+                    SkeletonBlock(width: 50, height: 10)
+                }
+                .padding(.horizontal, 16)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(0..<6, id: \.self) { _ in
+                            SkeletonBlock(width: 90, height: 90, cornerRadius: 12)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                }
+            }
         }
     }
 

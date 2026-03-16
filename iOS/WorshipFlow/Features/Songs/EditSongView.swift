@@ -225,6 +225,9 @@ struct EditSongView: View {
             tempo: tempoInt,
             duration: totalSec,
             notes: notes.isEmpty ? nil : notes,
+            lyrics: lyrics.isEmpty ? nil : lyrics,
+            tags: tags,
+            theme: theme.isEmpty ? nil : theme,
             youtubeUrl: youtubeUrl.isEmpty ? nil : youtubeUrl,
             spotifyUrl: spotifyUrl.isEmpty ? nil : spotifyUrl
         ) {

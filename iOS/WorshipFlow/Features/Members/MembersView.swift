@@ -63,7 +63,20 @@ struct MembersView: View {
             .task { await loadMembers() }
             .overlay {
                 if isLoading && members.isEmpty {
-                    ProgressView()
+                    List {
+                        Section {
+                            SkeletonList(count: 3) { SkeletonMemberRow() }
+                                .listRowBackground(Color.appSurface)
+                        }
+                        Section {
+                            SkeletonList(count: 5) { SkeletonMemberRow() }
+                                .listRowBackground(Color.appSurface)
+                        }
+                    }
+                    .listStyle(.insetGrouped)
+                    .scrollContentBackground(.hidden)
+                    .allowsHitTesting(false)
+                    .background(Color.appBackground)
                 }
             }
         }

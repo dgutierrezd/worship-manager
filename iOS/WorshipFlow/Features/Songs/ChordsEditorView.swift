@@ -1,7 +1,10 @@
 import SwiftUI
 
+// MARK: - Chords Editor View
+
 struct ChordsEditorView: View {
     let songId: String
+    let songKey: String?        // pass song.defaultKey so degree bar shows real chord names
     let chordSheet: ChordSheet?
     @ObservedObject var vm: SongsViewModel
     @Environment(\.dismiss) var dismiss
@@ -12,35 +15,53 @@ struct ChordsEditorView: View {
     @State private var showSectionPicker = false
     @State private var isLoading = false
 
-    private let instruments = ["", "Guitar", "Piano", "Bass", "Drums"]
+    private let instruments = ["", "Guitar", "Piano", "Bass", "Drums", "Keys", "Strings"]
+    private let modifiers   = ["", "2", "sus2", "sus4", "add9", "6", "7", "maj7", "m7", "dim", "aug"]
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
-                    instrumentPicker
-
-                    ForEach(progression.sections) { section in
-                        sectionCard(section)
+                VStack(spacing: 20) {
+                    // Key reference bar
+                    if let key = songKey {
+                        keyReferenceBar(key: key)
                     }
 
+                    // Instrument selector
+                    instrumentPicker
+
+                    // Sections
+                    if progression.sections.isEmpty {
+                        emptySectionsView
+                    } else {
+                        ForEach(progression.sections) { section in
+                            sectionCard(section)
+                        }
+                    }
+
+                    // Add section CTA
                     addSectionButton
                 }
-                .padding()
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
             }
             .background(Color.appBackground)
-            .navigationTitle("edit_chords".localized)
+            .navigationTitle(chordSheet == nil ? "New Chord Sheet" : "Edit Chords")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") { dismiss() }
+                        .foregroundColor(.appSecondary)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        Task { await save() }
+                    if isLoading {
+                        ProgressView().tint(.appAccent)
+                    } else {
+                        Button("Save") { Task { await save() } }
+                            .fontWeight(.semibold)
+                            .foregroundColor(.appAccent)
+                            .disabled(progression.sections.isEmpty)
                     }
-                    .disabled(progression.sections.isEmpty || isLoading)
-                    .fontWeight(.semibold)
                 }
             }
             .confirmationDialog("Add Section", isPresented: $showSectionPicker) {
@@ -56,106 +77,281 @@ struct ChordsEditorView: View {
         }
     }
 
+    // MARK: - Key Reference Bar
+
+    private func keyReferenceBar(_ key: String) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 6) {
+                Image(systemName: "music.note")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(.appAccent)
+                Text("Key of \(key)  ·  Diatonic Chords")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(.appSecondary)
+                    .tracking(0.3)
+            }
+
+            HStack(spacing: 5) {
+                ForEach(1...7, id: \.self) { deg in
+                    let entry = ChordEntry(degree: deg)
+                    let color = functionColor(entry.harmonicFunction)
+                    VStack(spacing: 3) {
+                        Text(entry.romanNumeral)
+                            .font(.system(size: 9, weight: .bold))
+                            .foregroundColor(color)
+                        Text(entry.chordName(inKey: key))
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .foregroundColor(.appPrimary)
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 7)
+                    .background(color.opacity(0.09))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(color.opacity(0.2), lineWidth: 1)
+                    )
+                }
+            }
+
+            // Function legend
+            HStack(spacing: 18) {
+                legendDot(color: functionColor(.tonic),       label: "Tonic")
+                legendDot(color: functionColor(.subdominant), label: "Subdominant")
+                legendDot(color: functionColor(.dominant),    label: "Dominant")
+            }
+        }
+        .padding(14)
+        .background(Color.appSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.appDivider, lineWidth: 1))
+    }
+
+    private func legendDot(color: Color, label: String) -> some View {
+        HStack(spacing: 5) {
+            Circle().fill(color).frame(width: 7, height: 7)
+            Text(label)
+                .font(.system(size: 10))
+                .foregroundColor(.appSecondary)
+        }
+    }
+
     // MARK: - Section Card
 
     private func sectionCard(_ section: ChordSection) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            // Section header
+            // Header
             HStack {
-                Text(section.name.uppercased())
-                    .font(.system(size: 12, weight: .bold))
+                Label(section.name.uppercased(), systemImage: sectionIcon(section.name))
+                    .font(.system(size: 11, weight: .bold))
                     .foregroundColor(.appAccent)
-                    .tracking(1.5)
-
+                    .tracking(1.2)
                 Spacer()
-
-                Button { deleteSection(section.id) } label: {
+                Button {
+                    withAnimation { progression.sections.removeAll { $0.id == section.id } }
+                } label: {
                     Image(systemName: "trash")
                         .font(.system(size: 13))
-                        .foregroundColor(.statusNo.opacity(0.6))
+                        .foregroundColor(.statusNo.opacity(0.5))
                 }
             }
 
-            // Chord badges (wrapping flow)
-            if !section.chords.isEmpty {
-                FlowLayout(spacing: 8) {
-                    ForEach(section.chords) { chord in
-                        chordBadge(chord, sectionId: section.id)
-                    }
-                }
+            // Chords in measure groups (4 per bar)
+            if section.chords.isEmpty {
+                Text("Tap a chord below to add it to this section")
+                    .font(.appCaption)
+                    .foregroundColor(.appSecondary)
+                    .italic()
+                    .padding(.vertical, 4)
+            } else {
+                measuresView(section: section)
             }
 
-            // Degree bar (1–7) to add chords
+            Divider()
+
+            // Degree bar to add more chords
             degreeBar(sectionId: section.id)
         }
         .padding(16)
         .cardStyle()
     }
 
-    // MARK: - Chord Badge
-    //  Tap to toggle full/pass. Long-press (context menu) to delete.
+    // MARK: - Measures View (4 chords per bar = 4/4 time)
 
-    private func chordBadge(_ chord: ChordEntry, sectionId: UUID) -> some View {
-        Button {
-            toggleChord(inSection: sectionId, chordId: chord.id)
-        } label: {
-            VStack(spacing: 2) {
-                Text("\(chord.degree)")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-
-                Text(chord.isPass ? "pass" : "full")
-                    .font(.system(size: 9, weight: .semibold))
-                    .textCase(.uppercase)
-            }
-            .foregroundColor(chord.isPass ? .appSecondary : .white)
-            .frame(width: 50, height: 54)
-            .background(chord.isPass ? Color.appSurface : Color.appPrimary)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(chord.isPass ? Color.appDivider : Color.clear, lineWidth: 1.5)
-            )
+    private func measuresView(section: ChordSection) -> some View {
+        let chords = section.chords
+        let bars = stride(from: 0, to: chords.count, by: 4).map {
+            Array(chords[$0..<min($0 + 4, chords.count)])
         }
-        .contextMenu {
-            Button(chord.isPass ? "Set Full Comp\u{00E1}s" : "Set Pass") {
-                toggleChord(inSection: sectionId, chordId: chord.id)
-            }
-            Button(role: .destructive) {
-                deleteChord(fromSection: sectionId, chordId: chord.id)
-            } label: {
-                Label("Delete", systemImage: "trash")
+
+        return VStack(alignment: .leading, spacing: 6) {
+            ForEach(bars.indices, id: \.self) { barIdx in
+                HStack(spacing: 4) {
+                    // Bar number
+                    Text("\(barIdx + 1)")
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .foregroundColor(.appSecondary)
+                        .frame(width: 14)
+
+                    // Chord tiles — fill exactly 4 slots
+                    HStack(spacing: 5) {
+                        ForEach(bars[barIdx]) { chord in
+                            chordTile(chord, sectionId: section.id)
+                        }
+                        // Empty beat placeholders to keep 4/4 grid
+                        ForEach(bars[barIdx].count..<4, id: \.self) { _ in
+                            emptyBeatTile
+                        }
+                    }
+                }
             }
         }
     }
 
-    // MARK: - Degree Bar
+    private var emptyBeatTile: some View {
+        RoundedRectangle(cornerRadius: 10)
+            .fill(Color.appBackground)
+            .frame(maxWidth: .infinity)
+            .frame(height: 72)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.appDivider.opacity(0.35),
+                            style: StrokeStyle(lineWidth: 1, dash: [5]))
+            )
+    }
+
+    // MARK: - Chord Tile
+
+    private func chordTile(_ chord: ChordEntry, sectionId: UUID) -> some View {
+        let fnColor = functionColor(chord.harmonicFunction)
+        let isPass = chord.isPass
+
+        return Button {
+            withAnimation(.spring(response: 0.2)) {
+                togglePass(sectionId: sectionId, chordId: chord.id)
+            }
+        } label: {
+            VStack(spacing: 2) {
+                // Roman numeral at top
+                Text(chord.romanNumeral)
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(isPass ? fnColor.opacity(0.7) : fnColor.opacity(0.9))
+
+                // Primary label: chord name if key known, else degree
+                Text(chord.chordName(inKey: songKey))
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundColor(isPass ? .appSecondary : .white)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+
+                // Modifier or PASS badge
+                if let mod = chord.modifier, !mod.isEmpty {
+                    Text(mod)
+                        .font(.system(size: 8, weight: .semibold))
+                        .foregroundColor(isPass ? .appSecondary : .white.opacity(0.75))
+                } else {
+                    Text(isPass ? "PASS" : " ")
+                        .font(.system(size: 8, weight: .semibold))
+                        .foregroundColor(.appSecondary)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 72)
+            .background(
+                isPass
+                    ? Color.appSurface
+                    : LinearGradient(
+                        colors: [fnColor, fnColor.opacity(0.72)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(isPass ? fnColor.opacity(0.35) : Color.clear, lineWidth: 1.5)
+            )
+        }
+        .contextMenu {
+            // Modifier submenu
+            Menu {
+                ForEach(modifiers, id: \.self) { mod in
+                    Button {
+                        setModifier(sectionId: sectionId, chordId: chord.id,
+                                    modifier: mod.isEmpty ? nil : mod)
+                    } label: {
+                        HStack {
+                            Text(mod.isEmpty ? "None" : mod)
+                            if (chord.modifier ?? "") == mod ||
+                               (mod.isEmpty && chord.modifier == nil) {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                Label("Modifier", systemImage: "textformat.subscript")
+            }
+
+            Divider()
+
+            Button(isPass ? "Mark as Full Beat" : "Mark as Passing Chord") {
+                togglePass(sectionId: sectionId, chordId: chord.id)
+            }
+
+            Divider()
+
+            Button(role: .destructive) {
+                deleteChord(fromSection: sectionId, chordId: chord.id)
+            } label: {
+                Label("Remove", systemImage: "trash")
+            }
+        }
+    }
+
+    // MARK: - Degree Bar (keyboard to add chords)
 
     private func degreeBar(sectionId: UUID) -> some View {
-        HStack(spacing: 0) {
-            ForEach(1...7, id: \.self) { degree in
-                Button {
-                    addChord(toSection: sectionId, degree: degree)
-                } label: {
-                    Text("\(degree)")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundColor(.appPrimary)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 38)
-                        .background(Color.appBackground)
-                }
+        VStack(alignment: .leading, spacing: 8) {
+            Text("ADD CHORD  ·  TAP TO INSERT")
+                .font(.system(size: 9, weight: .bold))
+                .foregroundColor(.appSecondary)
+                .tracking(1.2)
 
-                if degree < 7 {
-                    Rectangle()
-                        .fill(Color.appDivider)
-                        .frame(width: 1, height: 22)
+            HStack(spacing: 5) {
+                ForEach(1...7, id: \.self) { degree in
+                    let entry = ChordEntry(degree: degree)
+                    let color = functionColor(entry.harmonicFunction)
+
+                    Button {
+                        addChord(toSection: sectionId, degree: degree)
+                    } label: {
+                        VStack(spacing: 3) {
+                            Text(entry.romanNumeral)
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundColor(color)
+                            Text(songKey != nil
+                                 ? entry.chordName(inKey: songKey)
+                                 : "\(degree)")
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                .foregroundColor(.appPrimary)
+                                .minimumScaleFactor(0.5)
+                                .lineLimit(1)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(color.opacity(0.10))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(color.opacity(0.28), lineWidth: 1)
+                        )
+                    }
                 }
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.appDivider, lineWidth: 1)
-        )
     }
 
     // MARK: - Instrument Picker
@@ -164,32 +360,46 @@ struct ChordsEditorView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(instruments, id: \.self) { inst in
-                    Button {
-                        selectedInstrument = inst
-                    } label: {
-                        Text(inst.isEmpty ? "All" : inst)
+                    Button { selectedInstrument = inst } label: {
+                        Text(inst.isEmpty ? "All Instruments" : inst)
                             .font(.appCaption)
                             .foregroundColor(selectedInstrument == inst ? .white : .appPrimary)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 7)
                             .background(selectedInstrument == inst ? Color.appPrimary : Color.appSurface)
                             .clipShape(Capsule())
-                            .overlay(
-                                Capsule().stroke(Color.appDivider, lineWidth: selectedInstrument == inst ? 0 : 1)
-                            )
+                            .overlay(Capsule().stroke(Color.appDivider,
+                                                     lineWidth: selectedInstrument == inst ? 0 : 1))
                     }
                 }
             }
         }
     }
 
+    // MARK: - Empty State
+
+    private var emptySectionsView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "music.note.list")
+                .font(.system(size: 44))
+                .foregroundColor(.appDivider)
+            Text("No Sections Yet")
+                .font(.appHeadline)
+                .foregroundColor(.appSecondary)
+            Text("Tap "Add Section" to start building\nyour chord progression")
+                .font(.appCaption)
+                .foregroundColor(.appSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(48)
+    }
+
     // MARK: - Add Section Button
 
     private var addSectionButton: some View {
-        Button {
-            showSectionPicker = true
-        } label: {
-            HStack(spacing: 6) {
+        Button { showSectionPicker = true } label: {
+            HStack(spacing: 8) {
                 Image(systemName: "plus.circle.fill")
                 Text("Add Section")
             }
@@ -201,65 +411,87 @@ struct ChordsEditorView: View {
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
-                    .stroke(Color.appAccent.opacity(0.3), style: StrokeStyle(lineWidth: 1, dash: [6]))
+                    .stroke(Color.appAccent.opacity(0.35),
+                            style: StrokeStyle(lineWidth: 1.5, dash: [6]))
             )
+        }
+    }
+
+    // MARK: - Harmonic Function Colors
+
+    func functionColor(_ fn: HarmonicFunction) -> Color {
+        switch fn {
+        case .tonic:       return Color(hex: "#3B82F6") // Blue  — home/stable
+        case .subdominant: return Color(hex: "#10B981") // Green — movement
+        case .dominant:    return Color(hex: "#F59E0B") // Amber — tension
+        }
+    }
+
+    // MARK: - Section Icon
+
+    private func sectionIcon(_ name: String) -> String {
+        switch name.lowercased() {
+        case "intro":          return "play.circle"
+        case "verse":          return "text.alignleft"
+        case "pre-chorus":     return "arrow.up.right"
+        case "chorus":         return "waveform.path.ecg"
+        case "bridge":         return "arrow.triangle.swap"
+        case "instrumental":   return "guitars"
+        case "outro":          return "stop.circle"
+        case "tag":            return "repeat"
+        default:               return "music.note"
         }
     }
 
     // MARK: - Mutations
 
     private func addChord(toSection sectionId: UUID, degree: Int) {
-        if let idx = progression.sections.firstIndex(where: { $0.id == sectionId }) {
-            withAnimation(.spring(response: 0.3)) {
-                progression.sections[idx].chords.append(ChordEntry(degree: degree))
-            }
+        guard let idx = progression.sections.firstIndex(where: { $0.id == sectionId }) else { return }
+        withAnimation(.spring(response: 0.3)) {
+            progression.sections[idx].chords.append(ChordEntry(degree: degree))
         }
     }
 
-    private func toggleChord(inSection sectionId: UUID, chordId: UUID) {
-        if let si = progression.sections.firstIndex(where: { $0.id == sectionId }),
-           let ci = progression.sections[si].chords.firstIndex(where: { $0.id == chordId }) {
-            withAnimation(.spring(response: 0.2)) {
-                progression.sections[si].chords[ci].isPass.toggle()
-            }
-        }
+    private func setModifier(sectionId: UUID, chordId: UUID, modifier: String?) {
+        guard let si = progression.sections.firstIndex(where: { $0.id == sectionId }),
+              let ci = progression.sections[si].chords.firstIndex(where: { $0.id == chordId })
+        else { return }
+        progression.sections[si].chords[ci].modifier = modifier
+    }
+
+    private func togglePass(sectionId: UUID, chordId: UUID) {
+        guard let si = progression.sections.firstIndex(where: { $0.id == sectionId }),
+              let ci = progression.sections[si].chords.firstIndex(where: { $0.id == chordId })
+        else { return }
+        progression.sections[si].chords[ci].isPass.toggle()
     }
 
     private func deleteChord(fromSection sectionId: UUID, chordId: UUID) {
-        if let si = progression.sections.firstIndex(where: { $0.id == sectionId }) {
-            withAnimation {
-                progression.sections[si].chords.removeAll { $0.id == chordId }
-            }
-        }
-    }
-
-    private func deleteSection(_ sectionId: UUID) {
+        guard let si = progression.sections.firstIndex(where: { $0.id == sectionId }) else { return }
         withAnimation {
-            progression.sections.removeAll { $0.id == sectionId }
+            progression.sections[si].chords.removeAll { $0.id == chordId }
         }
     }
 
     // MARK: - Load / Save
 
     private func loadExisting() {
-        if let sheet = chordSheet {
-            if let parsed = ChordProgression.from(json: sheet.content) {
-                progression = parsed
-            }
-            title = sheet.title
-            selectedInstrument = sheet.instrument ?? ""
+        guard let sheet = chordSheet else { return }
+        if let parsed = ChordProgression.from(json: sheet.content) {
+            progression = parsed
         }
+        title = sheet.title
+        selectedInstrument = sheet.instrument ?? ""
     }
 
     private func save() async {
         isLoading = true
-        let content = progression.toJSON()
         let success = await vm.saveChordSheet(
             songId: songId,
             chordId: chordSheet?.id,
             instrument: selectedInstrument.isEmpty ? nil : selectedInstrument,
             title: title,
-            content: content
+            content: progression.toJSON()
         )
         isLoading = false
         if success { dismiss() }

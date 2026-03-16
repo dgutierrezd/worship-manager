@@ -76,7 +76,17 @@ struct SongLibraryView: View {
 
                 Divider().opacity(0.5)
 
-                if vm.songs.isEmpty && !vm.isLoading {
+                if vm.isLoading && vm.songs.isEmpty {
+                    // Skeleton while loading for the first time
+                    List {
+                        SkeletonList(count: 8) { SkeletonSongRow() }
+                            .listRowBackground(Color.appSurface)
+                            .listRowSeparatorTint(Color.appDivider)
+                    }
+                    .listStyle(.insetGrouped)
+                    .scrollContentBackground(.hidden)
+                    .allowsHitTesting(false)
+                } else if vm.songs.isEmpty {
                     EmptyStateView(
                         icon: "🎵",
                         title: "No songs yet",

@@ -9,13 +9,12 @@ struct SongDetailView: View {
 
     @State private var selectedTab = 0
     @State private var transposeSteps = 0
-    @State private var showChordsEditor = false
+    @State private var chordEditorTarget: ChordEditorTarget? // nil = closed; value = edit or new
     @State private var showEditSong = false
     @State private var showPresenter = false
-    @State private var selectedChordSheet: ChordSheet?
     @State private var instrumentFilter = "All"
 
-    private let instrumentFilters = ["All", "Guitar", "Piano", "Bass", "Drums"]
+    private let instrumentFilters = ["All", "Guitar", "Piano", "Bass", "Drums", "Keys", "Strings"]
 
     init(song: Song) {
         _song = State(initialValue: song)
@@ -100,8 +99,14 @@ struct SongDetailView: View {
             vm.bandId = bandVM.currentBand?.id
             await vm.loadChords(songId: song.id)
         }
-        .sheet(isPresented: $showChordsEditor) {
-            ChordsEditorView(songId: song.id, chordSheet: selectedChordSheet, vm: vm)
+        // .sheet(item:) guarantees the correct ChordSheet is always bound when the editor opens
+        .sheet(item: $chordEditorTarget) { target in
+            ChordsEditorView(
+                songId: song.id,
+                songKey: song.defaultKey,
+                chordSheet: target.sheet,
+                vm: vm
+            )
         }
         .sheet(isPresented: $showEditSong) {
             EditSongView(song: song, vm: vm) { updated in
@@ -300,9 +305,7 @@ struct SongDetailView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(instrumentFilters, id: \.self) { filter in
-                        Button {
-                            instrumentFilter = filter
-                        } label: {
+                        Button { instrumentFilter = filter } label: {
                             Text(filter)
                                 .font(.appCaption)
                                 .foregroundColor(instrumentFilter == filter ? .white : .appPrimary)
@@ -310,7 +313,8 @@ struct SongDetailView: View {
                                 .padding(.vertical, 7)
                                 .background(instrumentFilter == filter ? Color.appPrimary : Color.appSurface)
                                 .clipShape(Capsule())
-                                .overlay(Capsule().stroke(Color.appDivider, lineWidth: instrumentFilter == filter ? 0 : 1))
+                                .overlay(Capsule().stroke(Color.appDivider,
+                                                         lineWidth: instrumentFilter == filter ? 0 : 1))
                         }
                     }
                 }
@@ -322,46 +326,53 @@ struct SongDetailView: View {
             }
 
             if filtered.isEmpty {
-                VStack(spacing: 12) {
+                VStack(spacing: 16) {
                     Image(systemName: "guitars")
-                        .font(.system(size: 36))
+                        .font(.system(size: 40))
                         .foregroundColor(.appDivider)
-                    Text("No chords yet")
+                    Text("No chord sheets yet")
                         .font(.appBody)
                         .foregroundColor(.appSecondary)
                     Button {
-                        selectedChordSheet = nil
-                        showChordsEditor = true
+                        chordEditorTarget = ChordEditorTarget(sheet: nil)
                     } label: {
-                        Text("Add Chord Sheet")
+                        Label("Create Chord Sheet", systemImage: "plus.circle.fill")
                             .font(.appCaption)
                             .foregroundColor(.appAccent)
                     }
                 }
-                .padding(40)
+                .frame(maxWidth: .infinity)
+                .padding(48)
             } else {
                 ForEach(filtered) { sheet in
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 14) {
+                        // Sheet header
                         HStack {
-                            Text(sheet.title)
-                                .font(.appHeadline)
-                                .foregroundColor(.appPrimary)
-                            if let instrument = sheet.instrument {
-                                Text(instrument)
-                                    .font(.appCaption)
-                                    .foregroundColor(.appSecondary)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 2)
-                                    .background(Color.appDivider)
-                                    .clipShape(Capsule())
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(sheet.title)
+                                    .font(.appHeadline)
+                                    .foregroundColor(.appPrimary)
+                                if let instrument = sheet.instrument {
+                                    Text(instrument)
+                                        .font(.appCaption)
+                                        .foregroundColor(.appSecondary)
+                                }
                             }
                             Spacer()
                             Button {
-                                selectedChordSheet = sheet
-                                showChordsEditor = true
+                                // .sheet(item:) guarantees chordEditorTarget is set before view builds
+                                chordEditorTarget = ChordEditorTarget(sheet: sheet)
                             } label: {
-                                Image(systemName: "pencil")
-                                    .foregroundColor(.appAccent)
+                                HStack(spacing: 4) {
+                                    Image(systemName: "pencil")
+                                    Text("Edit")
+                                        .font(.appCaption)
+                                }
+                                .foregroundColor(.appAccent)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(Color.appAccent.opacity(0.1))
+                                .clipShape(Capsule())
                             }
                         }
 
@@ -380,11 +391,10 @@ struct SongDetailView: View {
                 }
 
                 Button {
-                    selectedChordSheet = nil
-                    showChordsEditor = true
+                    chordEditorTarget = ChordEditorTarget(sheet: nil)
                 } label: {
-                    Label("Add Chord Sheet", systemImage: "plus")
-                        .font(.appHeadline)
+                    Label("Add Another Sheet", systemImage: "plus")
+                        .font(.appCaption)
                         .foregroundColor(.appAccent)
                 }
                 .padding(.bottom, 16)
@@ -393,32 +403,57 @@ struct SongDetailView: View {
         .padding(.top, 16)
     }
 
+    // MARK: - Chord Progression Viewer (musician-friendly)
+
     private func chordProgressionView(_ progression: ChordProgression) -> some View {
         VStack(alignment: .leading, spacing: 16) {
+            // Function legend
+            HStack(spacing: 14) {
+                legendPill(color: chordFnColor(.tonic),       label: "Tonic")
+                legendPill(color: chordFnColor(.subdominant), label: "Sub-dom")
+                legendPill(color: chordFnColor(.dominant),    label: "Dominant")
+                Spacer()
+                if let key = transposedKey {
+                    Text("Key of \(key)")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.appSecondary)
+                }
+            }
+
             ForEach(progression.sections) { section in
                 VStack(alignment: .leading, spacing: 8) {
+                    // Section label
                     Text(section.name.uppercased())
-                        .font(.system(size: 11, weight: .bold))
+                        .font(.system(size: 10, weight: .bold))
                         .foregroundColor(.appAccent)
-                        .tracking(1.2)
-                    FlowLayout(spacing: 6) {
-                        ForEach(section.chords) { chord in
-                            // Transpose chord degree if steps ≠ 0
-                            let displayDegree = transposeSteps == 0 ? "\(chord.degree)" :
-                                transposedChordDisplay(degree: chord.degree)
-                            VStack(spacing: 1) {
-                                Text(displayDegree)
-                                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                                Text(chord.isPass ? "pass" : "full")
-                                    .font(.system(size: 8, weight: .medium))
-                                    .textCase(.uppercase)
+                        .tracking(1.4)
+
+                    // Measures: 4 chords per bar
+                    let bars = stride(from: 0, to: section.chords.count, by: 4).map {
+                        Array(section.chords[$0..<min($0 + 4, section.chords.count)])
+                    }
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        ForEach(bars.indices, id: \.self) { barIdx in
+                            HStack(spacing: 4) {
+                                // Bar marker
+                                Text("\(barIdx + 1)")
+                                    .font(.system(size: 8, weight: .bold, design: .monospaced))
+                                    .foregroundColor(.appSecondary)
+                                    .frame(width: 12)
+
+                                HStack(spacing: 4) {
+                                    ForEach(bars[barIdx]) { chord in
+                                        viewerChordTile(chord)
+                                    }
+                                    // Empty beat slots
+                                    ForEach(bars[barIdx].count..<4, id: \.self) { _ in
+                                        Color.clear
+                                            .frame(maxWidth: .infinity)
+                                            .frame(height: 56)
+                                    }
+                                }
                             }
-                            .foregroundColor(chord.isPass ? .appSecondary : .white)
-                            .frame(width: 42, height: 46)
-                            .background(chord.isPass ? Color.appBackground : Color.appPrimary)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .overlay(RoundedRectangle(cornerRadius: 8)
-                                .stroke(chord.isPass ? Color.appDivider : Color.clear, lineWidth: 1))
                         }
                     }
                 }
@@ -426,9 +461,65 @@ struct SongDetailView: View {
         }
     }
 
-    /// Returns transposed chord label (numeric Roman-to-number remains, key shifts)
-    private func transposedChordDisplay(degree: Int) -> String {
-        "\(degree)"
+    /// Single chord tile used in the read-only chord viewer
+    private func viewerChordTile(_ chord: ChordEntry) -> some View {
+        let fnColor = chordFnColor(chord.harmonicFunction)
+        let isPass = chord.isPass
+
+        return VStack(spacing: 2) {
+            Text(chord.romanNumeral)
+                .font(.system(size: 9, weight: .bold))
+                .foregroundColor(isPass ? fnColor.opacity(0.6) : fnColor.opacity(0.85))
+
+            Text(chord.chordName(inKey: transposedKey))
+                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .foregroundColor(isPass ? .appSecondary : .white)
+                .minimumScaleFactor(0.6)
+                .lineLimit(1)
+
+            if let mod = chord.modifier, !mod.isEmpty {
+                Text(mod)
+                    .font(.system(size: 7, weight: .medium))
+                    .foregroundColor(isPass ? .appSecondary : .white.opacity(0.7))
+            } else {
+                Text(isPass ? "pass" : " ")
+                    .font(.system(size: 7, weight: .medium))
+                    .foregroundColor(.appSecondary)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 56)
+        .background(
+            isPass
+                ? Color.appSurface
+                : LinearGradient(
+                    colors: [fnColor, fnColor.opacity(0.72)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(isPass ? fnColor.opacity(0.3) : Color.clear, lineWidth: 1)
+        )
+    }
+
+    private func legendPill(color: Color, label: String) -> some View {
+        HStack(spacing: 4) {
+            Circle().fill(color).frame(width: 6, height: 6)
+            Text(label)
+                .font(.system(size: 9, weight: .medium))
+                .foregroundColor(.appSecondary)
+        }
+    }
+
+    private func chordFnColor(_ fn: HarmonicFunction) -> Color {
+        switch fn {
+        case .tonic:       return Color(hex: "#3B82F6")
+        case .subdominant: return Color(hex: "#10B981")
+        case .dominant:    return Color(hex: "#F59E0B")
+        }
     }
 
     // MARK: - Lyrics Tab
