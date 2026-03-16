@@ -19,6 +19,7 @@ struct EditSongView: View {
     @State private var youtubeUrl: String
     @State private var spotifyUrl: String
     @State private var isLoading = false
+    @State private var errorMessage: String?
 
     private let keys = ["", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
 
@@ -186,36 +187,33 @@ struct EditSongView: View {
                     }
                 }
             }
+            .alert("Couldn't Save Song", isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )) {
+                Button("OK", role: .cancel) { errorMessage = nil }
+            } message: {
+                Text(errorMessage ?? "")
+            }
         }
     }
 
     private func save() async {
         isLoading = true
+        errorMessage = nil
+
         let tempoInt = Int(tempo)
         let totalSec: Int? = {
             let m = Int(durationMin) ?? 0
             let s = Int(durationSec) ?? 0
             return (m > 0 || s > 0) ? m * 60 + s : nil
         }()
-
         let tags: [String]? = {
             let t = tagsText.components(separatedBy: ",")
                 .map { $0.trimmingCharacters(in: .whitespaces) }
                 .filter { !$0.isEmpty }
             return t.isEmpty ? nil : t
         }()
-
-        var body: [String: Any] = ["title": title]
-        body["artist"]       = artist.isEmpty ? nil : artist
-        body["default_key"]  = selectedKey.isEmpty ? nil : selectedKey
-        body["tempo_bpm"]    = tempoInt as Any
-        body["duration_sec"] = totalSec as Any
-        body["notes"]        = notes.isEmpty ? nil : notes
-        body["lyrics"]       = lyrics.isEmpty ? nil : lyrics
-        body["tags"]         = tags as Any
-        body["theme"]        = theme.isEmpty ? nil : theme
-        body["youtube_url"]  = youtubeUrl.isEmpty ? nil : youtubeUrl
-        body["spotify_url"]  = spotifyUrl.isEmpty ? nil : spotifyUrl
 
         if let updated = await vm.updateSong(
             song,
@@ -233,6 +231,8 @@ struct EditSongView: View {
         ) {
             onSaved?(updated)
             dismiss()
+        } else {
+            errorMessage = vm.error ?? "Failed to save song. Please try again."
         }
         isLoading = false
     }

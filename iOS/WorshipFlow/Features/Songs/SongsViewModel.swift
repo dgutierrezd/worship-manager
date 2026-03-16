@@ -65,17 +65,18 @@ class SongsViewModel: ObservableObject {
         spotifyUrl: String?
     ) async -> Song? {
         guard let bandId else { return nil }
+        // Only include non-nil values — JSONSerialization throws on Swift Optional-wrapped nils
         var body: [String: Any] = ["title": title]
-        body["artist"]       = artist as Any
-        body["default_key"]  = key as Any
-        body["tempo_bpm"]    = tempo as Any
-        body["duration_sec"] = duration as Any
-        body["notes"]        = notes as Any
-        body["lyrics"]       = lyrics as Any
-        body["tags"]         = tags as Any
-        body["theme"]        = theme as Any
-        body["youtube_url"]  = youtubeUrl as Any
-        body["spotify_url"]  = spotifyUrl as Any
+        if let artist,    !artist.isEmpty    { body["artist"]       = artist }
+        if let key,       !key.isEmpty       { body["default_key"]  = key }
+        if let tempo                         { body["tempo_bpm"]    = tempo }
+        if let duration                      { body["duration_sec"] = duration }
+        if let notes,     !notes.isEmpty     { body["notes"]        = notes }
+        if let lyrics,    !lyrics.isEmpty    { body["lyrics"]       = lyrics }
+        if let tags,      !tags.isEmpty      { body["tags"]         = tags }
+        if let theme,     !theme.isEmpty     { body["theme"]        = theme }
+        if let youtubeUrl, !youtubeUrl.isEmpty { body["youtube_url"] = youtubeUrl }
+        if let spotifyUrl, !spotifyUrl.isEmpty { body["spotify_url"] = spotifyUrl }
         do {
             let updated: Song = try await SongService.updateSong(bandId: bandId, songId: song.id, updates: body)
             if let idx = songs.firstIndex(where: { $0.id == song.id }) {
