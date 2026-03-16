@@ -20,12 +20,25 @@ class SongsViewModel: ObservableObject {
         isLoading = false
     }
 
-    func addSong(title: String, artist: String?, key: String?, tempo: Int?, duration: Int?, notes: String?, youtubeUrl: String?, spotifyUrl: String?) async -> Bool {
+    func addSong(
+        title: String,
+        artist: String?,
+        key: String?,
+        tempo: Int?,
+        duration: Int?,
+        notes: String?,
+        lyrics: String? = nil,
+        tags: [String]? = nil,
+        theme: String? = nil,
+        youtubeUrl: String?,
+        spotifyUrl: String?
+    ) async -> Bool {
         guard let bandId else { return false }
         do {
             let song = try await SongService.addSong(
                 bandId: bandId, title: title, artist: artist, key: key,
                 tempo: tempo, duration: duration, notes: notes,
+                lyrics: lyrics, tags: tags, theme: theme,
                 youtubeUrl: youtubeUrl, spotifyUrl: spotifyUrl
             )
             songs.append(song)

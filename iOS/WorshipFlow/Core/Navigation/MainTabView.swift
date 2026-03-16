@@ -7,39 +7,39 @@ struct MainTabView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             TabView {
+                // 1. Home / Dashboard
                 BandHomeView()
                     .tabItem {
-                        Image(systemName: "house")
-                        Text("Home")
+                        Label("Home", systemImage: "house.fill")
                     }
 
-                SetlistsView()
+                // 2. Services (OnStage-style setlists with team assignments)
+                ServicesView()
                     .tabItem {
-                        Image(systemName: "music.note.list")
-                        Text("setlists".localized)
+                        Label("Services", systemImage: "music.note.list")
                     }
 
+                // 3. Song Library
                 SongLibraryView()
                     .tabItem {
-                        Image(systemName: "music.note")
-                        Text("songs".localized)
+                        Label("songs".localized, systemImage: "music.note")
                     }
 
+                // 4. Rehearsals / Schedule
                 RehearsalsView()
                     .tabItem {
-                        Image(systemName: "calendar")
-                        Text("rehearsals".localized)
+                        Label("Schedule", systemImage: "calendar")
                     }
 
+                // 5. Team / Members
                 MembersView()
                     .tabItem {
-                        Image(systemName: "person.3")
-                        Text("members".localized)
+                        Label("Team", systemImage: "person.3.fill")
                     }
             }
             .tint(.appPrimary)
 
-            // Floating mini player above tab bar
+            // Floating mini metronome player above tab bar
             VStack(spacing: 0) {
                 PracticeMiniPlayerView()
                     .padding(.bottom, 49) // tab bar height

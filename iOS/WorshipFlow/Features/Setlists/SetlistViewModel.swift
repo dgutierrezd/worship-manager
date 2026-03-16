@@ -20,11 +20,24 @@ class SetlistViewModel: ObservableObject {
         isLoading = false
     }
 
-    func createSetlist(name: String, date: String?, notes: String?) async -> Setlist? {
+    func createSetlist(
+        name: String,
+        date: String?,
+        notes: String?,
+        serviceType: String? = nil,
+        location: String? = nil,
+        theme: String? = nil
+    ) async -> Setlist? {
         guard let bandId else { return nil }
         do {
             let setlist = try await SetlistService.createSetlist(
-                bandId: bandId, name: name, date: date, notes: notes
+                bandId: bandId,
+                name: name,
+                date: date,
+                notes: notes,
+                serviceType: serviceType,
+                location: location,
+                theme: theme
             )
             setlists.insert(setlist, at: 0)
             return setlist

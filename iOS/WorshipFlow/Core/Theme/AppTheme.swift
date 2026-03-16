@@ -1,24 +1,57 @@
 import SwiftUI
+import UIKit
 
-// MARK: - Colors
+// MARK: - Colors (Light/Dark adaptive)
 
 extension Color {
-    // Core palette
-    static let appBackground  = Color(hex: "#FAFAF8")
-    static let appSurface     = Color(hex: "#FFFFFF")
-    static let appPrimary     = Color(hex: "#1C1C1E")
-    static let appSecondary   = Color(hex: "#6B6B6B")
-    static let appAccent      = Color(hex: "#C9A84C")
-    static let appDivider     = Color(hex: "#E8E8E4")
+    /// Warm off-white in light mode, deep charcoal in dark mode
+    static let appBackground = Color(UIColor { t in
+        t.userInterfaceStyle == .dark
+            ? UIColor(red: 0.07, green: 0.07, blue: 0.07, alpha: 1)
+            : UIColor(red: 0.98, green: 0.98, blue: 0.97, alpha: 1)
+    })
+
+    /// Pure white / raised dark surface
+    static let appSurface = Color(UIColor { t in
+        t.userInterfaceStyle == .dark
+            ? UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1)
+            : UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+    })
+
+    /// Near-black / near-white text
+    static let appPrimary = Color(UIColor { t in
+        t.userInterfaceStyle == .dark
+            ? UIColor(red: 0.95, green: 0.95, blue: 0.97, alpha: 1)
+            : UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1)
+    })
+
+    /// Muted secondary text
+    static let appSecondary = Color(UIColor { t in
+        t.userInterfaceStyle == .dark
+            ? UIColor(red: 0.56, green: 0.56, blue: 0.58, alpha: 1)
+            : UIColor(red: 0.42, green: 0.42, blue: 0.42, alpha: 1)
+    })
+
+    /// Subtle separator / divider
+    static let appDivider = Color(UIColor { t in
+        t.userInterfaceStyle == .dark
+            ? UIColor(red: 0.18, green: 0.18, blue: 0.20, alpha: 1)
+            : UIColor(red: 0.91, green: 0.91, blue: 0.89, alpha: 1)
+    })
+
+    /// Gold accent — consistent across modes
+    static let appAccent   = Color(hex: "#C9A84C")
 
     // Status colors
-    static let statusGoing    = Color(hex: "#3D8B5C")
-    static let statusMaybe    = Color(hex: "#C9A84C")
-    static let statusNo       = Color(hex: "#B05040")
+    static let statusGoing = Color(hex: "#3D8B5C")
+    static let statusMaybe = Color(hex: "#C9A84C")
+    static let statusNo    = Color(hex: "#B05040")
 
     // Music key colors
-    static let keyMajor       = Color(hex: "#1C1C1E")
-    static let keyMinor       = Color(hex: "#6B6B6B")
+    static let keyMajor = Color(hex: "#1C1C1E")
+    static let keyMinor = Color(hex: "#6B6B6B")
+
+    // MARK: - Hex initializer
 
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -35,9 +68,9 @@ extension Color {
         }
         self.init(
             .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue: Double(b) / 255,
+            red:     Double(r) / 255,
+            green:   Double(g) / 255,
+            blue:    Double(b) / 255,
             opacity: Double(a) / 255
         )
     }
@@ -46,12 +79,12 @@ extension Color {
 // MARK: - Typography
 
 extension Font {
-    static let appLargeTitle = Font.system(size: 32, weight: .bold, design: .serif)
+    static let appLargeTitle = Font.system(size: 32, weight: .bold,     design: .serif)
     static let appTitle      = Font.system(size: 22, weight: .semibold, design: .default)
     static let appHeadline   = Font.system(size: 17, weight: .semibold)
     static let appBody       = Font.system(size: 16, weight: .regular)
     static let appCaption    = Font.system(size: 13, weight: .regular)
-    static let appMono       = Font.system(size: 14, weight: .regular, design: .monospaced)
+    static let appMono       = Font.system(size: 14, weight: .regular,  design: .monospaced)
 }
 
 // MARK: - View Modifiers
@@ -65,14 +98,24 @@ struct CardStyle: ViewModifier {
     }
 }
 
+struct ElevatedCardStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(Color.appSurface)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .shadow(color: .black.opacity(0.09), radius: 14, x: 0, y: 4)
+    }
+}
+
 struct PrimaryButtonStyle: ViewModifier {
+    var isDestructive: Bool = false
     func body(content: Content) -> some View {
         content
             .font(.appHeadline)
             .foregroundColor(.appSurface)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(Color.appPrimary)
+            .background(isDestructive ? Color.statusNo : Color.appPrimary)
             .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }
@@ -108,8 +151,10 @@ struct AppTextFieldStyle: ViewModifier {
 }
 
 extension View {
-    func cardStyle() -> some View { modifier(CardStyle()) }
-    func primaryButton() -> some View { modifier(PrimaryButtonStyle()) }
-    func secondaryButton() -> some View { modifier(SecondaryButtonStyle()) }
-    func appTextField() -> some View { modifier(AppTextFieldStyle()) }
+    func cardStyle()         -> some View { modifier(CardStyle()) }
+    func elevatedCardStyle() -> some View { modifier(ElevatedCardStyle()) }
+    func primaryButton()     -> some View { modifier(PrimaryButtonStyle()) }
+    func destructiveButton() -> some View { modifier(PrimaryButtonStyle(isDestructive: true)) }
+    func secondaryButton()   -> some View { modifier(SecondaryButtonStyle()) }
+    func appTextField()      -> some View { modifier(AppTextFieldStyle()) }
 }

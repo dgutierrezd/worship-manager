@@ -5,13 +5,29 @@ enum SongService {
         try await APIClient.shared.get("/bands/\(bandId)/songs")
     }
 
-    static func addSong(bandId: String, title: String, artist: String?, key: String?, tempo: Int?, duration: Int?, notes: String?, youtubeUrl: String?, spotifyUrl: String?) async throws -> Song {
+    static func addSong(
+        bandId: String,
+        title: String,
+        artist: String?,
+        key: String?,
+        tempo: Int?,
+        duration: Int?,
+        notes: String?,
+        lyrics: String? = nil,
+        tags: [String]? = nil,
+        theme: String? = nil,
+        youtubeUrl: String?,
+        spotifyUrl: String?
+    ) async throws -> Song {
         var body: [String: Any] = ["title": title]
-        if let artist, !artist.isEmpty { body["artist"] = artist }
-        if let key, !key.isEmpty { body["default_key"] = key }
-        if let tempo { body["tempo_bpm"] = tempo }
-        if let duration { body["duration_sec"] = duration }
-        if let notes, !notes.isEmpty { body["notes"] = notes }
+        if let artist, !artist.isEmpty    { body["artist"]       = artist }
+        if let key, !key.isEmpty          { body["default_key"]  = key }
+        if let tempo                      { body["tempo_bpm"]    = tempo }
+        if let duration                   { body["duration_sec"] = duration }
+        if let notes, !notes.isEmpty      { body["notes"]        = notes }
+        if let lyrics, !lyrics.isEmpty    { body["lyrics"]       = lyrics }
+        if let tags, !tags.isEmpty        { body["tags"]         = tags }
+        if let theme, !theme.isEmpty      { body["theme"]        = theme }
         if let youtubeUrl, !youtubeUrl.isEmpty { body["youtube_url"] = youtubeUrl }
         if let spotifyUrl, !spotifyUrl.isEmpty { body["spotify_url"] = spotifyUrl }
         return try await APIClient.shared.post("/bands/\(bandId)/songs", body: body)

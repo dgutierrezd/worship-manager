@@ -70,6 +70,13 @@
 		FC80A488F1C3A192D50A27B1 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EBE9584D2C5BECA3D8F41D /* ProfileView.swift */; };
 		FE51296F1E75D2227F723F55 /* RehearsalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40EF23443220891CF541FC6 /* RehearsalService.swift */; };
 		FF1556FAB699DD77594D3F6F /* AddSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017EED141996BC5B30286F93 /* AddSongView.swift */; };
+		100102020202020202020202 /* ServiceAssignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100101010101010101010101 /* ServiceAssignment.swift */; };
+		100202020202020202020202 /* ServiceAssignmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100201010101010101010101 /* ServiceAssignmentService.swift */; };
+		100302020202020202020202 /* ServiceAssignmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100301010101010101010101 /* ServiceAssignmentViewModel.swift */; };
+		100402020202020202020202 /* ServicesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100401010101010101010101 /* ServicesView.swift */; };
+		100502020202020202020202 /* ServiceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100501010101010101010101 /* ServiceDetailView.swift */; };
+		100602020202020202020202 /* CreateServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100601010101010101010101 /* CreateServiceView.swift */; };
+		100702020202020202020202 /* ManageTeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 100701010101010101010101 /* ManageTeamView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -134,10 +141,17 @@
 		EBE0269F537F026CE05ABB80 /* SetlistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistService.swift; sourceTree = "<group>"; };
 		ED23EFBDEB700190D9F983EB /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F40EF23443220891CF541FC6 /* RehearsalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalService.swift; sourceTree = "<group>"; };
-		F6606BE96CC0ECE873AA7327 /* WorshipFlow.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WorshipFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6606BE96CC0ECE873AA7327 /* WorshipFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorshipFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C3A68CF9140961BEB2CD9D /* SetlistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistsView.swift; sourceTree = "<group>"; };
 		F8A13830AA55E6B4FD08BF1F /* CreateSetlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSetlistView.swift; sourceTree = "<group>"; };
 		FD73F9DA701E8060EACF1007 /* BandViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandViewModel.swift; sourceTree = "<group>"; };
+		100101010101010101010101 /* ServiceAssignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAssignment.swift; sourceTree = "<group>"; };
+		100201010101010101010101 /* ServiceAssignmentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAssignmentService.swift; sourceTree = "<group>"; };
+		100301010101010101010101 /* ServiceAssignmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAssignmentViewModel.swift; sourceTree = "<group>"; };
+		100401010101010101010101 /* ServicesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesView.swift; sourceTree = "<group>"; };
+		100501010101010101010101 /* ServiceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceDetailView.swift; sourceTree = "<group>"; };
+		100601010101010101010101 /* CreateServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceView.swift; sourceTree = "<group>"; };
+		100701010101010101010101 /* ManageTeamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageTeamView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -321,6 +335,7 @@
 				3D022CD5C999EF8E716B8E6D /* Practice */,
 				F8280828A3AC00BF56EF5595 /* Rehearsals */,
 				A159B38D416EC8802CB6A8C9 /* Setlists */,
+				100801010101010101010101 /* Services (Feature) */,
 				1993678F0A664769A2C56436 /* Settings */,
 				2CB7C683601ADE5EA3322575 /* Songs */,
 			);
@@ -347,8 +362,21 @@
 				858D7B2CA4A0F09551E14DEC /* BandService.swift */,
 				ED23EFBDEB700190D9F983EB /* NotificationService.swift */,
 				F40EF23443220891CF541FC6 /* RehearsalService.swift */,
+				100201010101010101010101 /* ServiceAssignmentService.swift */,
 				EBE0269F537F026CE05ABB80 /* SetlistService.swift */,
 				873BF5146CB1576F57EEDC81 /* SongService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		100801010101010101010101 /* Services (Feature) */ = {
+			isa = PBXGroup;
+			children = (
+				100601010101010101010101 /* CreateServiceView.swift */,
+				100701010101010101010101 /* ManageTeamView.swift */,
+				100501010101010101010101 /* ServiceDetailView.swift */,
+				100301010101010101010101 /* ServiceAssignmentViewModel.swift */,
+				100401010101010101010101 /* ServicesView.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -374,6 +402,7 @@
 				C9F03182B1A6FBACB236954E /* Profile.swift */,
 				BDF5E63AC89831C59FF215CD /* Rehearsal.swift */,
 				A19273B2A68F35B5AFCD44E2 /* Setlist.swift */,
+				100101010101010101010101 /* ServiceAssignment.swift */,
 				D3819DF1EFAB63A2098795DD /* Song.swift */,
 			);
 			path = Models;
@@ -410,7 +439,6 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					D9BF7C51C944F58BCD8233F0 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -513,6 +541,13 @@
 				9BD692CBBD3B920F958A1150 /* SongsViewModel.swift in Sources */,
 				E8C88E8EF372DB5DC0C6C61A /* WelcomeView.swift in Sources */,
 				29065D81129D1467C358E215 /* WorshipFlowApp.swift in Sources */,
+				100102020202020202020202 /* ServiceAssignment.swift in Sources */,
+				100202020202020202020202 /* ServiceAssignmentService.swift in Sources */,
+				100302020202020202020202 /* ServiceAssignmentViewModel.swift in Sources */,
+				100402020202020202020202 /* ServicesView.swift in Sources */,
+				100502020202020202020202 /* ServiceDetailView.swift in Sources */,
+				100602020202020202020202 /* CreateServiceView.swift in Sources */,
+				100702020202020202020202 /* ManageTeamView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,7 +572,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = UMM993JNZH;
 				INFOPLIST_KEY_CFBundleDisplayName = "Worship Manager";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "WorshipFlow needs access to your photo library to set a band image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -562,7 +597,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = UMM993JNZH;
 				INFOPLIST_KEY_CFBundleDisplayName = "Worship Manager";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "WorshipFlow needs access to your photo library to set a band image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

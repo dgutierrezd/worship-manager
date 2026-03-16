@@ -5,10 +5,21 @@ enum SetlistService {
         try await APIClient.shared.get("/bands/\(bandId)/setlists")
     }
 
-    static func createSetlist(bandId: String, name: String, date: String?, notes: String?) async throws -> Setlist {
+    static func createSetlist(
+        bandId: String,
+        name: String,
+        date: String?,
+        notes: String?,
+        serviceType: String? = nil,
+        location: String? = nil,
+        theme: String? = nil
+    ) async throws -> Setlist {
         var body: [String: Any] = ["name": name]
-        if let date { body["date"] = date }
-        if let notes { body["notes"] = notes }
+        if let date        { body["date"]         = date }
+        if let notes       { body["notes"]        = notes }
+        if let serviceType { body["service_type"] = serviceType }
+        if let location    { body["location"]     = location }
+        if let theme       { body["theme"]        = theme }
         return try await APIClient.shared.post("/bands/\(bandId)/setlists", body: body)
     }
 

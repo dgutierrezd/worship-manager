@@ -12,7 +12,10 @@ struct EditSongView: View {
     @State private var tempo: String
     @State private var durationMin: String
     @State private var durationSec: String
+    @State private var theme: String
+    @State private var tagsText: String
     @State private var notes: String
+    @State private var lyrics: String
     @State private var youtubeUrl: String
     @State private var spotifyUrl: String
     @State private var isLoading = false
@@ -23,13 +26,16 @@ struct EditSongView: View {
         self.song = song
         self.vm = vm
         self.onSaved = onSaved
-        _title = State(initialValue: song.title)
-        _artist = State(initialValue: song.artist ?? "")
+        _title       = State(initialValue: song.title)
+        _artist      = State(initialValue: song.artist ?? "")
         _selectedKey = State(initialValue: song.defaultKey ?? "")
-        _tempo = State(initialValue: song.tempoBpm.map { String($0) } ?? "")
-        _notes = State(initialValue: song.notes ?? "")
-        _youtubeUrl = State(initialValue: song.youtubeUrl ?? "")
-        _spotifyUrl = State(initialValue: song.spotifyUrl ?? "")
+        _tempo       = State(initialValue: song.tempoBpm.map { String($0) } ?? "")
+        _notes       = State(initialValue: song.notes ?? "")
+        _lyrics      = State(initialValue: song.lyrics ?? "")
+        _theme       = State(initialValue: song.theme ?? "")
+        _tagsText    = State(initialValue: song.tags?.joined(separator: ", ") ?? "")
+        _youtubeUrl  = State(initialValue: song.youtubeUrl ?? "")
+        _spotifyUrl  = State(initialValue: song.spotifyUrl ?? "")
 
         let totalSec = song.durationSec ?? 0
         _durationMin = State(initialValue: totalSec > 0 ? String(totalSec / 60) : "")
@@ -39,7 +45,8 @@ struct EditSongView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: 20) {
+                    // Title / Artist
                     TextField("song_title".localized, text: $title)
                         .appTextField()
 
@@ -48,7 +55,7 @@ struct EditSongView: View {
 
                     // Key picker
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("default_key".localized)
+                        Label("default_key".localized, systemImage: "music.note")
                             .font(.appCaption)
                             .foregroundColor(.appSecondary)
 
@@ -75,9 +82,10 @@ struct EditSongView: View {
                         }
                     }
 
+                    // Tempo + Duration
                     HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("tempo".localized)
+                            Label("tempo".localized, systemImage: "metronome")
                                 .font(.appCaption)
                                 .foregroundColor(.appSecondary)
                             TextField("120", text: $tempo)
@@ -86,7 +94,7 @@ struct EditSongView: View {
                         }
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("duration".localized)
+                            Label("duration".localized, systemImage: "clock")
                                 .font(.appCaption)
                                 .foregroundColor(.appSecondary)
                             HStack(spacing: 4) {
@@ -102,19 +110,60 @@ struct EditSongView: View {
                         }
                     }
 
-                    TextField("youtube_link".localized, text: $youtubeUrl)
-                        .appTextField()
-                        .keyboardType(.URL)
-                        .autocapitalization(.none)
+                    // Theme
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label("Theme (optional)", systemImage: "sparkles")
+                            .font(.appCaption)
+                            .foregroundColor(.appSecondary)
+                        TextField("e.g. Grace, Worship, Praise...", text: $theme)
+                            .appTextField()
+                    }
 
-                    TextField("spotify_link".localized, text: $spotifyUrl)
-                        .appTextField()
-                        .keyboardType(.URL)
-                        .autocapitalization(.none)
+                    // Tags
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label("Tags (comma-separated)", systemImage: "tag")
+                            .font(.appCaption)
+                            .foregroundColor(.appSecondary)
+                        TextField("upbeat, acoustic, modern...", text: $tagsText)
+                            .appTextField()
+                            .autocapitalization(.none)
+                    }
 
-                    TextField("Notes", text: $notes, axis: .vertical)
-                        .appTextField()
-                        .lineLimit(3...6)
+                    // Links
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label("Links", systemImage: "link")
+                            .font(.appCaption)
+                            .foregroundColor(.appSecondary)
+                        TextField("youtube_link".localized, text: $youtubeUrl)
+                            .appTextField()
+                            .keyboardType(.URL)
+                            .autocapitalization(.none)
+                        TextField("spotify_link".localized, text: $spotifyUrl)
+                            .appTextField()
+                            .keyboardType(.URL)
+                            .autocapitalization(.none)
+                    }
+
+                    // Lyrics
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label("Lyrics", systemImage: "text.alignleft")
+                            .font(.appCaption)
+                            .foregroundColor(.appSecondary)
+                        TextField("Paste or type lyrics here...", text: $lyrics, axis: .vertical)
+                            .appTextField()
+                            .lineLimit(6...16)
+                            .font(.system(size: 14, design: .monospaced))
+                    }
+
+                    // Notes
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label("Notes", systemImage: "note.text")
+                            .font(.appCaption)
+                            .foregroundColor(.appSecondary)
+                        TextField("Private notes...", text: $notes, axis: .vertical)
+                            .appTextField()
+                            .lineLimit(3...6)
+                    }
                 }
                 .padding(24)
             }
@@ -126,11 +175,15 @@ struct EditSongView: View {
                     Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        Task { await save() }
+                    if isLoading {
+                        ProgressView()
+                    } else {
+                        Button("Save") {
+                            Task { await save() }
+                        }
+                        .disabled(title.isEmpty)
+                        .fontWeight(.semibold)
                     }
-                    .disabled(title.isEmpty || isLoading)
-                    .fontWeight(.semibold)
                 }
             }
         }
@@ -144,6 +197,25 @@ struct EditSongView: View {
             let s = Int(durationSec) ?? 0
             return (m > 0 || s > 0) ? m * 60 + s : nil
         }()
+
+        let tags: [String]? = {
+            let t = tagsText.components(separatedBy: ",")
+                .map { $0.trimmingCharacters(in: .whitespaces) }
+                .filter { !$0.isEmpty }
+            return t.isEmpty ? nil : t
+        }()
+
+        var body: [String: Any] = ["title": title]
+        body["artist"]       = artist.isEmpty ? nil : artist
+        body["default_key"]  = selectedKey.isEmpty ? nil : selectedKey
+        body["tempo_bpm"]    = tempoInt as Any
+        body["duration_sec"] = totalSec as Any
+        body["notes"]        = notes.isEmpty ? nil : notes
+        body["lyrics"]       = lyrics.isEmpty ? nil : lyrics
+        body["tags"]         = tags as Any
+        body["theme"]        = theme.isEmpty ? nil : theme
+        body["youtube_url"]  = youtubeUrl.isEmpty ? nil : youtubeUrl
+        body["spotify_url"]  = spotifyUrl.isEmpty ? nil : spotifyUrl
 
         if let updated = await vm.updateSong(
             song,
