@@ -493,38 +493,21 @@ struct SongDetailView: View {
         let isPass  = chord.isPass
         let name    = chord.chordName(inKey: transposedKey)
 
-        return VStack(spacing: 0) {
-            // ── Top band: Roman numeral ──────────────────────
+        return VStack(spacing: 4) {
+            // Roman numeral
             Text(chord.romanNumeral)
-                .font(.system(size: 11, weight: .bold))
+                .font(.system(size: 13, weight: .bold))
                 .foregroundColor(isPass ? fnColor.opacity(0.55) : fnColor)
-                .frame(maxWidth: .infinity)
-                .padding(.top, 10)
 
-            Spacer()
-
-            // ── Centre: Chord name (the NOTE) ───────────────
+            // Chord name
             Text(name)
                 .font(.system(size: 22, weight: .black, design: .rounded))
                 .foregroundColor(isPass ? .appSecondary : .white)
                 .minimumScaleFactor(0.55)
                 .lineLimit(1)
                 .padding(.horizontal, 4)
-
-            Spacer()
-
-            // ── Bottom band: Nashville degree + modifier ─────
-            HStack(spacing: 2) {
-                Text("\(chord.degree)")
-                    .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                if let mod = chord.modifier, !mod.isEmpty {
-                    Text(mod)
-                        .font(.system(size: 9, weight: .medium))
-                }
-            }
-            .foregroundColor(isPass ? .appSecondary.opacity(0.7) : .white.opacity(0.65))
-            .padding(.bottom, 8)
         }
+        .frame(maxWidth: .infinity)
         .frame(maxWidth: .infinity)
         .frame(height: 88)
         .background {

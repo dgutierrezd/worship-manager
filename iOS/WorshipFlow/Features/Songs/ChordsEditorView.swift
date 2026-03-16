@@ -233,38 +233,19 @@ struct ChordsEditorView: View {
                 togglePass(sectionId: sectionId, chordId: chord.id)
             }
         } label: {
-            VStack(spacing: 0) {
-                // ── Top: Roman numeral ───────────────────────
+            VStack(spacing: 4) {
+                // Roman numeral
                 Text(chord.romanNumeral)
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.system(size: 13, weight: .bold))
                     .foregroundColor(isPass ? fnColor.opacity(0.55) : fnColor)
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 10)
 
-                Spacer()
-
-                // ── Centre: Chord name (NOTE) ────────────────
+                // Chord name
                 Text(chord.chordName(inKey: songKey))
                     .font(.system(size: 20, weight: .black, design: .rounded))
                     .foregroundColor(isPass ? .appSecondary : .white)
                     .minimumScaleFactor(0.55)
                     .lineLimit(1)
                     .padding(.horizontal, 4)
-
-                Spacer()
-
-                // ── Bottom: Nashville degree + modifier ──────
-                HStack(spacing: 2) {
-                    Text("\(chord.degree)")
-                        .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                    if let mod = chord.modifier, !mod.isEmpty {
-                        Text(mod).font(.system(size: 9, weight: .medium))
-                    } else if isPass {
-                        Text("PASS").font(.system(size: 8, weight: .bold))
-                    }
-                }
-                .foregroundColor(isPass ? .appSecondary.opacity(0.7) : .white.opacity(0.65))
-                .padding(.bottom, 8)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 88)
