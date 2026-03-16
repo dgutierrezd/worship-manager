@@ -178,12 +178,37 @@ struct ChordsEditorView: View {
         .cardStyle()
     }
 
-    // MARK: - Measures View (4 chords per bar = 4/4 time)
+    // MARK: - Beat Slot Builder
+    // Pass chords are "half-beats": two consecutive pass chords share one bar slot.
+
+    private func buildBeatSlots(from chords: [ChordEntry]) -> [[ChordEntry]] {
+        var slots: [[ChordEntry]] = []
+        var i = 0
+        while i < chords.count {
+            if chords[i].isPass {
+                // Pair two consecutive pass chords into one slot
+                var slot = [chords[i]]
+                if i + 1 < chords.count && chords[i + 1].isPass {
+                    slot.append(chords[i + 1])
+                    i += 2
+                } else {
+                    i += 1
+                }
+                slots.append(slot)
+            } else {
+                slots.append([chords[i]])
+                i += 1
+            }
+        }
+        return slots
+    }
+
+    // MARK: - Measures View (4 beat-slots per bar = 4/4 time)
 
     private func measuresView(section: ChordSection) -> some View {
-        let chords = section.chords
-        let bars = stride(from: 0, to: chords.count, by: 4).map {
-            Array(chords[$0..<min($0 + 4, chords.count)])
+        let slots = buildBeatSlots(from: section.chords)
+        let bars = stride(from: 0, to: slots.count, by: 4).map {
+            Array(slots[$0..<min($0 + 4, slots.count)])
         }
 
         return VStack(alignment: .leading, spacing: 6) {
@@ -195,18 +220,38 @@ struct ChordsEditorView: View {
                         .foregroundColor(.appSecondary)
                         .frame(width: 14)
 
-                    // Chord tiles — fill exactly 4 slots
+                    // Beat slots — each slot is 1 full chord or 1-2 pass chords
                     HStack(spacing: 5) {
-                        ForEach(bars[barIdx]) { chord in
-                            chordTile(chord, sectionId: section.id)
+                        ForEach(bars[barIdx].indices, id: \.self) { slotIdx in
+                            beatSlotView(bars[barIdx][slotIdx], sectionId: section.id)
                         }
-                        // Empty beat placeholders — match tile height
+                        // Empty beat placeholders to complete 4 slots
                         ForEach(bars[barIdx].count..<4, id: \.self) { _ in
                             emptyBeatTile
                         }
                     }
                 }
             }
+        }
+    }
+
+    /// Renders one beat slot: full chord, or one/two half-width pass chords.
+    @ViewBuilder
+    private func beatSlotView(_ slot: [ChordEntry], sectionId: UUID) -> some View {
+        if slot.count == 2 {
+            // Two pass chords share the slot side-by-side
+            HStack(spacing: 3) {
+                halfChordTile(slot[0], sectionId: sectionId)
+                halfChordTile(slot[1], sectionId: sectionId)
+            }
+        } else if slot[0].isPass {
+            // Single pass chord at half-width with a filler on the right
+            HStack(spacing: 3) {
+                halfChordTile(slot[0], sectionId: sectionId)
+                halfEmptyTile
+            }
+        } else {
+            chordTile(slot[0], sectionId: sectionId)
         }
     }
 
@@ -222,50 +267,54 @@ struct ChordsEditorView: View {
             )
     }
 
+    private var halfEmptyTile: some View {
+        RoundedRectangle(cornerRadius: 10)
+            .fill(Color.appBackground)
+            .frame(maxWidth: .infinity)
+            .frame(height: 88)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.appDivider.opacity(0.22),
+                            style: StrokeStyle(lineWidth: 1, dash: [4]))
+            )
+    }
+
     // MARK: - Chord Tile
 
     private func chordTile(_ chord: ChordEntry, sectionId: UUID) -> some View {
         let fnColor = functionColor(chord.harmonicFunction)
         let isPass = chord.isPass
+        let bgOpacity: Double = isPass ? 0.06 : 0.14
+        let textOpacity: Double = isPass ? 0.4 : 1.0
 
         return Button {
             withAnimation(.spring(response: 0.2)) {
                 togglePass(sectionId: sectionId, chordId: chord.id)
             }
         } label: {
-            VStack(spacing: 4) {
-                // Roman numeral
+            VStack(spacing: 2) {
+                // Roman numeral — hero element
                 Text(chord.romanNumeral)
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundColor(isPass ? fnColor.opacity(0.55) : fnColor)
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .foregroundColor(fnColor.opacity(textOpacity))
 
-                // Chord name
+                // Chord name — supporting detail
                 Text(chord.chordName(inKey: songKey))
-                    .font(.system(size: 20, weight: .black, design: .rounded))
-                    .foregroundColor(isPass ? .appSecondary : .white)
-                    .minimumScaleFactor(0.55)
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .foregroundColor(isPass ? .appSecondary.opacity(0.6) : .appPrimary.opacity(0.75))
+                    .minimumScaleFactor(0.6)
                     .lineLimit(1)
                     .padding(.horizontal, 4)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 88)
-            .background {
-                if isPass {
-                    Color.appSurface
-                } else {
-                    LinearGradient(
-                        colors: [fnColor, fnColor.opacity(0.72)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                }
-            }
+            .background(fnColor.opacity(bgOpacity))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(isPass ? fnColor.opacity(0.35) : Color.clear, lineWidth: 1.5)
+                    .stroke(fnColor.opacity(isPass ? 0.2 : 0.4), lineWidth: 1.5)
             )
-            .shadow(color: isPass ? .clear : fnColor.opacity(0.2), radius: 4, x: 0, y: 2)
+            .shadow(color: isPass ? .clear : fnColor.opacity(0.08), radius: 3, x: 0, y: 1)
         }
         .contextMenu {
             // Modifier submenu
@@ -296,6 +345,69 @@ struct ChordsEditorView: View {
 
             Divider()
 
+            Button(role: .destructive) {
+                deleteChord(fromSection: sectionId, chordId: chord.id)
+            } label: {
+                Label("Remove", systemImage: "trash")
+            }
+        }
+    }
+
+    // MARK: - Half Chord Tile (for passing chords — half-width, dashed border)
+
+    private func halfChordTile(_ chord: ChordEntry, sectionId: UUID) -> some View {
+        let fnColor = functionColor(chord.harmonicFunction)
+
+        return Button {
+            withAnimation(.spring(response: 0.2)) {
+                togglePass(sectionId: sectionId, chordId: chord.id)
+            }
+        } label: {
+            VStack(spacing: 1) {
+                Text(chord.romanNumeral)
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundColor(fnColor.opacity(0.85))
+                Text(chord.chordName(inKey: songKey))
+                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    .foregroundColor(.appPrimary.opacity(0.65))
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(1)
+                    .padding(.horizontal, 2)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 88)
+            .background(fnColor.opacity(0.10))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(fnColor.opacity(0.35),
+                            style: StrokeStyle(lineWidth: 1.5, dash: [5, 3]))
+            )
+        }
+        .contextMenu {
+            Menu {
+                ForEach(modifiers, id: \.self) { mod in
+                    Button {
+                        setModifier(sectionId: sectionId, chordId: chord.id,
+                                    modifier: mod.isEmpty ? nil : mod)
+                    } label: {
+                        HStack {
+                            Text(mod.isEmpty ? "None" : mod)
+                            if (chord.modifier ?? "") == mod ||
+                               (mod.isEmpty && chord.modifier == nil) {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                Label("Modifier", systemImage: "textformat.subscript")
+            }
+            Divider()
+            Button("Mark as Full Beat") {
+                togglePass(sectionId: sectionId, chordId: chord.id)
+            }
+            Divider()
             Button(role: .destructive) {
                 deleteChord(fromSection: sectionId, chordId: chord.id)
             } label: {

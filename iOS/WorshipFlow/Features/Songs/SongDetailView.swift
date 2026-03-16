@@ -447,24 +447,25 @@ struct SongDetailView: View {
                             .tracking(1.6)
                     }
 
-                    // Measures: 4 chords per bar
-                    let bars = stride(from: 0, to: section.chords.count, by: 4).map {
-                        Array(section.chords[$0..<min($0 + 4, section.chords.count)])
+                    // Measures: beat-slot based (pass chords are half-beats)
+                    let slots = buildBeatSlots(from: section.chords)
+                    let bars = stride(from: 0, to: slots.count, by: 4).map {
+                        Array(slots[$0..<min($0 + 4, slots.count)])
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
                         ForEach(bars.indices, id: \.self) { barIdx in
                             HStack(spacing: 6) {
-                                // Bar number pill
+                                // Bar number
                                 Text("\(barIdx + 1)")
                                     .font(.system(size: 9, weight: .bold, design: .monospaced))
                                     .foregroundColor(.appSecondary)
                                     .frame(width: 16)
 
-                                // 4 chord tiles
+                                // Beat slots
                                 HStack(spacing: 6) {
-                                    ForEach(bars[barIdx]) { chord in
-                                        viewerChordTile(chord)
+                                    ForEach(bars[barIdx].indices, id: \.self) { slotIdx in
+                                        viewerBeatSlotView(bars[barIdx][slotIdx])
                                     }
                                     // Empty beat placeholders
                                     ForEach(bars[barIdx].count..<4, id: \.self) { _ in
@@ -487,46 +488,112 @@ struct SongDetailView: View {
         }
     }
 
-    /// Chord tile in the read-only viewer — shows Roman numeral, chord name, and Nashville degree
+    /// Chord tile in the read-only viewer — Roman numeral as hero, chord name as supporting detail
     private func viewerChordTile(_ chord: ChordEntry) -> some View {
         let fnColor = chordFnColor(chord.harmonicFunction)
         let isPass  = chord.isPass
         let name    = chord.chordName(inKey: transposedKey)
+        let bgOpacity: Double = isPass ? 0.06 : 0.14
+        let textOpacity: Double = isPass ? 0.4 : 1.0
 
-        return VStack(spacing: 4) {
-            // Roman numeral
+        return VStack(spacing: 2) {
+            // Roman numeral — hero element
             Text(chord.romanNumeral)
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(isPass ? fnColor.opacity(0.55) : fnColor)
+                .font(.system(size: 26, weight: .bold, design: .rounded))
+                .foregroundColor(fnColor.opacity(textOpacity))
 
-            // Chord name
+            // Chord name — supporting detail
             Text(name)
-                .font(.system(size: 22, weight: .black, design: .rounded))
-                .foregroundColor(isPass ? .appSecondary : .white)
-                .minimumScaleFactor(0.55)
+                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .foregroundColor(isPass ? .appSecondary.opacity(0.6) : .appPrimary.opacity(0.75))
+                .minimumScaleFactor(0.6)
                 .lineLimit(1)
                 .padding(.horizontal, 4)
         }
         .frame(maxWidth: .infinity)
-        .frame(maxWidth: .infinity)
         .frame(height: 88)
-        .background {
-            if isPass {
-                Color.appSurface
-            } else {
-                LinearGradient(
-                    colors: [fnColor, fnColor.opacity(0.7)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            }
-        }
+        .background(fnColor.opacity(bgOpacity))
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(isPass ? fnColor.opacity(0.35) : Color.clear, lineWidth: 1.5)
+                .stroke(fnColor.opacity(isPass ? 0.2 : 0.4), lineWidth: 1.5)
         )
-        .shadow(color: isPass ? .clear : fnColor.opacity(0.25), radius: 4, x: 0, y: 2)
+        .shadow(color: isPass ? .clear : fnColor.opacity(0.08), radius: 3, x: 0, y: 1)
+    }
+
+    // MARK: - Beat Slot Helpers
+
+    /// Groups consecutive pass chords into pairs so they share one beat slot.
+    private func buildBeatSlots(from chords: [ChordEntry]) -> [[ChordEntry]] {
+        var slots: [[ChordEntry]] = []
+        var i = 0
+        while i < chords.count {
+            if chords[i].isPass {
+                var slot = [chords[i]]
+                if i + 1 < chords.count && chords[i + 1].isPass {
+                    slot.append(chords[i + 1])
+                    i += 2
+                } else {
+                    i += 1
+                }
+                slots.append(slot)
+            } else {
+                slots.append([chords[i]])
+                i += 1
+            }
+        }
+        return slots
+    }
+
+    /// Renders one beat slot in the viewer — full chord, or one/two half-width pass chords.
+    @ViewBuilder
+    private func viewerBeatSlotView(_ slot: [ChordEntry]) -> some View {
+        if slot.count == 2 {
+            HStack(spacing: 4) {
+                viewerHalfChordTile(slot[0])
+                viewerHalfChordTile(slot[1])
+            }
+        } else if slot[0].isPass {
+            HStack(spacing: 4) {
+                viewerHalfChordTile(slot[0])
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.appBackground)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 88)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.appDivider.opacity(0.22),
+                                    style: StrokeStyle(lineWidth: 1, dash: [4]))
+                    )
+            }
+        } else {
+            viewerChordTile(slot[0])
+        }
+    }
+
+    /// Half-width read-only tile for a passing chord.
+    private func viewerHalfChordTile(_ chord: ChordEntry) -> some View {
+        let fnColor = chordFnColor(chord.harmonicFunction)
+        return VStack(spacing: 1) {
+            Text(chord.romanNumeral)
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundColor(fnColor.opacity(0.85))
+            Text(chord.chordName(inKey: transposedKey))
+                .font(.system(size: 10, weight: .semibold, design: .rounded))
+                .foregroundColor(.appPrimary.opacity(0.65))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+                .padding(.horizontal, 2)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 88)
+        .background(fnColor.opacity(0.10))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(fnColor.opacity(0.35),
+                        style: StrokeStyle(lineWidth: 1.5, dash: [5, 3]))
+        )
     }
 
     private func legendPill(color: Color, label: String) -> some View {
