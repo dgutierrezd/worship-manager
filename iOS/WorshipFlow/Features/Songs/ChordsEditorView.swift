@@ -200,7 +200,7 @@ struct ChordsEditorView: View {
                         ForEach(bars[barIdx]) { chord in
                             chordTile(chord, sectionId: section.id)
                         }
-                        // Empty beat placeholders to keep 4/4 grid
+                        // Empty beat placeholders — match tile height
                         ForEach(bars[barIdx].count..<4, id: \.self) { _ in
                             emptyBeatTile
                         }
@@ -211,12 +211,12 @@ struct ChordsEditorView: View {
     }
 
     private var emptyBeatTile: some View {
-        RoundedRectangle(cornerRadius: 10)
+        RoundedRectangle(cornerRadius: 12)
             .fill(Color.appBackground)
             .frame(maxWidth: .infinity)
-            .frame(height: 72)
+            .frame(height: 88)
             .overlay(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 12)
                     .stroke(Color.appDivider.opacity(0.35),
                             style: StrokeStyle(lineWidth: 1, dash: [5]))
             )
@@ -233,32 +233,41 @@ struct ChordsEditorView: View {
                 togglePass(sectionId: sectionId, chordId: chord.id)
             }
         } label: {
-            VStack(spacing: 2) {
-                // Roman numeral at top
+            VStack(spacing: 0) {
+                // ── Top: Roman numeral ───────────────────────
                 Text(chord.romanNumeral)
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundColor(isPass ? fnColor.opacity(0.7) : fnColor.opacity(0.9))
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(isPass ? fnColor.opacity(0.55) : fnColor)
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 10)
 
-                // Primary label: chord name if key known, else degree
+                Spacer()
+
+                // ── Centre: Chord name (NOTE) ────────────────
                 Text(chord.chordName(inKey: songKey))
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(size: 20, weight: .black, design: .rounded))
                     .foregroundColor(isPass ? .appSecondary : .white)
-                    .minimumScaleFactor(0.6)
+                    .minimumScaleFactor(0.55)
                     .lineLimit(1)
+                    .padding(.horizontal, 4)
 
-                // Modifier or PASS badge
-                if let mod = chord.modifier, !mod.isEmpty {
-                    Text(mod)
-                        .font(.system(size: 8, weight: .semibold))
-                        .foregroundColor(isPass ? .appSecondary : .white.opacity(0.75))
-                } else {
-                    Text(isPass ? "PASS" : " ")
-                        .font(.system(size: 8, weight: .semibold))
-                        .foregroundColor(.appSecondary)
+                Spacer()
+
+                // ── Bottom: Nashville degree + modifier ──────
+                HStack(spacing: 2) {
+                    Text("\(chord.degree)")
+                        .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                    if let mod = chord.modifier, !mod.isEmpty {
+                        Text(mod).font(.system(size: 9, weight: .medium))
+                    } else if isPass {
+                        Text("PASS").font(.system(size: 8, weight: .bold))
+                    }
                 }
+                .foregroundColor(isPass ? .appSecondary.opacity(0.7) : .white.opacity(0.65))
+                .padding(.bottom, 8)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 72)
+            .frame(height: 88)
             .background {
                 if isPass {
                     Color.appSurface
@@ -270,11 +279,12 @@ struct ChordsEditorView: View {
                     )
                 }
             }
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 12)
                     .stroke(isPass ? fnColor.opacity(0.35) : Color.clear, lineWidth: 1.5)
             )
+            .shadow(color: isPass ? .clear : fnColor.opacity(0.2), radius: 4, x: 0, y: 2)
         }
         .contextMenu {
             // Modifier submenu

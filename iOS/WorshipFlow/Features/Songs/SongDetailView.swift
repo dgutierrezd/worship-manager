@@ -403,54 +403,80 @@ struct SongDetailView: View {
         .padding(.top, 16)
     }
 
-    // MARK: - Chord Progression Viewer (musician-friendly)
+    // MARK: - Chord Progression Viewer
 
     private func chordProgressionView(_ progression: ChordProgression) -> some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Function legend
-            HStack(spacing: 14) {
-                legendPill(color: chordFnColor(.tonic),       label: "Tonic")
-                legendPill(color: chordFnColor(.subdominant), label: "Sub-dom")
-                legendPill(color: chordFnColor(.dominant),    label: "Dominant")
-                Spacer()
+        VStack(alignment: .leading, spacing: 20) {
+            // Key + legend header
+            HStack(spacing: 0) {
                 if let key = transposedKey {
-                    Text("Key of \(key)")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(.appSecondary)
+                    HStack(spacing: 6) {
+                        Image(systemName: "music.note")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(.appAccent)
+                        Text("Key of \(key)")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.appPrimary)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.appAccent.opacity(0.1))
+                    .clipShape(Capsule())
+                    .padding(.trailing, 12)
                 }
+
+                HStack(spacing: 12) {
+                    legendPill(color: chordFnColor(.tonic),       label: "Tonic")
+                    legendPill(color: chordFnColor(.subdominant), label: "Sub-dom")
+                    legendPill(color: chordFnColor(.dominant),    label: "Dominant")
+                }
+                Spacer()
             }
 
             ForEach(progression.sections) { section in
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 10) {
                     // Section label
-                    Text(section.name.uppercased())
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.appAccent)
-                        .tracking(1.4)
+                    HStack(spacing: 6) {
+                        Rectangle()
+                            .fill(Color.appAccent)
+                            .frame(width: 3, height: 14)
+                            .clipShape(Capsule())
+                        Text(section.name.uppercased())
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(.appAccent)
+                            .tracking(1.6)
+                    }
 
                     // Measures: 4 chords per bar
                     let bars = stride(from: 0, to: section.chords.count, by: 4).map {
                         Array(section.chords[$0..<min($0 + 4, section.chords.count)])
                     }
 
-                    VStack(alignment: .leading, spacing: 5) {
+                    VStack(alignment: .leading, spacing: 8) {
                         ForEach(bars.indices, id: \.self) { barIdx in
-                            HStack(spacing: 4) {
-                                // Bar marker
+                            HStack(spacing: 6) {
+                                // Bar number pill
                                 Text("\(barIdx + 1)")
-                                    .font(.system(size: 8, weight: .bold, design: .monospaced))
+                                    .font(.system(size: 9, weight: .bold, design: .monospaced))
                                     .foregroundColor(.appSecondary)
-                                    .frame(width: 12)
+                                    .frame(width: 16)
 
-                                HStack(spacing: 4) {
+                                // 4 chord tiles
+                                HStack(spacing: 6) {
                                     ForEach(bars[barIdx]) { chord in
                                         viewerChordTile(chord)
                                     }
-                                    // Empty beat slots
+                                    // Empty beat placeholders
                                     ForEach(bars[barIdx].count..<4, id: \.self) { _ in
-                                        Color.clear
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.appBackground)
                                             .frame(maxWidth: .infinity)
-                                            .frame(height: 56)
+                                            .frame(height: 88)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color.appDivider.opacity(0.4),
+                                                            style: StrokeStyle(lineWidth: 1, dash: [4]))
+                                            )
                                     }
                                 }
                             }
@@ -461,57 +487,70 @@ struct SongDetailView: View {
         }
     }
 
-    /// Single chord tile used in the read-only chord viewer
+    /// Chord tile in the read-only viewer — shows Roman numeral, chord name, and Nashville degree
     private func viewerChordTile(_ chord: ChordEntry) -> some View {
         let fnColor = chordFnColor(chord.harmonicFunction)
-        let isPass = chord.isPass
+        let isPass  = chord.isPass
+        let name    = chord.chordName(inKey: transposedKey)
 
-        return VStack(spacing: 2) {
+        return VStack(spacing: 0) {
+            // ── Top band: Roman numeral ──────────────────────
             Text(chord.romanNumeral)
-                .font(.system(size: 9, weight: .bold))
-                .foregroundColor(isPass ? fnColor.opacity(0.6) : fnColor.opacity(0.85))
+                .font(.system(size: 11, weight: .bold))
+                .foregroundColor(isPass ? fnColor.opacity(0.55) : fnColor)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 10)
 
-            Text(chord.chordName(inKey: transposedKey))
-                .font(.system(size: 14, weight: .bold, design: .rounded))
+            Spacer()
+
+            // ── Centre: Chord name (the NOTE) ───────────────
+            Text(name)
+                .font(.system(size: 22, weight: .black, design: .rounded))
                 .foregroundColor(isPass ? .appSecondary : .white)
-                .minimumScaleFactor(0.6)
+                .minimumScaleFactor(0.55)
                 .lineLimit(1)
+                .padding(.horizontal, 4)
 
-            if let mod = chord.modifier, !mod.isEmpty {
-                Text(mod)
-                    .font(.system(size: 7, weight: .medium))
-                    .foregroundColor(isPass ? .appSecondary : .white.opacity(0.7))
-            } else {
-                Text(isPass ? "pass" : " ")
-                    .font(.system(size: 7, weight: .medium))
-                    .foregroundColor(.appSecondary)
+            Spacer()
+
+            // ── Bottom band: Nashville degree + modifier ─────
+            HStack(spacing: 2) {
+                Text("\(chord.degree)")
+                    .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                if let mod = chord.modifier, !mod.isEmpty {
+                    Text(mod)
+                        .font(.system(size: 9, weight: .medium))
+                }
             }
+            .foregroundColor(isPass ? .appSecondary.opacity(0.7) : .white.opacity(0.65))
+            .padding(.bottom, 8)
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 56)
+        .frame(height: 88)
         .background {
             if isPass {
                 Color.appSurface
             } else {
                 LinearGradient(
-                    colors: [fnColor, fnColor.opacity(0.72)],
+                    colors: [fnColor, fnColor.opacity(0.7)],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(isPass ? fnColor.opacity(0.3) : Color.clear, lineWidth: 1)
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(isPass ? fnColor.opacity(0.35) : Color.clear, lineWidth: 1.5)
         )
+        .shadow(color: isPass ? .clear : fnColor.opacity(0.25), radius: 4, x: 0, y: 2)
     }
 
     private func legendPill(color: Color, label: String) -> some View {
         HStack(spacing: 4) {
-            Circle().fill(color).frame(width: 6, height: 6)
+            Circle().fill(color).frame(width: 7, height: 7)
             Text(label)
-                .font(.system(size: 9, weight: .medium))
+                .font(.system(size: 10, weight: .medium))
                 .foregroundColor(.appSecondary)
         }
     }
