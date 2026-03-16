@@ -6,6 +6,26 @@ struct RootView: View {
 
     @State private var hasLoadedBands = false
 
+    // MARK: - Splash / loading screen
+
+    private var splashView: some View {
+        VStack(spacing: 24) {
+            if let logo = UIImage(named: "AppLogo") {
+                Image(uiImage: logo)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 180)
+            } else {
+                Text("🎵")
+                    .font(.system(size: 72))
+            }
+            ProgressView()
+                .tint(.appAccent)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.appBackground)
+    }
+
     var body: some View {
         Group {
             if authVM.isAuthenticated {
@@ -13,17 +33,19 @@ struct RootView: View {
                     MainTabView()
                         .environmentObject(bandVM)
                 } else if !hasLoadedBands || bandVM.isLoading {
-                    VStack(spacing: 24) {
-                        Image("AppLogo")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: 180)
-                        ProgressView()
-                            .tint(.appAccent)
+                    // Still loading — show splash spinner
+                    splashView
+                } else if bandVM.bandsLoadFailed {
+                    // Network / auth error — show retry instead of onboarding
+                    BandsLoadErrorView {
+                        hasLoadedBands = false
+                        Task {
+                            await bandVM.loadMyBands()
+                            hasLoadedBands = true
+                        }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.appBackground)
                 } else {
+                    // Load succeeded, user genuinely has no band yet
                     BandOnboardingView()
                         .environmentObject(bandVM)
                 }
@@ -32,6 +54,8 @@ struct RootView: View {
             }
         }
         .task {
+            // Covers the case where the app launched already authenticated
+            // (tokens were restored synchronously before this task fires)
             if authVM.isAuthenticated {
                 await bandVM.loadMyBands()
                 hasLoadedBands = true
@@ -39,6 +63,7 @@ struct RootView: View {
         }
         .onChange(of: authVM.isAuthenticated) { _, isAuth in
             if isAuth {
+                // Covers fresh sign-in AND async token-restore completing after view appeared
                 Task {
                     await bandVM.loadMyBands()
                     hasLoadedBands = true
@@ -46,6 +71,7 @@ struct RootView: View {
             } else {
                 bandVM.currentBand = nil
                 bandVM.bands = []
+                bandVM.bandsLoadFailed = false
                 hasLoadedBands = false
             }
         }
@@ -62,6 +88,45 @@ struct RootView: View {
         }
     }
 }
+
+// MARK: - Bands Load Error (retry screen shown instead of onboarding on network failure)
+
+struct BandsLoadErrorView: View {
+    let onRetry: () -> Void
+
+    var body: some View {
+        VStack(spacing: 28) {
+            Spacer()
+
+            Image(systemName: "wifi.exclamationmark")
+                .font(.system(size: 56))
+                .foregroundColor(.appSecondary)
+
+            VStack(spacing: 10) {
+                Text("Couldn't Load Your Band")
+                    .font(.appTitle)
+                    .foregroundColor(.appPrimary)
+
+                Text("Check your connection and try again.\nYour band data is waiting for you.")
+                    .font(.appBody)
+                    .foregroundColor(.appSecondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            Button(action: onRetry) {
+                Label("Try Again", systemImage: "arrow.clockwise")
+                    .primaryButton()
+            }
+            .padding(.horizontal, 40)
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.appBackground)
+    }
+}
+
+// MARK: - Band Onboarding
 
 struct BandOnboardingView: View {
     @State private var showCreate = false

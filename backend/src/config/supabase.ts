@@ -18,9 +18,9 @@ export const supabaseAdmin: SupabaseClient = createClient(
 );
 
 // Separate client for signInWithPassword / refreshSession calls.
-// This prevents user sessions from polluting the admin client's in-memory state.
+// Must use the ANON key — service role key cannot authenticate end users.
 export function createAuthClient(): SupabaseClient {
-  return createClient(supabaseUrl, supabaseServiceKey, {
+  return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

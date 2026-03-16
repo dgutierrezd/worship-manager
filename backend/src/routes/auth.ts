@@ -51,8 +51,10 @@ router.post("/signup", async (req: Request, res: Response): Promise<void> => {
       user: { id: authData.user.id, email, full_name, instrument },
       session: session.session,
     });
-  } catch {
-    res.status(500).json({ error: "Signup failed" });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Signup failed";
+    console.error("POST /auth/signup error:", message);
+    res.status(500).json({ error: message });
   }
 });
 
@@ -86,8 +88,10 @@ router.post("/signin", async (req: Request, res: Response): Promise<void> => {
       .single();
 
     res.json({ user: profile, session: data.session });
-  } catch {
-    res.status(500).json({ error: "Sign in failed" });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Sign in failed";
+    console.error("POST /auth/signin error:", message);
+    res.status(500).json({ error: message });
   }
 });
 
@@ -117,8 +121,10 @@ router.post("/refresh", async (req: Request, res: Response): Promise<void> => {
         refresh_token: data.session.refresh_token,
       },
     });
-  } catch {
-    res.status(500).json({ error: "Token refresh failed" });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Token refresh failed";
+    console.error("POST /auth/refresh error:", message);
+    res.status(500).json({ error: message });
   }
 });
 

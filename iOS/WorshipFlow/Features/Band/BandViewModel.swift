@@ -7,11 +7,16 @@ class BandViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var error: String?
 
+    /// `true` when `loadMyBands()` threw — lets RootView show a retry screen
+    /// instead of incorrectly landing on BandOnboardingView.
+    @Published var bandsLoadFailed = false
+
     /// Set after creating a band — triggers the invite code sheet on the dashboard
     @Published var newlyCreatedBand: Band?
 
     func loadMyBands() async {
         isLoading = true
+        bandsLoadFailed = false
         do {
             bands = try await BandService.myBands()
             if currentBand == nil, let first = bands.first {
@@ -19,6 +24,7 @@ class BandViewModel: ObservableObject {
             }
         } catch {
             print("loadMyBands error: \(error.localizedDescription)")
+            bandsLoadFailed = true
         }
         isLoading = false
     }
