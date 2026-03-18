@@ -445,7 +445,7 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					D9BF7C51C944F58BCD8233F0 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = UMM993JNZH;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -581,7 +581,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = UMM993JNZH;
 				INFOPLIST_KEY_CFBundleDisplayName = "Worship Manager";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "WorshipFlow needs access to your photo library to set a band image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -606,7 +606,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = UMM993JNZH;
 				INFOPLIST_KEY_CFBundleDisplayName = "Worship Manager";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "WorshipFlow needs access to your photo library to set a band image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

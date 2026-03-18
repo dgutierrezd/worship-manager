@@ -27,6 +27,6 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         PRODUCT_BUNDLE_IDENTIFIER: com.dgutierrezd.worshipflow
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: UMM993JNZH
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "WorshipFlow needs access to your photo library to set a band image."
         INFOPLIST_KEY_CFBundleDisplayName: "Worship Manager"
