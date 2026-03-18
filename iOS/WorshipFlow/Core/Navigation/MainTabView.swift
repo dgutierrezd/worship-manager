@@ -7,35 +7,19 @@ struct MainTabView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             TabView {
-                // 1. Home / Dashboard
+                // 1. Home — launchpad for all sections
                 BandHomeView()
                     .tabItem {
                         Label("Home", systemImage: "house.fill")
                     }
 
-                // 2. Services (OnStage-style setlists with team assignments)
-                ServicesView()
-                    .tabItem {
-                        Label("Services", systemImage: "music.note.list")
-                    }
-
-                // 3. Song Library
-                SongLibraryView()
-                    .tabItem {
-                        Label("songs".localized, systemImage: "music.note")
-                    }
-
-                // 4. Rehearsals / Schedule
-                RehearsalsView()
-                    .tabItem {
-                        Label("Schedule", systemImage: "calendar")
-                    }
-
-                // 5. Team / Members
-                MembersView()
-                    .tabItem {
-                        Label("Team", systemImage: "person.3.fill")
-                    }
+                // 2. Settings
+                NavigationStack {
+                    SettingsView()
+                }
+                .tabItem {
+                    Label("settings".localized, systemImage: "gearshape.fill")
+                }
             }
             .tint(.appPrimary)
 

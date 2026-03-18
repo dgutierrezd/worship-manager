@@ -14,6 +14,10 @@ struct SongDetailView: View {
     @State private var showPresenter = false
     @State private var instrumentFilter = "All"
 
+    // PDF export
+    @State private var pdfShareItem: ChordSheetPDFShareItem?
+    @State private var generatingPDFForId: String?
+
     private let instrumentFilters = ["All", "Guitar", "Piano", "Bass", "Drums", "Keys", "Strings"]
 
     init(song: Song) {
@@ -112,6 +116,9 @@ struct SongDetailView: View {
             EditSongView(song: song, vm: vm) { updated in
                 song = updated
             }
+        }
+        .sheet(item: $pdfShareItem) { item in
+            ActivityView(items: [item.url])
         }
         .fullScreenCover(isPresented: $showPresenter) {
             SongPresenterView(song: song, transposedKey: transposedKey)
@@ -359,6 +366,36 @@ struct SongDetailView: View {
                                 }
                             }
                             Spacer()
+
+                            // Share / Export as PDF
+                            Button {
+                                Task {
+                                    generatingPDFForId = sheet.id
+                                    if let url = ChordSheetPDFExporter.makePDF(
+                                        sheet: sheet,
+                                        song: song,
+                                        transposedKey: transposedKey
+                                    ) {
+                                        pdfShareItem = ChordSheetPDFShareItem(url: url)
+                                    }
+                                    generatingPDFForId = nil
+                                }
+                            } label: {
+                                if generatingPDFForId == sheet.id {
+                                    ProgressView()
+                                        .tint(.appAccent)
+                                        .scaleEffect(0.75)
+                                        .frame(width: 28, height: 28)
+                                } else {
+                                    Image(systemName: "square.and.arrow.up")
+                                        .font(.system(size: 15, weight: .medium))
+                                        .foregroundColor(.appAccent)
+                                        .frame(width: 28, height: 28)
+                                }
+                            }
+                            .padding(.trailing, 4)
+
+                            // Edit
                             Button {
                                 // .sheet(item:) guarantees chordEditorTarget is set before view builds
                                 chordEditorTarget = ChordEditorTarget(sheet: sheet)
@@ -661,6 +698,25 @@ struct SongDetailView: View {
         .padding(24)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+}
+
+// MARK: - PDF Share Helpers
+
+/// Identifiable wrapper around a temp PDF URL — used to trigger .sheet(item:) for sharing.
+struct ChordSheetPDFShareItem: Identifiable {
+    let id = UUID()
+    let url: URL
+}
+
+/// Thin UIViewControllerRepresentable that presents UIActivityViewController (system share sheet).
+struct ActivityView: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - Lyrics View (chord+lyric display with transpose)

@@ -26,6 +26,7 @@ struct BandHomeView: View {
                         skeletonDashboard
                     } else {
                         quickStats
+                        quickAccessGrid
                         nextServiceSection
                         upcomingServicesSection
                         recentSongsSection
@@ -34,16 +35,6 @@ struct BandHomeView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink {
-                        SettingsView()
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .foregroundColor(.appPrimary)
-                    }
-                }
-            }
             .refreshable { await loadAll() }
             .task { await loadAll() }
         }
@@ -109,6 +100,65 @@ struct BandHomeView: View {
         .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
+    }
+
+    // MARK: - Quick Access Grid
+
+    private var quickAccessGrid: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            SectionHeader(title: "Explore")
+            LazyVGrid(
+                columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
+                spacing: 12
+            ) {
+                NavigationLink { ServicesView().environmentObject(bandVM) } label: {
+                    QuickAccessCard(
+                        icon: "music.note.list",
+                        title: "Services",
+                        subtitle: upcomingServices.isEmpty
+                            ? "No upcoming"
+                            : "\(setlistVM.setlists.filter { $0.isUpcoming }.count) upcoming",
+                        accentColor: .appAccent
+                    )
+                }
+                .buttonStyle(.plain)
+
+                NavigationLink { SongLibraryView().environmentObject(bandVM) } label: {
+                    QuickAccessCard(
+                        icon: "music.note",
+                        title: "songs".localized,
+                        subtitle: songsVM.songs.isEmpty
+                            ? "Add songs"
+                            : "\(songsVM.songs.count) tracks",
+                        accentColor: Color(red: 0.4, green: 0.6, blue: 1.0)
+                    )
+                }
+                .buttonStyle(.plain)
+
+                NavigationLink { RehearsalsView().environmentObject(bandVM) } label: {
+                    QuickAccessCard(
+                        icon: "calendar",
+                        title: "Schedule",
+                        subtitle: rehearsalVM.nextRehearsal.map { "Next: \($0.formattedDate)" }
+                            ?? "No rehearsals",
+                        accentColor: Color(red: 0.3, green: 0.75, blue: 0.5)
+                    )
+                }
+                .buttonStyle(.plain)
+
+                NavigationLink { MembersView().environmentObject(bandVM) } label: {
+                    QuickAccessCard(
+                        icon: "person.3.fill",
+                        title: "Team",
+                        subtitle: "\(bandVM.currentBand?.memberCount ?? 0) members",
+                        accentColor: Color(red: 0.9, green: 0.55, blue: 0.3)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 24)
+        }
     }
 
     private func statItem(value: String, label: String) -> some View {
@@ -427,6 +477,49 @@ struct SetlistCard: View {
         .frame(width: 160, alignment: .leading)
         .padding(16)
         .cardStyle()
+    }
+}
+
+// MARK: - Quick Access Card
+
+struct QuickAccessCard: View {
+    let icon: String
+    let title: String
+    let subtitle: String
+    let accentColor: Color
+
+    var body: some View {
+        HStack(spacing: 14) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(accentColor.opacity(0.14))
+                    .frame(width: 44, height: 44)
+                Image(systemName: icon)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(accentColor)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.appHeadline)
+                    .foregroundColor(.appPrimary)
+                    .lineLimit(1)
+                Text(subtitle)
+                    .font(.appCaption)
+                    .foregroundColor(.appSecondary)
+                    .lineLimit(1)
+            }
+
+            Spacer(minLength: 0)
+
+            Image(systemName: "chevron.right")
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(.appSecondary.opacity(0.5))
+        }
+        .padding(14)
+        .background(Color.appSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
     }
 }
 
