@@ -3,6 +3,8 @@ import SwiftUI
 struct RehearsalDetailView: View {
     let rehearsal: Rehearsal
     @ObservedObject var vm: RehearsalsViewModel
+    @State private var calendarAdded = false
+    @State private var showCalendarError = false
 
     var body: some View {
         ScrollView {
@@ -107,7 +109,7 @@ struct RehearsalDetailView: View {
                             title: "rsvp_going".localized,
                             icon: "checkmark",
                             color: .statusGoing,
-                            isSelected: vm.myRSVP == "going"
+                            isSelected: vm.rsvpStatus(for: rehearsal.id) == "going"
                         ) {
                             Task { await vm.rsvp(rehearsalId: rehearsal.id, status: "going") }
                         }
@@ -117,7 +119,7 @@ struct RehearsalDetailView: View {
                             title: "rsvp_maybe".localized,
                             icon: "questionmark",
                             color: .statusMaybe,
-                            isSelected: vm.myRSVP == "maybe"
+                            isSelected: vm.rsvpStatus(for: rehearsal.id) == "maybe"
                         ) {
                             Task { await vm.rsvp(rehearsalId: rehearsal.id, status: "maybe") }
                         }
@@ -127,7 +129,7 @@ struct RehearsalDetailView: View {
                             title: "rsvp_no".localized,
                             icon: "xmark",
                             color: .statusNo,
-                            isSelected: vm.myRSVP == "not_going"
+                            isSelected: vm.rsvpStatus(for: rehearsal.id) == "not_going"
                         ) {
                             Task { await vm.rsvp(rehearsalId: rehearsal.id, status: "not_going") }
                         }
@@ -137,6 +139,29 @@ struct RehearsalDetailView: View {
                 .padding(18)
                 .featuredCardStyle()
                 .padding(.horizontal, 20)
+
+                // MARK: Add to Calendar
+                Button {
+                    Task { await addToCalendar() }
+                } label: {
+                    HStack {
+                        Spacer()
+                        Label(
+                            calendarAdded ? "added_to_calendar".localized : "add_to_calendar".localized,
+                            systemImage: calendarAdded ? "checkmark.circle.fill" : "calendar.badge.plus"
+                        )
+                        .font(.appHeadline)
+                        .foregroundColor(calendarAdded ? .statusGoing : .appAccent)
+                        Spacer()
+                    }
+                    .padding(16)
+                    .cardStyle()
+                }
+                .disabled(calendarAdded)
+                .padding(.horizontal, 20)
+                .alert("Could not add to calendar. Please allow calendar access in Settings.", isPresented: $showCalendarError) {
+                    Button("OK", role: .cancel) {}
+                }
 
                 // MARK: Notes
                 if let notes = rehearsal.notes, !notes.isEmpty {
@@ -166,5 +191,20 @@ struct RehearsalDetailView: View {
         }
         .background(Color.appBackground)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func addToCalendar() async {
+        guard let startDate = rehearsal.scheduledDate else { return }
+        let success = await CalendarService.addEvent(
+            title: rehearsal.title,
+            startDate: startDate,
+            location: rehearsal.location,
+            notes: rehearsal.notes
+        )
+        if success {
+            calendarAdded = true
+        } else {
+            showCalendarError = true
+        }
     }
 }

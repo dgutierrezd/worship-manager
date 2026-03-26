@@ -9,6 +9,7 @@ enum SetlistService {
         bandId: String,
         name: String,
         date: String?,
+        time: String? = nil,
         notes: String?,
         serviceType: String? = nil,
         location: String? = nil,
@@ -16,6 +17,7 @@ enum SetlistService {
     ) async throws -> Setlist {
         var body: [String: Any] = ["name": name]
         if let date        { body["date"]         = date }
+        if let time        { body["time"]         = time }
         if let notes       { body["notes"]        = notes }
         if let serviceType { body["service_type"] = serviceType }
         if let location    { body["location"]     = location }
@@ -23,11 +25,24 @@ enum SetlistService {
         return try await APIClient.shared.post("/bands/\(bandId)/setlists", body: body)
     }
 
-    static func updateSetlist(id: String, name: String?, date: String?, notes: String?) async throws -> Setlist {
+    static func updateSetlist(
+        id: String,
+        name: String? = nil,
+        date: String? = nil,
+        time: String? = nil,
+        notes: String? = nil,
+        serviceType: String? = nil,
+        location: String? = nil,
+        theme: String? = nil
+    ) async throws -> Setlist {
         var body: [String: Any] = [:]
-        if let name { body["name"] = name }
-        if let date { body["date"] = date }
-        if let notes { body["notes"] = notes }
+        if let name        { body["name"]         = name }
+        if let date        { body["date"]         = date }
+        if let time        { body["time"]         = time }
+        if let notes       { body["notes"]        = notes }
+        if let serviceType { body["service_type"] = serviceType }
+        if let location    { body["location"]     = location }
+        if let theme       { body["theme"]        = theme }
         return try await APIClient.shared.put("/setlists/\(id)", body: body)
     }
 

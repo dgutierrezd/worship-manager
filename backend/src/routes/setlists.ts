@@ -40,7 +40,7 @@ bandSetlistsRouter.post(
   authMiddleware,
   bandAccessMiddleware,
   async (req: BandRequest, res: Response): Promise<void> => {
-    const { name, date, notes, is_template } = req.body;
+    const { name, date, notes, is_template, service_type, location, theme, time } = req.body;
 
     if (!name) {
       res.status(400).json({ error: "Setlist name is required" });
@@ -56,6 +56,10 @@ bandSetlistsRouter.post(
           date: date || null,
           notes: notes || null,
           is_template: is_template || false,
+          service_type: service_type || null,
+          location: location || null,
+          theme: theme || null,
+          time: time || null,
           created_by: req.userId,
         })
         .select()
@@ -82,7 +86,7 @@ setlistsRouter.put(
   authMiddleware,
   async (req: AuthRequest, res: Response): Promise<void> => {
     const setlistId = req.params.id;
-    const { name, date, notes, is_template } = req.body;
+    const { name, date, notes, is_template, service_type, location, theme, time } = req.body;
 
     try {
       const { data, error } = await supabaseAdmin
@@ -92,6 +96,10 @@ setlistsRouter.put(
           ...(date !== undefined && { date }),
           ...(notes !== undefined && { notes }),
           ...(is_template !== undefined && { is_template }),
+          ...(service_type !== undefined && { service_type }),
+          ...(location !== undefined && { location }),
+          ...(theme !== undefined && { theme }),
+          ...(time !== undefined && { time }),
         })
         .eq("id", setlistId)
         .select()

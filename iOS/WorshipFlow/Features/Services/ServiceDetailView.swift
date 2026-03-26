@@ -11,6 +11,8 @@ struct ServiceDetailView: View {
     @State private var showAddSong = false
     @State private var showManageTeam = false
     @State private var selectedTab = 0
+    @State private var calendarAdded = false
+    @State private var showCalendarError = false
 
     var isLeader: Bool { bandVM.currentBand?.isLeader == true }
 
@@ -191,9 +193,18 @@ struct ServiceDetailView: View {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(spacing: 16) {
                     if let date = setlist.formattedDate {
-                        Label(date, systemImage: "calendar")
-                            .font(.appCaption)
-                            .foregroundColor(.appSecondary)
+                        HStack(spacing: 6) {
+                            Label(date, systemImage: "calendar")
+                                .font(.appCaption)
+                                .foregroundColor(.appSecondary)
+                            if let time = setlist.formattedTime {
+                                Text("·")
+                                    .foregroundColor(.appDivider)
+                                Text(time)
+                                    .font(.appCaption)
+                                    .foregroundColor(.appSecondary)
+                            }
+                        }
                     }
                     if setlist.serviceType != nil {
                         ServiceTypeBadge(setlist: setlist)
@@ -216,9 +227,43 @@ struct ServiceDetailView: View {
                         .foregroundColor(.appSecondary)
                         .padding(.top, 2)
                 }
+
+                if setlist.parsedDate != nil {
+                    Button {
+                        Task { await addToCalendar() }
+                    } label: {
+                        Label(
+                            calendarAdded ? "Added to Calendar" : "Add to Calendar",
+                            systemImage: calendarAdded ? "checkmark.circle.fill" : "calendar.badge.plus"
+                        )
+                        .font(.appCaption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(calendarAdded ? .statusGoing : .appAccent)
+                    }
+                    .disabled(calendarAdded)
+                    .padding(.top, 4)
+                }
             }
         }
         .listRowBackground(Color.appSurface)
+        .alert("Could not add to calendar. Please allow calendar access in Settings.", isPresented: $showCalendarError) {
+            Button("OK", role: .cancel) {}
+        }
+    }
+
+    private func addToCalendar() async {
+        guard let startDate = setlist.scheduledDate else { return }
+        let success = await CalendarService.addEvent(
+            title: setlist.name,
+            startDate: startDate,
+            location: setlist.location,
+            notes: [setlist.serviceType != nil ? setlist.serviceTypeDisplay : nil, setlist.theme].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")
+        )
+        if success {
+            calendarAdded = true
+        } else {
+            showCalendarError = true
+        }
     }
 
     private var emptySongsPlaceholder: some View {

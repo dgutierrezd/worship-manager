@@ -5,6 +5,7 @@ struct Setlist: Codable, Identifiable {
     var bandId: String?
     var name: String
     var date: String?
+    var time: String?
     var notes: String?
     var isTemplate: Bool?
     var serviceType: String?
@@ -14,7 +15,7 @@ struct Setlist: Codable, Identifiable {
     var createdAt: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, name, date, notes, location, theme
+        case id, name, date, time, notes, location, theme
         case bandId = "band_id"
         case isTemplate = "is_template"
         case serviceType = "service_type"
@@ -22,13 +23,35 @@ struct Setlist: Codable, Identifiable {
         case createdAt = "created_at"
     }
 
-    var formattedDate: String? {
+    var parsedDate: Date? {
         guard let date else { return nil }
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        guard let d = formatter.date(from: date) else { return nil }
+        return formatter.date(from: date)
+    }
+
+    var formattedDate: String? {
+        guard let d = parsedDate else { return nil }
+        let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: d)
+    }
+
+    var formattedTime: String? {
+        guard let time else { return nil }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        guard let t = formatter.date(from: time) else { return nil }
+        formatter.dateFormat = "h:mm a"
+        return formatter.string(from: t)
+    }
+
+    var scheduledDate: Date? {
+        guard let d = parsedDate else { return nil }
+        guard let time, !time.isEmpty else { return d }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.date(from: "\(date!) \(time)") ?? d
     }
 
     var isUpcoming: Bool {

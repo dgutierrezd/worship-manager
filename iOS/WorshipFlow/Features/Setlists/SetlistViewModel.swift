@@ -23,6 +23,7 @@ class SetlistViewModel: ObservableObject {
     func createSetlist(
         name: String,
         date: String?,
+        time: String? = nil,
         notes: String?,
         serviceType: String? = nil,
         location: String? = nil,
@@ -34,6 +35,7 @@ class SetlistViewModel: ObservableObject {
                 bandId: bandId,
                 name: name,
                 date: date,
+                time: time,
                 notes: notes,
                 serviceType: serviceType,
                 location: location,

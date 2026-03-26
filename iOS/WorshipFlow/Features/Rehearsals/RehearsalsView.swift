@@ -39,7 +39,7 @@ struct RehearsalsView: View {
                                     NavigationLink {
                                         RehearsalDetailView(rehearsal: rehearsal, vm: vm)
                                     } label: {
-                                        RehearsalRow(rehearsal: rehearsal)
+                                        RehearsalRow(rehearsal: rehearsal, rsvpStatus: vm.rsvpStatus(for: rehearsal.id))
                                     }
                                 }
                                 .onDelete { indexSet in
@@ -58,7 +58,7 @@ struct RehearsalsView: View {
                                     NavigationLink {
                                         RehearsalDetailView(rehearsal: rehearsal, vm: vm)
                                     } label: {
-                                        RehearsalRow(rehearsal: rehearsal)
+                                        RehearsalRow(rehearsal: rehearsal, rsvpStatus: vm.rsvpStatus(for: rehearsal.id))
                                             .opacity(0.6)
                                     }
                                 }
@@ -94,6 +94,16 @@ struct RehearsalsView: View {
 
 struct RehearsalRow: View {
     let rehearsal: Rehearsal
+    var rsvpStatus: String? = nil
+
+    private var rsvpInfo: (color: Color, icon: String, label: String)? {
+        switch rsvpStatus {
+        case "going":     return (.statusGoing, "checkmark.circle.fill", "rsvp_going".localized)
+        case "maybe":     return (.statusMaybe, "questionmark.circle.fill", "rsvp_maybe".localized)
+        case "not_going": return (.statusNo, "xmark.circle.fill", "rsvp_no".localized)
+        default:          return nil
+        }
+    }
 
     var body: some View {
         HStack(spacing: 14) {
@@ -132,15 +142,31 @@ struct RehearsalRow: View {
 
             Spacer()
 
-            if let setlistName = rehearsal.setlists?.name {
-                Text(setlistName)
-                    .font(.appSmall)
-                    .foregroundColor(.appAccent)
-                    .lineLimit(1)
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 4)
-                    .background(Color.appAccent.opacity(0.10))
+            VStack(alignment: .trailing, spacing: 6) {
+                if let setlistName = rehearsal.setlists?.name {
+                    Text(setlistName)
+                        .font(.appSmall)
+                        .foregroundColor(.appAccent)
+                        .lineLimit(1)
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 4)
+                        .background(Color.appAccent.opacity(0.10))
+                        .clipShape(Capsule())
+                }
+
+                if let info = rsvpInfo {
+                    HStack(spacing: 4) {
+                        Image(systemName: info.icon)
+                            .font(.system(size: 10))
+                        Text(info.label)
+                            .font(.system(size: 11, weight: .medium))
+                    }
+                    .foregroundColor(info.color)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(info.color.opacity(0.12))
                     .clipShape(Capsule())
+                }
             }
         }
         .padding(.vertical, 6)

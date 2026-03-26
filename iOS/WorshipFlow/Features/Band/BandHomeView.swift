@@ -637,15 +637,15 @@ struct NextRehearsalCard: View {
 
             HStack(spacing: 10) {
                 RSVPButton(title: "rsvp_going".localized, icon: "checkmark", color: .statusGoing,
-                           isSelected: rehearsalVM.myRSVP == "going") {
+                           isSelected: rehearsalVM.rsvpStatus(for: rehearsal.id) == "going") {
                     Task { await rehearsalVM.rsvp(rehearsalId: rehearsal.id, status: "going") }
                 }
                 RSVPButton(title: "rsvp_maybe".localized, icon: "questionmark", color: .statusMaybe,
-                           isSelected: rehearsalVM.myRSVP == "maybe") {
+                           isSelected: rehearsalVM.rsvpStatus(for: rehearsal.id) == "maybe") {
                     Task { await rehearsalVM.rsvp(rehearsalId: rehearsal.id, status: "maybe") }
                 }
                 RSVPButton(title: "rsvp_no".localized, icon: "xmark", color: .statusNo,
-                           isSelected: rehearsalVM.myRSVP == "not_going") {
+                           isSelected: rehearsalVM.rsvpStatus(for: rehearsal.id) == "not_going") {
                     Task { await rehearsalVM.rsvp(rehearsalId: rehearsal.id, status: "not_going") }
                 }
             }

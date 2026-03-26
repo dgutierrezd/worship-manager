@@ -115,3 +115,7 @@
 "ai_import_loading" = "Buscando canciones...";
 "ai_import_no_results" = "Sin resultados";
 "ai_import_try_again" = "Intenta con otros nombres o busca de nuevo.";
+
+// Calendar
+"add_to_calendar" = "Agregar al Calendario";
+"added_to_calendar" = "Agregado al Calendario";

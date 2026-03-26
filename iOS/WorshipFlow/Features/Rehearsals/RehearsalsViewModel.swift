@@ -5,7 +5,7 @@ class RehearsalsViewModel: ObservableObject {
     @Published var rehearsals: [Rehearsal] = []
     @Published var isLoading = false
     @Published var error: String?
-    @Published var myRSVP: String?
+    @Published var rsvpStatuses: [String: String] = [:]
 
     var nextRehearsal: Rehearsal? {
         rehearsals.first { !$0.isPast }
@@ -19,10 +19,24 @@ class RehearsalsViewModel: ObservableObject {
         rehearsals.filter { $0.isPast }
     }
 
+    func rsvpStatus(for rehearsalId: String) -> String? {
+        rsvpStatuses[rehearsalId]
+    }
+
     func loadRehearsals(bandId: String) async {
         isLoading = true
         do {
-            rehearsals = try await RehearsalService.getRehearsals(bandId: bandId)
+            async let rehearsalsTask = RehearsalService.getRehearsals(bandId: bandId)
+            async let rsvpsTask = RehearsalService.getMyRSVPs(bandId: bandId)
+            let (loadedRehearsals, loadedRSVPs) = try await (rehearsalsTask, rsvpsTask)
+            rehearsals = loadedRehearsals
+            var statuses: [String: String] = [:]
+            for rsvp in loadedRSVPs {
+                if let rid = rsvp.rehearsalId {
+                    statuses[rid] = rsvp.status
+                }
+            }
+            rsvpStatuses = statuses
         } catch {
             self.error = error.localizedDescription
         }
@@ -57,7 +71,7 @@ class RehearsalsViewModel: ObservableObject {
     func rsvp(rehearsalId: String, status: String) async {
         do {
             let response = try await RehearsalService.rsvp(rehearsalId: rehearsalId, status: status)
-            myRSVP = response.status
+            rsvpStatuses[rehearsalId] = response.status
         } catch {
             self.error = error.localizedDescription
         }

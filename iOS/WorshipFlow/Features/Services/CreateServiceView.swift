@@ -8,6 +8,8 @@ struct CreateServiceView: View {
     @State private var selectedServiceType = ""
     @State private var includeDate = true
     @State private var date = Date()
+    @State private var includeTime = true
+    @State private var time = Date()
     @State private var location = ""
     @State private var theme = ""
     @State private var notes = ""
@@ -82,6 +84,22 @@ struct CreateServiceView: View {
                         }
                     }
 
+                    // Time
+                    VStack(alignment: .leading, spacing: 10) {
+                        Toggle(isOn: $includeTime) {
+                            Label("Set Time", systemImage: "clock")
+                                .font(.appCaption)
+                                .foregroundColor(.appSecondary)
+                        }
+                        .tint(.appAccent)
+
+                        if includeTime {
+                            DatePicker("", selection: $time, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                                .tint(.appAccent)
+                        }
+                    }
+
                     // Location
                     fieldSection(label: "Location (optional)", icon: "mappin.circle") {
                         TextField("Main Sanctuary", text: $location)
@@ -144,9 +162,16 @@ struct CreateServiceView: View {
             return f.string(from: date)
         }() : nil
 
+        let timeStr: String? = includeTime ? {
+            let f = DateFormatter()
+            f.dateFormat = "HH:mm:ss"
+            return f.string(from: time)
+        }() : nil
+
         let _ = await vm.createSetlist(
             name: name,
             date: dateStr,
+            time: timeStr,
             notes: notes.isEmpty ? nil : notes,
             serviceType: selectedServiceType.isEmpty ? nil : selectedServiceType,
             location: location.isEmpty ? nil : location,

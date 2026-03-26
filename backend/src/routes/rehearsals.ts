@@ -156,6 +156,53 @@ rehearsalsRouter.delete(
   }
 );
 
+// GET /rehearsals/my-rsvps?band_id=...
+rehearsalsRouter.get(
+  "/my-rsvps",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const bandId = req.query.band_id as string;
+    if (!bandId) {
+      res.status(400).json({ error: "band_id query parameter is required" });
+      return;
+    }
+
+    try {
+      // Get all rehearsal IDs for this band
+      const { data: rehearsals, error: rError } = await supabaseAdmin
+        .from("rehearsals")
+        .select("id")
+        .eq("band_id", bandId);
+
+      if (rError) {
+        res.status(500).json({ error: rError.message });
+        return;
+      }
+
+      const rehearsalIds = (rehearsals || []).map((r: any) => r.id);
+      if (rehearsalIds.length === 0) {
+        res.json([]);
+        return;
+      }
+
+      const { data, error } = await supabaseAdmin
+        .from("rehearsal_rsvps")
+        .select("rehearsal_id, status")
+        .eq("user_id", req.userId!)
+        .in("rehearsal_id", rehearsalIds);
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+      }
+
+      res.json(data);
+    } catch {
+      res.status(500).json({ error: "Failed to fetch RSVPs" });
+    }
+  }
+);
+
 // POST /rehearsals/:id/rsvp
 rehearsalsRouter.post(
   "/:id/rsvp",

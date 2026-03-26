@@ -115,3 +115,7 @@
 "ai_import_loading" = "Looking up songs...";
 "ai_import_no_results" = "No results returned";
 "ai_import_try_again" = "Try different song names or search again.";
+
+// Calendar
+"add_to_calendar" = "Add to Calendar";
+"added_to_calendar" = "Added to Calendar";

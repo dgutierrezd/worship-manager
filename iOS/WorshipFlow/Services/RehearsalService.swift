@@ -33,4 +33,8 @@ enum RehearsalService {
     static func rsvp(rehearsalId: String, status: String) async throws -> RehearsalRSVP {
         try await APIClient.shared.post("/rehearsals/\(rehearsalId)/rsvp", body: ["status": status])
     }
+
+    static func getMyRSVPs(bandId: String) async throws -> [RehearsalRSVP] {
+        try await APIClient.shared.get("/rehearsals/my-rsvps?band_id=\(bandId)")
+    }
 }

@@ -35,6 +35,7 @@
 		604BDB79332EE1D5C53D2D74 /* SetlistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C3A68CF9140961BEB2CD9D /* SetlistsView.swift */; };
 		63DFB3DDFFD354DD9F7AFF5B /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */; };
 		669CB5130408CB40BAD3D2CF /* AIImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650C58EA79F6B0B4E943121E /* AIImportView.swift */; };
+		6AACCDC8CFA5855D91D4C11D /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0E194FD7B10CE7EAB362A /* CalendarService.swift */; };
 		75C4265C3AD581B0928D7C4A /* RehearsalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A944E2964D971DA162342DC3 /* RehearsalDetailView.swift */; };
 		7613813444F9E31D4A60682D /* Setlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19273B2A68F35B5AFCD44E2 /* Setlist.swift */; };
 		797E49889DDFA6FA512CAA05 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39741D081C2468888DDE443D /* Localizable.strings */; };
@@ -112,6 +113,7 @@
 		5704527C346DC45FEEA01D8E /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		577D2D9987BF181DF2190216 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5D755319DA3D23CD5B9DB7E1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		5FD0E194FD7B10CE7EAB362A /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		64188005DEC3434634BE4339 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		6469B8E211B9A01F898EB197 /* WorshipFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorshipFlowApp.swift; sourceTree = "<group>"; };
 		650C58EA79F6B0B4E943121E /* AIImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIImportView.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 				4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */,
 				B81F9E6CB1C339DE66C77393 /* AuthService.swift */,
 				858D7B2CA4A0F09551E14DEC /* BandService.swift */,
+				5FD0E194FD7B10CE7EAB362A /* CalendarService.swift */,
 				DBCE7723F6822DF9819813A0 /* ClaudeService.swift */,
 				ED23EFBDEB700190D9F983EB /* NotificationService.swift */,
 				F40EF23443220891CF541FC6 /* RehearsalService.swift */,
@@ -513,6 +516,7 @@
 				90E931321E0840DD7C4DC4C3 /* BandService.swift in Sources */,
 				E8C8060E2091DAC620B535DC /* BandSettingsView.swift in Sources */,
 				98686BDD432D1EB119725E01 /* BandViewModel.swift in Sources */,
+				6AACCDC8CFA5855D91D4C11D /* CalendarService.swift in Sources */,
 				F30D4AA291964CE038ED87B2 /* ChordProgression.swift in Sources */,
 				5F4C6F057675541D66CA8B21 /* ChordSheet.swift in Sources */,
 				F1004622908856539A758078 /* ChordSheetPDFExporter.swift in Sources */,
@@ -599,6 +603,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UMM993JNZH;
 				INFOPLIST_KEY_CFBundleDisplayName = "Worship Manager";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "WorshipFlow uses your calendar to add services and rehearsals as events.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "WorshipFlow needs access to your photo library to set a band image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -624,6 +629,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UMM993JNZH;
 				INFOPLIST_KEY_CFBundleDisplayName = "Worship Manager";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "WorshipFlow uses your calendar to add services and rehearsals as events.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "WorshipFlow needs access to your photo library to set a band image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -675,7 +681,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -741,7 +747,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

@@ -198,6 +198,11 @@ struct ServiceRow: View {
                 }
 
                 HStack(spacing: 10) {
+                    if let time = setlist.formattedTime {
+                        Label(time, systemImage: "clock")
+                            .font(.appSmall)
+                            .foregroundColor(.appSecondary)
+                    }
                     if let location = setlist.location, !location.isEmpty {
                         Label(location, systemImage: "mappin.circle.fill")
                             .font(.appSmall)

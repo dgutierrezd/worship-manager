@@ -67,14 +67,18 @@ CREATE TABLE chord_sheets (
 
 -- Setlists
 CREATE TABLE setlists (
-  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  band_id     UUID REFERENCES bands(id) ON DELETE CASCADE,
-  name        TEXT NOT NULL,
-  date        DATE,
-  notes       TEXT,
-  is_template BOOLEAN DEFAULT FALSE,
-  created_by  UUID REFERENCES profiles(id),
-  created_at  TIMESTAMPTZ DEFAULT NOW()
+  id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  band_id       UUID REFERENCES bands(id) ON DELETE CASCADE,
+  name          TEXT NOT NULL,
+  date          DATE,
+  time          TIME,
+  notes         TEXT,
+  is_template   BOOLEAN DEFAULT FALSE,
+  service_type  TEXT,
+  location      TEXT,
+  theme         TEXT,
+  created_by    UUID REFERENCES profiles(id),
+  created_at    TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Songs inside a setlist (ordered)
