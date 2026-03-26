@@ -169,7 +169,7 @@ bandSongsRouter.post(
             chords: section.chords.map((chord) => ({
               id: crypto.randomUUID(),
               degree: chord.degree,
-              isPass: false,
+              is_pass: false,           // must match iOS ChordEntry.CodingKeys ("is_pass")
               modifier: chord.modifier ?? null,
             })),
           }));
