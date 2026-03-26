@@ -5,6 +5,8 @@ class SongsViewModel: ObservableObject {
     @Published var songs: [Song] = []
     @Published var chordSheets: [ChordSheet] = []
     @Published var isLoading = false
+    @Published var isAILoading = false
+    @Published var aiResults: [AISongResult] = []
     @Published var error: String?
 
     var bandId: String?
@@ -106,6 +108,37 @@ class SongsViewModel: ObservableObject {
             self.error = error.localizedDescription
         }
     }
+
+    // MARK: - AI Import
+
+    func aiLookup(names: [String]) async {
+        guard let bandId else { return }
+        isAILoading = true
+        error = nil
+        do {
+            aiResults = try await SongService.aiLookup(bandId: bandId, names: names)
+        } catch {
+            self.error = error.localizedDescription
+        }
+        isAILoading = false
+    }
+
+    func aiImport(songs toImport: [AISongResult]) async {
+        guard let bandId else { return }
+        isAILoading = true
+        error = nil
+        do {
+            let imported = try await SongService.aiImport(bandId: bandId, songs: toImport)
+            self.songs.append(contentsOf: imported)
+            self.songs.sort { $0.title.lowercased() < $1.title.lowercased() }
+            aiResults = []
+        } catch {
+            self.error = error.localizedDescription
+        }
+        isAILoading = false
+    }
+
+    // MARK: - Chord Sheets
 
     func saveChordSheet(songId: String, chordId: String?, instrument: String?, title: String?, content: String) async -> Bool {
         do {

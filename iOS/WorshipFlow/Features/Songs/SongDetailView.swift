@@ -12,6 +12,7 @@ struct SongDetailView: View {
     @State private var chordEditorTarget: ChordEditorTarget? // nil = closed; value = edit or new
     @State private var showEditSong = false
     @State private var showPresenter = false
+    @State private var showChordEditor = false
     @State private var instrumentFilter = "All"
 
     // PDF export
@@ -121,7 +122,23 @@ struct SongDetailView: View {
             ActivityView(items: [item.url])
         }
         .fullScreenCover(isPresented: $showPresenter) {
-            SongPresenterView(song: song, transposedKey: transposedKey)
+            SongPresenterView(song: song, transposedKey: transposedKey, transposeSteps: transposeSteps)
+        }
+        .sheet(isPresented: $showChordEditor) {
+            LyricChordEditorView(song: song, vm: vm)
+        }
+        .onChange(of: showChordEditor) { _, isShowing in
+            if !isShowing {
+                // Refresh song data after editing chord annotations
+                Task {
+                    if let bandId = bandVM.currentBand?.id {
+                        await vm.loadSongs(bandId: bandId)
+                        if let updated = vm.songs.first(where: { $0.id == song.id }) {
+                            song = updated
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -655,6 +672,26 @@ struct SongDetailView: View {
     private var lyricsTab: some View {
         VStack(alignment: .leading, spacing: 16) {
             if let lyrics = song.lyrics, !lyrics.isEmpty {
+                // Edit chords button
+                HStack {
+                    Spacer()
+                    Button {
+                        showChordEditor = true
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "pencil.and.list.clipboard")
+                            Text("edit_chords".localized)
+                                .font(.appCaption)
+                        }
+                        .foregroundColor(.appAccent)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Color.appAccent.opacity(0.1))
+                        .clipShape(Capsule())
+                    }
+                }
+                .padding(.horizontal, 16)
+
                 LyricsView(lyrics: lyrics, key: transposedKey, transposeSteps: transposeSteps)
                     .padding(.horizontal, 16)
             } else {
@@ -727,43 +764,158 @@ struct LyricsView: View {
     let transposeSteps: Int
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            // Parse lyrics lines: lines starting with [ ] contain chord markers
+        VStack(alignment: .leading, spacing: 2) {
             ForEach(parsedLines, id: \.id) { line in
-                if line.isChordLine {
-                    chordLineView(line.content)
-                        .padding(.top, 8)
-                } else if line.isSection {
-                    Text(line.content)
+                switch line.kind {
+                case .section:
+                    Text(line.displayText)
                         .font(.system(size: 12, weight: .bold))
                         .foregroundColor(.appAccent)
                         .textCase(.uppercase)
                         .tracking(1.5)
                         .padding(.top, 16)
                         .padding(.bottom, 2)
-                } else {
-                    Text(line.content)
+
+                case .chordLine:
+                    chordLineView(line.displayText)
+                        .padding(.top, 8)
+
+                case .annotatedLyric:
+                    annotatedLyricLineView(line.chordPositions, cleanText: line.displayText)
+                        .padding(.top, 6)
+
+                case .lyric:
+                    Text(line.displayText)
                         .font(.system(size: 16, design: .monospaced))
                         .foregroundColor(.appPrimary)
+
+                case .empty:
+                    Spacer().frame(height: 8)
                 }
             }
         }
     }
 
-    private struct LyricLine: Identifiable {
-        let id: Int
-        let content: String
-        let isChordLine: Bool
-        let isSection: Bool
+    // MARK: - Parsed Line Model
+
+    private enum LineKind {
+        case section, chordLine, annotatedLyric, lyric, empty
     }
 
-    private var parsedLines: [LyricLine] {
-        lyrics.components(separatedBy: "\n").enumerated().map { idx, line in
-            let trimmed = line.trimmingCharacters(in: .whitespaces)
-            let isSection = trimmed.hasPrefix("#") || trimmed.hasPrefix("[Verse") || trimmed.hasPrefix("[Chorus") || trimmed.hasPrefix("[Bridge") || trimmed.hasPrefix("[Pre")
-            let isChord = isChordLine(trimmed)
-            return LyricLine(id: idx, content: trimmed, isChordLine: isChord, isSection: isSection)
+    private struct ParsedLine: Identifiable {
+        let id: Int
+        let displayText: String
+        let kind: LineKind
+        let chordPositions: [(chord: String, position: Int)]
+    }
+
+    // MARK: - Parsing
+
+    private var parsedLines: [ParsedLine] {
+        lyrics.components(separatedBy: "\n").enumerated().map { idx, rawLine in
+            let trimmed = rawLine.trimmingCharacters(in: .whitespaces)
+
+            if trimmed.isEmpty {
+                return ParsedLine(id: idx, displayText: "", kind: .empty, chordPositions: [])
+            }
+
+            // Section headers: [Verse], [Chorus], #Section, etc.
+            if isSectionHeader(trimmed) {
+                let name = trimmed
+                    .replacingOccurrences(of: "#", with: "")
+                    .replacingOccurrences(of: "[", with: "")
+                    .replacingOccurrences(of: "]", with: "")
+                    .trimmingCharacters(in: .whitespaces)
+                return ParsedLine(id: idx, displayText: name, kind: .section, chordPositions: [])
+            }
+
+            // Check for inline [chord] markers
+            let (cleanText, positions) = extractInlineChords(trimmed)
+            if !positions.isEmpty {
+                return ParsedLine(id: idx, displayText: cleanText, kind: .annotatedLyric, chordPositions: positions)
+            }
+
+            // Legacy: standalone chord lines (e.g., "G  C  D")
+            if isChordLine(trimmed) {
+                return ParsedLine(id: idx, displayText: trimmed, kind: .chordLine, chordPositions: [])
+            }
+
+            return ParsedLine(id: idx, displayText: trimmed, kind: .lyric, chordPositions: [])
         }
+    }
+
+    // MARK: - Inline [Chord] Extraction
+
+    /// Extracts [chord] markers from a line, returning clean text and chord positions.
+    private func extractInlineChords(_ line: String) -> (String, [(chord: String, position: Int)]) {
+        var cleanText = ""
+        var positions: [(chord: String, position: Int)] = []
+        var i = line.startIndex
+
+        while i < line.endIndex {
+            if line[i] == "[" {
+                // Look for closing bracket
+                if let closeIdx = line[i...].firstIndex(of: "]"), closeIdx > line.index(after: i) {
+                    let chordContent = String(line[line.index(after: i)..<closeIdx])
+                    if isChordName(chordContent) {
+                        positions.append((chord: chordContent, position: cleanText.count))
+                        i = line.index(after: closeIdx)
+                        continue
+                    }
+                }
+            }
+            cleanText.append(line[i])
+            i = line.index(after: i)
+        }
+
+        return (cleanText, positions)
+    }
+
+    // MARK: - Annotated Lyric Line (chords above lyrics)
+
+    private func annotatedLyricLineView(_ chordPositions: [(chord: String, position: Int)], cleanText: String) -> some View {
+        let charWidth: CGFloat = 9.6  // approximate monospaced char width at size 16
+        let transposedPositions = chordPositions.map { pos in
+            (chord: transposeChordToken(pos.chord), position: pos.position)
+        }
+
+        return VStack(alignment: .leading, spacing: 0) {
+            // Chord line: position each chord at the correct character offset
+            ZStack(alignment: .topLeading) {
+                // Invisible spacer to set minimum width
+                Text(cleanText)
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .hidden()
+
+                ForEach(Array(transposedPositions.enumerated()), id: \.offset) { _, pos in
+                    Text(pos.chord)
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(.appAccent)
+                        .offset(x: CGFloat(pos.position) * charWidth)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            // Lyric text
+            Text(cleanText)
+                .font(.system(size: 16, design: .monospaced))
+                .foregroundColor(.appPrimary)
+        }
+    }
+
+    // MARK: - Chord Detection Helpers
+
+    private func isSectionHeader(_ line: String) -> Bool {
+        if line.hasPrefix("#") { return true }
+        let sectionPattern = #"^\[(Verse|Chorus|Bridge|Pre-Chorus|Intro|Outro|Instrumental|Tag|Hook|Interlude|Ending)"#
+        return (try? NSRegularExpression(pattern: sectionPattern, options: .caseInsensitive))
+            .flatMap { $0.firstMatch(in: line, range: NSRange(line.startIndex..., in: line)) } != nil
+    }
+
+    private func isChordName(_ text: String) -> Bool {
+        let pattern = #"^[A-G][#b]?(m|min|maj|dim|aug|sus[24]?|add[0-9]+|[0-9]+)*(/[A-G][#b]?)?$"#
+        return (try? NSRegularExpression(pattern: pattern))
+            .flatMap { $0.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)) } != nil
     }
 
     private func isChordLine(_ line: String) -> Bool {
@@ -772,6 +924,8 @@ struct LyricsView: View {
         let range = NSRange(line.startIndex..., in: line)
         return regex.firstMatch(in: line, range: range) != nil && line.count < 60
     }
+
+    // MARK: - Legacy chord line display
 
     private func chordLineView(_ line: String) -> some View {
         let words = line.components(separatedBy: " ")
@@ -790,7 +944,6 @@ struct LyricsView: View {
     private func transposeChordToken(_ token: String) -> String {
         guard transposeSteps != 0 else { return token }
         let keys = Song.musicalKeys
-        // Try to find and transpose the root note
         for keyName in keys.sorted(by: { $0.count > $1.count }) {
             if token.hasPrefix(keyName) {
                 let suffix = String(token.dropFirst(keyName.count))
@@ -807,6 +960,7 @@ struct LyricsView: View {
 struct SongPresenterView: View {
     let song: Song
     let transposedKey: String?
+    var transposeSteps: Int = 0
     @Environment(\.dismiss) var dismiss
     @State private var brightness: Double = UIScreen.main.brightness
     @State private var fontSize: CGFloat = 22
@@ -874,13 +1028,13 @@ struct SongPresenterView: View {
                         }
                         .padding(.bottom, 16)
 
-                        // Lyrics
+                        // Lyrics with chord annotations
                         if let lyrics = song.lyrics, !lyrics.isEmpty {
-                            Text(lyrics)
-                                .font(.system(size: fontSize, design: .monospaced))
-                                .foregroundColor(.white)
-                                .lineSpacing(6)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            PresenterLyricsView(
+                                lyrics: lyrics,
+                                fontSize: fontSize,
+                                transposeSteps: transposeSteps
+                            )
                         } else {
                             Text("No lyrics available")
                                 .font(.system(size: fontSize))
@@ -895,6 +1049,125 @@ struct SongPresenterView: View {
         }
         .preferredColorScheme(.dark)
         .statusBarHidden(true)
+    }
+}
+
+// MARK: - Presenter Lyrics View (chord-aware, dark theme)
+
+struct PresenterLyricsView: View {
+    let lyrics: String
+    let fontSize: CGFloat
+    let transposeSteps: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            ForEach(Array(lyrics.components(separatedBy: "\n").enumerated()), id: \.offset) { _, rawLine in
+                let trimmed = rawLine.trimmingCharacters(in: .whitespaces)
+
+                if trimmed.isEmpty {
+                    Spacer().frame(height: fontSize * 0.5)
+                } else if isSectionHeader(trimmed) {
+                    let name = trimmed
+                        .replacingOccurrences(of: "#", with: "")
+                        .replacingOccurrences(of: "[", with: "")
+                        .replacingOccurrences(of: "]", with: "")
+                        .trimmingCharacters(in: .whitespaces)
+                    Text(name.uppercased())
+                        .font(.system(size: fontSize * 0.6, weight: .bold))
+                        .foregroundColor(.yellow.opacity(0.8))
+                        .tracking(2)
+                        .padding(.top, fontSize * 0.8)
+                        .padding(.bottom, fontSize * 0.2)
+                } else {
+                    let (cleanText, positions) = extractInlineChords(trimmed)
+                    if !positions.isEmpty {
+                        presenterAnnotatedLine(cleanText: cleanText, positions: positions)
+                            .padding(.top, 4)
+                    } else {
+                        Text(trimmed)
+                            .font(.system(size: fontSize, design: .monospaced))
+                            .foregroundColor(.white)
+                            .lineSpacing(4)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func presenterAnnotatedLine(cleanText: String, positions: [(chord: String, position: Int)]) -> some View {
+        let chordFontSize = fontSize * 0.7
+        let charWidth = fontSize * 0.6
+
+        return VStack(alignment: .leading, spacing: 0) {
+            // Chord line
+            ZStack(alignment: .topLeading) {
+                Text(cleanText)
+                    .font(.system(size: chordFontSize, weight: .bold, design: .monospaced))
+                    .foregroundColor(.clear)
+
+                ForEach(Array(positions.enumerated()), id: \.offset) { _, pos in
+                    Text(transposeChord(pos.chord))
+                        .font(.system(size: chordFontSize, weight: .bold, design: .monospaced))
+                        .foregroundColor(.yellow)
+                        .offset(x: CGFloat(pos.position) * charWidth)
+                }
+            }
+
+            // Lyric line
+            Text(cleanText)
+                .font(.system(size: fontSize, design: .monospaced))
+                .foregroundColor(.white)
+        }
+    }
+
+    private func isSectionHeader(_ line: String) -> Bool {
+        if line.hasPrefix("#") { return true }
+        let sectionPattern = #"^\[(Verse|Chorus|Bridge|Pre-Chorus|Intro|Outro|Instrumental|Tag|Hook|Interlude|Ending)"#
+        return (try? NSRegularExpression(pattern: sectionPattern, options: .caseInsensitive))
+            .flatMap { $0.firstMatch(in: line, range: NSRange(line.startIndex..., in: line)) } != nil
+    }
+
+    private func isChordName(_ text: String) -> Bool {
+        let pattern = #"^[A-G][#b]?(m|min|maj|dim|aug|sus[24]?|add[0-9]+|[0-9]+)*(/[A-G][#b]?)?$"#
+        return (try? NSRegularExpression(pattern: pattern))
+            .flatMap { $0.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)) } != nil
+    }
+
+    private func extractInlineChords(_ line: String) -> (String, [(chord: String, position: Int)]) {
+        var cleanText = ""
+        var positions: [(chord: String, position: Int)] = []
+        var i = line.startIndex
+
+        while i < line.endIndex {
+            if line[i] == "[" {
+                if let closeIdx = line[i...].firstIndex(of: "]"), closeIdx > line.index(after: i) {
+                    let chordContent = String(line[line.index(after: i)..<closeIdx])
+                    if isChordName(chordContent) {
+                        positions.append((chord: chordContent, position: cleanText.count))
+                        i = line.index(after: closeIdx)
+                        continue
+                    }
+                }
+            }
+            cleanText.append(line[i])
+            i = line.index(after: i)
+        }
+
+        return (cleanText, positions)
+    }
+
+    private func transposeChord(_ token: String) -> String {
+        guard transposeSteps != 0 else { return token }
+        let keys = Song.musicalKeys
+        for keyName in keys.sorted(by: { $0.count > $1.count }) {
+            if token.hasPrefix(keyName) {
+                let suffix = String(token.dropFirst(keyName.count))
+                let transposed = Song.transpose(key: keyName, steps: transposeSteps)
+                return transposed + suffix
+            }
+        }
+        return token
     }
 }
 

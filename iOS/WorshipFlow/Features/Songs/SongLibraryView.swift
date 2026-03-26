@@ -12,6 +12,7 @@ struct SongLibraryView: View {
     @State private var sortOption: SortOption = .alphabetical
     @State private var showAddSong = false
     @State private var showFilters = false
+    @State private var showAIImport = false
 
     enum SortOption: String, CaseIterable {
         case alphabetical = "A–Z"
@@ -143,16 +144,27 @@ struct SongLibraryView: View {
             .navigationTitle("songs".localized)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showAddSong = true
-                    } label: {
-                        Image(systemName: "plus")
-                            .fontWeight(.semibold)
+                    HStack(spacing: 4) {
+                        Button {
+                            showAIImport = true
+                        } label: {
+                            Image(systemName: "sparkles")
+                                .fontWeight(.semibold)
+                        }
+                        Button {
+                            showAddSong = true
+                        } label: {
+                            Image(systemName: "plus")
+                                .fontWeight(.semibold)
+                        }
                     }
                 }
             }
             .sheet(isPresented: $showAddSong) {
                 AddSongView(vm: vm)
+            }
+            .sheet(isPresented: $showAIImport) {
+                AIImportView(vm: vm)
             }
             .refreshable {
                 guard let bandId = bandVM.currentBand?.id else { return }

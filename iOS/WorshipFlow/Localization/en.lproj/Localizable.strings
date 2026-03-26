@@ -93,3 +93,25 @@
 "my_bands" = "My Bands";
 "profile" = "Profile";
 "premium_upgrade" = "Upgrade to Pro";
+
+// Chord Chart Editor
+"edit_chord_chart" = "Edit Chord Chart";
+"edit_chords" = "Edit Chords";
+"chord" = "Chord";
+"tap_word_to_place_chord" = "Tap a word to place a chord";
+"remove" = "Remove";
+"KEY_OF" = "Key of";
+"no_lyrics_to_annotate" = "No Lyrics to Annotate";
+"add_lyrics_first" = "Add lyrics to your song first,\nthen come back to place chords over them.";
+"save" = "Save";
+
+// AI Song Import
+"ai_import_title" = "AI Song Import";
+"ai_import_instructions" = "Enter up to 10 song names, one per line. AI will look up lyrics, chords, key, and tempo for each.";
+"ai_import_placeholder" = "Enter song names, one per line...";
+"ai_import_search" = "Search";
+"ai_import_button" = "Import Selected (%d)";
+"ai_import_not_found" = "Song not recognized";
+"ai_import_loading" = "Looking up songs...";
+"ai_import_no_results" = "No results returned";
+"ai_import_try_again" = "Try different song names or search again.";

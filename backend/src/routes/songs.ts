@@ -5,6 +5,7 @@ import {
   bandAccessMiddleware,
   BandRequest,
 } from "../middleware/bandAccess.middleware";
+import { lookupSongs, AISongResult } from "../services/groq.service";
 
 // Band-scoped song routes — mounted at /bands
 const bandSongsRouter = Router();
@@ -77,6 +78,122 @@ bandSongsRouter.post(
       res.status(201).json(data);
     } catch {
       res.status(500).json({ error: "Failed to add song" });
+    }
+  }
+);
+
+// POST /bands/:id/songs/ai-lookup — AI-powered song lookup (does NOT save anything)
+bandSongsRouter.post(
+  "/:id/songs/ai-lookup",
+  authMiddleware,
+  bandAccessMiddleware,
+  async (req: BandRequest, res: Response): Promise<void> => {
+    const { names } = req.body as { names?: unknown };
+
+    if (!Array.isArray(names) || names.length === 0) {
+      res.status(400).json({ error: "names must be a non-empty array of song name strings" });
+      return;
+    }
+    if (names.length > 10) {
+      res.status(400).json({ error: "Maximum 10 songs per lookup" });
+      return;
+    }
+
+    const nameStrings = (names as unknown[])
+      .filter((n): n is string => typeof n === "string" && n.trim().length > 0)
+      .map((n) => n.trim());
+
+    if (nameStrings.length === 0) {
+      res.status(400).json({ error: "All names must be non-empty strings" });
+      return;
+    }
+
+    try {
+      const results = await lookupSongs(nameStrings);
+      res.json({ results });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "AI lookup failed";
+      res.status(500).json({ error: message });
+    }
+  }
+);
+
+// POST /bands/:id/songs/ai-import — Save AI-sourced songs + chord sheets
+bandSongsRouter.post(
+  "/:id/songs/ai-import",
+  authMiddleware,
+  bandAccessMiddleware,
+  async (req: BandRequest, res: Response): Promise<void> => {
+    const { songs } = req.body as { songs?: AISongResult[] };
+
+    if (!Array.isArray(songs) || songs.length === 0) {
+      res.status(400).json({ error: "songs must be a non-empty array" });
+      return;
+    }
+
+    const createdSongs: Record<string, unknown>[] = [];
+
+    try {
+      for (const song of songs) {
+        // 1. Insert the song row
+        const { data: newSong, error: songError } = await supabaseAdmin
+          .from("songs")
+          .insert({
+            band_id: req.bandId,
+            title: song.title,
+            artist: song.artist || null,
+            default_key: song.default_key || null,
+            tempo_bpm: song.tempo_bpm || null,
+            duration_sec: song.duration_sec || null,
+            lyrics: song.lyrics || null,
+            theme: song.theme || null,
+            youtube_url: song.youtube_url || null,
+            spotify_url: song.spotify_url || null,
+            created_by: req.userId,
+          })
+          .select()
+          .single();
+
+        if (songError || !newSong) {
+          console.error("Failed to insert AI song:", songError?.message);
+          continue;
+        }
+
+        createdSongs.push(newSong);
+
+        // 2. Create chord sheet if sections were provided
+        if (Array.isArray(song.chord_sections) && song.chord_sections.length > 0) {
+          const sections = song.chord_sections.map((section) => ({
+            id: crypto.randomUUID(),
+            name: section.name,
+            chords: section.chords.map((chord) => ({
+              id: crypto.randomUUID(),
+              degree: chord.degree,
+              isPass: false,
+              modifier: chord.modifier ?? null,
+            })),
+          }));
+
+          const content = JSON.stringify({ sections });
+
+          const { error: chordError } = await supabaseAdmin
+            .from("chord_sheets")
+            .insert({
+              song_id: newSong.id,
+              title: "AI Generated",
+              content,
+              created_by: req.userId,
+            });
+
+          if (chordError) {
+            console.error("Failed to insert chord sheet for AI song:", chordError.message);
+          }
+        }
+      }
+
+      res.status(201).json({ songs: createdSongs });
+    } catch {
+      res.status(500).json({ error: "Failed to import songs" });
     }
   }
 );

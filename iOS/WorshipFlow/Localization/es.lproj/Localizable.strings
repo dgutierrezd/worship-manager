@@ -93,3 +93,25 @@
 "my_bands" = "Mis Bandas";
 "profile" = "Perfil";
 "premium_upgrade" = "Actualizar a Pro";
+
+// Chord Chart Editor
+"edit_chord_chart" = "Editar Cifrado";
+"edit_chords" = "Editar Acordes";
+"chord" = "Acorde";
+"tap_word_to_place_chord" = "Toca una palabra para colocar un acorde";
+"remove" = "Eliminar";
+"KEY_OF" = "Tono de";
+"no_lyrics_to_annotate" = "No hay letra para anotar";
+"add_lyrics_first" = "Agrega la letra a tu canción primero,\nluego vuelve para colocar los acordes.";
+"save" = "Guardar";
+
+// AI Song Import
+"ai_import_title" = "Importar con IA";
+"ai_import_instructions" = "Escribe hasta 10 nombres de canciones, uno por línea. La IA buscará letra, acordes, tono y tempo para cada una.";
+"ai_import_placeholder" = "Escribe nombres de canciones, uno por línea...";
+"ai_import_search" = "Buscar";
+"ai_import_button" = "Importar seleccionados (%d)";
+"ai_import_not_found" = "Canción no reconocida";
+"ai_import_loading" = "Buscando canciones...";
+"ai_import_no_results" = "Sin resultados";
+"ai_import_try_again" = "Intenta con otros nombres o busca de nuevo.";

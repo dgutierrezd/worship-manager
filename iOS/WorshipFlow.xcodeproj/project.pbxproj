@@ -33,6 +33,7 @@
 		5F4C6F057675541D66CA8B21 /* ChordSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA4B6D325EDFE9ABF08F750 /* ChordSheet.swift */; };
 		604BDB79332EE1D5C53D2D74 /* SetlistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C3A68CF9140961BEB2CD9D /* SetlistsView.swift */; };
 		63DFB3DDFFD354DD9F7AFF5B /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */; };
+		669CB5130408CB40BAD3D2CF /* AIImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650C58EA79F6B0B4E943121E /* AIImportView.swift */; };
 		75C4265C3AD581B0928D7C4A /* RehearsalDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A944E2964D971DA162342DC3 /* RehearsalDetailView.swift */; };
 		7613813444F9E31D4A60682D /* Setlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19273B2A68F35B5AFCD44E2 /* Setlist.swift */; };
 		797E49889DDFA6FA512CAA05 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39741D081C2468888DDE443D /* Localizable.strings */; };
@@ -46,6 +47,7 @@
 		90E931321E0840DD7C4DC4C3 /* BandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 858D7B2CA4A0F09551E14DEC /* BandService.swift */; };
 		98686BDD432D1EB119725E01 /* BandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD73F9DA701E8060EACF1007 /* BandViewModel.swift */; };
 		9BD692CBBD3B920F958A1150 /* SongsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6F372629ED30C8D84646E /* SongsViewModel.swift */; };
+		9C70A1A4409697EA5F04A732 /* LyricChordEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53844263BCD6454C23096682 /* LyricChordEditorView.swift */; };
 		9E68A4FE6A443D930F806502 /* CreateRehearsalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADB450DD057021E75C24BC6 /* CreateRehearsalView.swift */; };
 		A127C239D2C8ABE1D96C6CDA /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64188005DEC3434634BE4339 /* SkeletonView.swift */; };
 		ACE0F9445765D1EA7CB1C328 /* JoinBandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D80B74677247CD2B7A971AA /* JoinBandView.swift */; };
@@ -70,6 +72,7 @@
 		E8C8060E2091DAC620B535DC /* BandSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9990B2C35FF0EFE86B19FA /* BandSettingsView.swift */; };
 		E8C88E8EF372DB5DC0C6C61A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4079F2D64EDF752DC928274 /* WelcomeView.swift */; };
 		E9F220FDCB20AC314F3B5F02 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81F9E6CB1C339DE66C77393 /* AuthService.swift */; };
+		EF2AFBF968D92AE4EFD36D4A /* AISongResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED48E80D3F916F1F931AF6B /* AISongResult.swift */; };
 		F0BFB745C7B6F01DC36FFEBA /* ManageTeamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC349CF5FEDD2F2F9D95B23D /* ManageTeamView.swift */; };
 		F1004622908856539A758078 /* ChordSheetPDFExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22154F2426ECC99ADC1FA2C0 /* ChordSheetPDFExporter.swift */; };
 		F30D4AA291964CE038ED87B2 /* ChordProgression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FFF9574E775A195F339848 /* ChordProgression.swift */; };
@@ -100,6 +103,7 @@
 		3EEA9884E5D96F8724C2936A /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		462BDCC51C0FFBF9C5DE74B5 /* RehearsalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalsViewModel.swift; sourceTree = "<group>"; };
 		4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		53844263BCD6454C23096682 /* LyricChordEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricChordEditorView.swift; sourceTree = "<group>"; };
 		53A5BB6BB1B9C22998EA95D3 /* SetlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistViewModel.swift; sourceTree = "<group>"; };
 		5403BC2C20B77C4A9C9E40D2 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		564B5D8ECB7FC06A5758C07D /* SongDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDetailView.swift; sourceTree = "<group>"; };
@@ -109,6 +113,7 @@
 		5D755319DA3D23CD5B9DB7E1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		64188005DEC3434634BE4339 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		6469B8E211B9A01F898EB197 /* WorshipFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorshipFlowApp.swift; sourceTree = "<group>"; };
+		650C58EA79F6B0B4E943121E /* AIImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIImportView.swift; sourceTree = "<group>"; };
 		66EBE9584D2C5BECA3D8F41D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		6CDA40EE7A7F65192AF211AC /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		6D80B74677247CD2B7A971AA /* JoinBandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinBandView.swift; sourceTree = "<group>"; };
@@ -117,6 +122,7 @@
 		752805762EA5E536A529DC8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		795AF03D529AF62BB831A3F8 /* ServiceAssignmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAssignmentViewModel.swift; sourceTree = "<group>"; };
 		7DA36DE0159700DDFA30722D /* PracticeSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionView.swift; sourceTree = "<group>"; };
+		7ED48E80D3F916F1F931AF6B /* AISongResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AISongResult.swift; sourceTree = "<group>"; };
 		7F941BA59C05CCF987ACABB5 /* ServiceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceDetailView.swift; sourceTree = "<group>"; };
 		810159D579A346CD46081B5A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		858D7B2CA4A0F09551E14DEC /* BandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandService.swift; sourceTree = "<group>"; };
@@ -228,9 +234,11 @@
 			isa = PBXGroup;
 			children = (
 				017EED141996BC5B30286F93 /* AddSongView.swift */,
+				650C58EA79F6B0B4E943121E /* AIImportView.swift */,
 				0143689E1C983DE5C2A4B89C /* ChordsEditorView.swift */,
 				22154F2426ECC99ADC1FA2C0 /* ChordSheetPDFExporter.swift */,
 				A82C76E1BE661B71343D8829 /* EditSongView.swift */,
+				53844263BCD6454C23096682 /* LyricChordEditorView.swift */,
 				564B5D8ECB7FC06A5758C07D /* SongDetailView.swift */,
 				D0BFA3916AE6523D02F6D838 /* SongLibraryView.swift */,
 				32A6F372629ED30C8D84646E /* SongsViewModel.swift */,
@@ -401,6 +409,7 @@
 		FD8B2E6F0ED569E138C40245 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7ED48E80D3F916F1F931AF6B /* AISongResult.swift */,
 				8DFDC0CDAE78CEAE87B1BB58 /* Band.swift */,
 				20FFF9574E775A195F339848 /* ChordProgression.swift */,
 				AFA4B6D325EDFE9ABF08F750 /* ChordSheet.swift */,
@@ -487,6 +496,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				669CB5130408CB40BAD3D2CF /* AIImportView.swift in Sources */,
+				EF2AFBF968D92AE4EFD36D4A /* AISongResult.swift in Sources */,
 				63DFB3DDFFD354DD9F7AFF5B /* APIClient.swift in Sources */,
 				15879EE01E644122B64D7A93 /* AddSongToSetlistView.swift in Sources */,
 				FF1556FAB699DD77594D3F6F /* AddSongView.swift in Sources */,
@@ -519,6 +530,7 @@
 				897E3E4A1F4976480FF67B87 /* LoadingButton.swift in Sources */,
 				2F7B0B61FDD39354C7959CBF /* LocalizedString.swift in Sources */,
 				3FE73B060D9A7E4459D78D2A /* LoginView.swift in Sources */,
+				9C70A1A4409697EA5F04A732 /* LyricChordEditorView.swift in Sources */,
 				C4B27BC9B6E4734CB1806D2D /* MainTabView.swift in Sources */,
 				F0BFB745C7B6F01DC36FFEBA /* ManageTeamView.swift in Sources */,
 				4469F695F9E17EE76094E346 /* Member.swift in Sources */,
