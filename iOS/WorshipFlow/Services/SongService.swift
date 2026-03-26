@@ -61,20 +61,11 @@ enum SongService {
         return try await APIClient.shared.put("/chords/\(chordId)", body: body)
     }
 
-    // MARK: - AI Import
+    // MARK: - AI Import (Claude)
+    // Note: Song *lookup* now happens client-side via ClaudeService.lookupSongs().
+    // This method only handles *saving* the Claude results to the band's library.
 
-    /// Calls Groq AI to look up song data by name. Returns preview results without saving.
-    static func aiLookup(bandId: String, names: [String]) async throws -> [AISongResult] {
-        let body: [String: Any] = ["names": names]
-        struct Response: Decodable { let results: [AISongResult] }
-        let response: Response = try await APIClient.shared.post(
-            "/bands/\(bandId)/songs/ai-lookup",
-            body: body
-        )
-        return response.results
-    }
-
-    /// Saves AI-sourced songs (with chord sheets) to the band's library. Returns the created Song records.
+    /// Saves Claude-sourced songs (with chord sheets) to the band's library. Returns created Song records.
     static func aiImport(bandId: String, songs: [AISongResult]) async throws -> [Song] {
         // Convert Codable array → [[String: Any]] for APIClient (which uses JSONSerialization)
         let encoded = try JSONEncoder().encode(songs)

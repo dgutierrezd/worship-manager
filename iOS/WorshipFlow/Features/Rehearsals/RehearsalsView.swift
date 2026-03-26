@@ -96,33 +96,53 @@ struct RehearsalRow: View {
     let rehearsal: Rehearsal
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(rehearsal.title)
-                .font(.appHeadline)
-                .foregroundColor(.appPrimary)
+        HStack(spacing: 14) {
+            // Colored left indicator bar
+            RoundedRectangle(cornerRadius: 3)
+                .fill(Color.featureSchedule)
+                .frame(width: 4, height: 52)
 
-            HStack(spacing: 8) {
-                Label(rehearsal.formattedDate, systemImage: "calendar")
-                    .font(.appCaption)
-                    .foregroundColor(.appSecondary)
+            VStack(alignment: .leading, spacing: 5) {
+                Text(rehearsal.title)
+                    .font(.appHeadline)
+                    .foregroundColor(.appPrimary)
+                    .lineLimit(1)
 
-                Text(rehearsal.formattedTime)
-                    .font(.appCaption)
-                    .foregroundColor(.appSecondary)
+                HStack(spacing: 6) {
+                    Image(systemName: "calendar")
+                        .font(.system(size: 11))
+                        .foregroundColor(.appSecondary)
+                    Text("\(rehearsal.formattedDate) · \(rehearsal.formattedTime)")
+                        .font(.appCaption)
+                        .foregroundColor(.appSecondary)
+                }
+
+                if let location = rehearsal.location {
+                    HStack(spacing: 4) {
+                        Image(systemName: "mappin")
+                            .font(.system(size: 11))
+                            .foregroundColor(.appSecondary)
+                        Text(location)
+                            .font(.appCaption)
+                            .foregroundColor(.appSecondary)
+                            .lineLimit(1)
+                    }
+                }
             }
 
-            if let location = rehearsal.location {
-                Label(location, systemImage: "mappin")
-                    .font(.appCaption)
-                    .foregroundColor(.appSecondary)
-            }
+            Spacer()
 
             if let setlistName = rehearsal.setlists?.name {
-                Label(setlistName, systemImage: "music.note.list")
-                    .font(.appCaption)
+                Text(setlistName)
+                    .font(.appSmall)
                     .foregroundColor(.appAccent)
+                    .lineLimit(1)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 4)
+                    .background(Color.appAccent.opacity(0.10))
+                    .clipShape(Capsule())
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
     }
 }

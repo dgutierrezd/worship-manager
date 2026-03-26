@@ -9,6 +9,7 @@ import { bandSongsRouter, songsRouter, chordsRouter } from "./routes/songs";
 import { bandSetlistsRouter, setlistsRouter } from "./routes/setlists";
 import { bandRehearsalsRouter, rehearsalsRouter } from "./routes/rehearsals";
 import notificationsRouter from "./routes/notifications";
+import aiRouter from "./routes/ai";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,6 +48,7 @@ app.use("/chords", chordsRouter);       // /chords/:id
 app.use("/setlists", setlistsRouter);   // /setlists/:id, /setlists/:id/songs
 app.use("/rehearsals", rehearsalsRouter);// /rehearsals/:id, /rehearsals/:id/rsvp
 app.use("/notifications", notificationsRouter);
+app.use("/ai", aiRouter);                    // /ai/song-lookup
 
 app.listen(PORT, () => {
   console.log(`WorshipFlow API running on port ${PORT}`);

@@ -6,41 +6,72 @@ struct WelcomeView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                Spacer()
-
-                // Hero
-                VStack(spacing: 16) {
-                    Image("AppLogo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 260)
-
-                    Text("app_tagline".localized)
-                        .font(.appBody)
-                        .foregroundColor(.appSecondary)
+            ZStack {
+                // Hero gradient background
+                VStack(spacing: 0) {
+                    AppGradients.hero
+                        .frame(height: 420)
+                    Color.appBackground
                 }
+                .ignoresSafeArea()
 
-                Spacer()
+                VStack(spacing: 0) {
+                    Spacer()
 
-                // Actions
-                VStack(spacing: 12) {
-                    Button {
-                        showSignUp = true
-                    } label: {
-                        Text("sign_up".localized)
-                            .primaryButton()
+                    // Logo + tagline
+                    VStack(spacing: 20) {
+                        // App icon placeholder with gold gradient ring
+                        ZStack {
+                            Circle()
+                                .fill(AppGradients.gold)
+                                .frame(width: 104, height: 104)
+                            Circle()
+                                .fill(Color.appBackground)
+                                .frame(width: 96, height: 96)
+                            Image(systemName: "music.quarternote.3")
+                                .font(.system(size: 40, weight: .bold))
+                                .foregroundStyle(AppGradients.gold)
+                        }
+                        .shadow(color: Color.appAccent.opacity(0.30), radius: 18, x: 0, y: 6)
+
+                        VStack(spacing: 8) {
+                            Text("WorshipFlow")
+                                .font(.appLargeTitle)
+                                .foregroundColor(.appPrimary)
+
+                            Text("app_tagline".localized)
+                                .font(.appBody)
+                                .foregroundColor(.appSecondary)
+                                .multilineTextAlignment(.center)
+                        }
                     }
 
-                    Button {
-                        showLogin = true
-                    } label: {
-                        Text("sign_in".localized)
-                            .secondaryButton()
+                    Spacer()
+                    Spacer()
+
+                    // Actions
+                    VStack(spacing: 14) {
+                        Button {
+                            AppHaptics.medium()
+                            showSignUp = true
+                        } label: {
+                            Text("sign_up".localized)
+                                .accentButton()
+                        }
+                        .pressable()
+
+                        Button {
+                            AppHaptics.light()
+                            showLogin = true
+                        } label: {
+                            Text("sign_in".localized)
+                                .secondaryButton()
+                        }
+                        .pressable()
                     }
+                    .padding(.horizontal, 28)
+                    .padding(.bottom, 52)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 48)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.appBackground)

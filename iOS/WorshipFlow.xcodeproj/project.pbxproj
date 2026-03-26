@@ -11,6 +11,7 @@
 		01DAB81E5E6D5EF990132F6F /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEA9884E5D96F8724C2936A /* FlowLayout.swift */; };
 		03519469E19CC2315BF37C98 /* PracticeSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA36DE0159700DDFA30722D /* PracticeSessionView.swift */; };
 		05418EC38ECA43D382766E65 /* SongLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFA3916AE6523D02F6D838 /* SongLibraryView.swift */; };
+		06B99C3A3357E9E345F45332 /* ClaudeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE7723F6822DF9819813A0 /* ClaudeService.swift */; };
 		09AB9862A5CE88CB773956D0 /* ChordsEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0143689E1C983DE5C2A4B89C /* ChordsEditorView.swift */; };
 		09E2F653DB777BA134EE3B97 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 752805762EA5E536A529DC8F /* Assets.xcassets */; };
 		0F1A78516F37E76B8E729535 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5403BC2C20B77C4A9C9E40D2 /* EmptyStateView.swift */; };
@@ -150,6 +151,7 @@
 		CBE00E5F68547E8FCCC48A17 /* BandAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandAvatarView.swift; sourceTree = "<group>"; };
 		D0BFA3916AE6523D02F6D838 /* SongLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLibraryView.swift; sourceTree = "<group>"; };
 		D3819DF1EFAB63A2098795DD /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		DBCE7723F6822DF9819813A0 /* ClaudeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeService.swift; sourceTree = "<group>"; };
 		DD3D7A8BCC0219161F7E0F76 /* CreateServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceView.swift; sourceTree = "<group>"; };
 		DDC7BF046D4874F51138F927 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E44A8C5938FD4B01887730D3 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 				4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */,
 				B81F9E6CB1C339DE66C77393 /* AuthService.swift */,
 				858D7B2CA4A0F09551E14DEC /* BandService.swift */,
+				DBCE7723F6822DF9819813A0 /* ClaudeService.swift */,
 				ED23EFBDEB700190D9F983EB /* NotificationService.swift */,
 				F40EF23443220891CF541FC6 /* RehearsalService.swift */,
 				04991C091485794CD8FBEE44 /* ServiceAssignmentService.swift */,
@@ -514,6 +517,7 @@
 				5F4C6F057675541D66CA8B21 /* ChordSheet.swift in Sources */,
 				F1004622908856539A758078 /* ChordSheetPDFExporter.swift in Sources */,
 				09AB9862A5CE88CB773956D0 /* ChordsEditorView.swift in Sources */,
+				06B99C3A3357E9E345F45332 /* ClaudeService.swift in Sources */,
 				E38A1CE08C7006A7FA536A56 /* Config.swift in Sources */,
 				C05D14DCFACA5EAC71887555 /* CreateBandView.swift in Sources */,
 				9E68A4FE6A443D930F806502 /* CreateRehearsalView.swift in Sources */,
@@ -671,7 +675,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -737,7 +741,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

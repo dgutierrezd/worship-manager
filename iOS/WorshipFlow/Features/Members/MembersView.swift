@@ -101,31 +101,44 @@ struct MemberRow: View {
     let member: Member
 
     var body: some View {
-        HStack(spacing: 12) {
-            // Avatar with colored background
+        HStack(spacing: 14) {
+            // Avatar with gradient background
             ZStack {
                 Circle()
-                    .fill(avatarColor(for: member.fullName).opacity(0.18))
+                    .fill(
+                        LinearGradient(
+                            colors: [avatarColor(for: member.fullName),
+                                     avatarColor(for: member.fullName).opacity(0.70)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                     .frame(width: 46, height: 46)
+                    .shadow(color: avatarColor(for: member.fullName).opacity(0.20), radius: 5, x: 0, y: 2)
                 Text(String(member.fullName.prefix(1)).uppercased())
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(avatarColor(for: member.fullName))
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(.white)
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 6) {
+                HStack(spacing: 7) {
                     Text(member.fullName)
                         .font(.appHeadline)
                         .foregroundColor(.appPrimary)
+                        .lineLimit(1)
 
                     if member.isLeader {
-                        Text("Leader")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(.appAccent)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.appAccent.opacity(0.15))
-                            .clipShape(Capsule())
+                        HStack(spacing: 3) {
+                            Image(systemName: "star.fill")
+                                .font(.system(size: 8, weight: .bold))
+                            Text("Leader")
+                                .font(.system(size: 10, weight: .bold))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 3)
+                        .background(AppGradients.gold)
+                        .clipShape(Capsule())
                     }
                 }
 
@@ -143,64 +156,113 @@ struct MemberRow: View {
 
             Spacer()
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 5)
     }
 
     /// Generate a consistent color for each name
     private func avatarColor(for name: String) -> Color {
-        let colors: [Color] = [.appAccent, .statusGoing, Color(hex: "#5B6AF0"),
-                                Color(hex: "#E05C97"), Color(hex: "#3AA0C4")]
+        let colors: [Color] = [
+            .featureServices, .statusGoing, Color(hex: "#5B6AF0"),
+            Color(hex: "#E05C97"), .featureSongs
+        ]
         let idx = abs(name.hashValue) % colors.count
         return colors[idx]
     }
 }
 
-// MARK: - Invite Code Section (improved)
+// MARK: - Invite Code Section
 
 struct InviteCodeSection: View {
     let band: Band?
     @State private var copied = false
 
     var body: some View {
-        VStack(spacing: 14) {
-            Label("Invite Code", systemImage: "person.badge.plus")
-                .font(.appCaption)
-                .foregroundColor(.appSecondary)
+        VStack(spacing: 16) {
+            // Header
+            HStack(spacing: 8) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.featureTeam.opacity(0.14))
+                        .frame(width: 30, height: 30)
+                    Image(systemName: "person.badge.plus")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.featureTeam)
+                }
+                Text("Invite Code")
+                    .font(.appHeadline)
+                    .foregroundColor(.appPrimary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
+            // Code display
             Text(band?.inviteCode ?? "------")
-                .font(.system(size: 32, weight: .bold, design: .monospaced))
+                .font(.system(size: 34, weight: .bold, design: .monospaced))
                 .foregroundColor(.appPrimary)
-                .tracking(8)
+                .tracking(10)
+                .padding(.vertical, 14)
+                .padding(.horizontal, 20)
+                .background(Color.appBackground)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .strokeBorder(
+                            LinearGradient(
+                                colors: [Color.appAccent.opacity(0.40), Color.appAccent.opacity(0.15)],
+                                startPoint: .topLeading, endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1.5
+                        )
+                )
 
-            HStack(spacing: 16) {
+            // Actions
+            HStack(spacing: 12) {
                 Button {
+                    AppHaptics.success()
                     UIPasteboard.general.string = band?.inviteCode
-                    withAnimation { copied = true }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { copied = true }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                         withAnimation { copied = false }
                     }
                 } label: {
-                    Label(copied ? "Copied!" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc")
-                        .font(.appCaption)
-                        .foregroundColor(copied ? .statusGoing : .appAccent)
+                    HStack(spacing: 6) {
+                        Image(systemName: copied ? "checkmark.circle.fill" : "doc.on.doc.fill")
+                            .font(.system(size: 13, weight: .semibold))
+                        Text(copied ? "Copied!" : "Copy Code")
+                            .font(.system(size: 13, weight: .semibold))
+                    }
+                    .foregroundColor(copied ? .statusGoing : .appAccent)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(
+                        copied ? Color.statusGoing.opacity(0.10) : Color.appAccent.opacity(0.10)
+                    )
+                    .clipShape(Capsule())
                 }
 
                 if let band {
                     ShareLink(item: "Join \"\(band.name)\" on Worship Manager! Code: \(band.inviteCode)") {
-                        Label("share_invite".localized, systemImage: "square.and.arrow.up")
-                            .font(.appCaption)
-                            .foregroundColor(.appAccent)
+                        HStack(spacing: 6) {
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.system(size: 13, weight: .semibold))
+                            Text("share_invite".localized)
+                                .font(.system(size: 13, weight: .semibold))
+                        }
+                        .foregroundColor(.appPrimary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(Color.appDivider.opacity(0.50))
+                        .clipShape(Capsule())
                     }
                 }
             }
 
             Text("Anyone with this code can join your team")
-                .font(.appCaption)
+                .font(.appSmall)
                 .foregroundColor(.appSecondary)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
+        .padding(.vertical, 10)
         .listRowBackground(Color.appSurface)
     }
 }

@@ -21,7 +21,7 @@ struct MainTabView: View {
                     Label("settings".localized, systemImage: "gearshape.fill")
                 }
             }
-            .tint(.appPrimary)
+            .tint(.appAccent)
 
             // Floating mini metronome player above tab bar
             VStack(spacing: 0) {

@@ -67,19 +67,34 @@ struct ServicesView: View {
         HStack(spacing: 8) {
             ForEach(ServiceFilter.allCases, id: \.self) { f in
                 Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
+                    AppHaptics.selection()
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                         filter = f
                     }
                 } label: {
                     Text(f.rawValue)
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(filter == f ? .white : .appPrimary)
                         .padding(.horizontal, 16)
-                        .padding(.vertical, 7)
-                        .background(filter == f ? Color.appPrimary : Color.appSurface)
+                        .padding(.vertical, 8)
+                        .background(
+                            Group {
+                                if filter == f {
+                                    AnyView(AppGradients.gold)
+                                } else {
+                                    AnyView(Color.appSurface)
+                                }
+                            }
+                        )
                         .clipShape(Capsule())
-                        .overlay(Capsule().stroke(Color.appDivider, lineWidth: filter == f ? 0 : 1))
+                        .overlay(Capsule().stroke(
+                            filter == f ? Color.clear : Color.appDivider,
+                            lineWidth: 1
+                        ))
+                        .shadow(color: filter == f ? Color.appAccent.opacity(0.30) : .clear,
+                                radius: 5, x: 0, y: 2)
                 }
+                .animation(.spring(response: 0.25, dampingFraction: 0.7), value: filter)
             }
             Spacer()
         }
@@ -143,42 +158,73 @@ struct ServiceRow: View {
     let setlist: Setlist
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(setlist.name)
-                        .font(.appHeadline)
+        HStack(spacing: 14) {
+            // Date column
+            if let date = setlist.formattedDate {
+                VStack(spacing: 2) {
+                    Text(monthString(from: date))
+                        .font(.appSmall)
+                        .foregroundColor(.appAccent)
+                        .fontWeight(.bold)
+                    Text(dayString(from: date))
+                        .font(.system(size: 22, weight: .bold, design: .rounded))
                         .foregroundColor(.appPrimary)
-
-                    if let date = setlist.formattedDate {
-                        Label(date, systemImage: "calendar")
-                            .font(.appCaption)
-                            .foregroundColor(.appSecondary)
-                    }
                 }
-
-                Spacer()
-
-                if setlist.serviceType != nil {
-                    ServiceTypeBadge(setlist: setlist)
+                .frame(width: 44)
+                .padding(.vertical, 6)
+                .background(Color.appAccent.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.featureServices.opacity(0.12))
+                        .frame(width: 44, height: 48)
+                    Image(systemName: "music.note.list")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.featureServices)
                 }
             }
 
-            HStack(spacing: 12) {
-                if let location = setlist.location, !location.isEmpty {
-                    Label(location, systemImage: "mappin.circle")
-                        .font(.system(size: 11))
-                        .foregroundColor(.appSecondary)
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(alignment: .top) {
+                    Text(setlist.name)
+                        .font(.appHeadline)
+                        .foregroundColor(.appPrimary)
+                        .lineLimit(1)
+                    Spacer()
+                    if setlist.serviceType != nil {
+                        ServiceTypeBadge(setlist: setlist)
+                    }
                 }
-                if let theme = setlist.theme, !theme.isEmpty {
-                    Label(theme, systemImage: "sparkles")
-                        .font(.system(size: 11))
-                        .foregroundColor(.appSecondary)
-                        .italic()
+
+                HStack(spacing: 10) {
+                    if let location = setlist.location, !location.isEmpty {
+                        Label(location, systemImage: "mappin.circle.fill")
+                            .font(.appSmall)
+                            .foregroundColor(.appSecondary)
+                            .lineLimit(1)
+                    }
+                    if let theme = setlist.theme, !theme.isEmpty {
+                        Label(theme, systemImage: "sparkles")
+                            .font(.appSmall)
+                            .foregroundColor(.appSecondary)
+                    }
                 }
             }
         }
         .padding(.vertical, 6)
+    }
+
+    private func monthString(from dateStr: String) -> String {
+        // dateStr is already formatted; try to parse a month abbreviation
+        let parts = dateStr.components(separatedBy: " ")
+        return parts.first?.prefix(3).uppercased() ?? ""
+    }
+
+    private func dayString(from dateStr: String) -> String {
+        let parts = dateStr.components(separatedBy: " ")
+        // Look for a numeric part
+        return parts.first(where: { Int($0.filter(\.isNumber)) != nil })?.filter(\.isNumber) ?? "--"
     }
 }
 
@@ -190,14 +236,15 @@ struct ServiceTypeBadge: View {
     var body: some View {
         HStack(spacing: 4) {
             Image(systemName: setlist.serviceTypeIcon)
-                .font(.system(size: 10))
+                .font(.system(size: 9, weight: .semibold))
             Text(setlist.serviceTypeDisplay)
-                .font(.system(size: 11, weight: .medium))
+                .font(.system(size: 11, weight: .bold))
         }
-        .foregroundColor(.appAccent)
-        .padding(.horizontal, 9)
+        .foregroundColor(.white)
+        .padding(.horizontal, 10)
         .padding(.vertical, 5)
-        .background(Color.appAccent.opacity(0.12))
+        .background(AppGradients.gold)
         .clipShape(Capsule())
+        .shadow(color: Color.appAccent.opacity(0.25), radius: 4, x: 0, y: 2)
     }
 }

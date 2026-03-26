@@ -109,14 +109,14 @@ class SongsViewModel: ObservableObject {
         }
     }
 
-    // MARK: - AI Import
+    // MARK: - AI Import (Claude)
 
+    /// Calls Claude directly to look up song data. No backend round-trip needed for lookup.
     func aiLookup(names: [String]) async {
-        guard let bandId else { return }
         isAILoading = true
         error = nil
         do {
-            aiResults = try await SongService.aiLookup(bandId: bandId, names: names)
+            aiResults = try await ClaudeService.lookupSongs(names: names)
         } catch {
             self.error = error.localizedDescription
         }

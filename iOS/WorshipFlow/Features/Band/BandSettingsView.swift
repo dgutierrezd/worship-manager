@@ -87,7 +87,8 @@ struct BandSettingsView: View {
                 // Save button
                 LoadingButton(
                     title: "save_changes".localized,
-                    isLoading: isSaving
+                    isLoading: isSaving,
+                    style: .accent
                 ) {
                     Task { await saveChanges() }
                 }

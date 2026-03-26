@@ -219,29 +219,43 @@ struct PracticeMiniPlayerView: View {
 
                 // Play/Pause
                 Button {
+                    AppHaptics.light()
                     practice.togglePlayback()
                 } label: {
-                    Image(systemName: practice.isPlaying || practice.countingIn ? "pause.fill" : "play.fill")
-                        .font(.system(size: 18))
-                        .foregroundColor(.appPrimary)
-                        .frame(width: 36, height: 36)
+                    ZStack {
+                        Circle()
+                            .fill(AppGradients.gold)
+                            .frame(width: 38, height: 38)
+                            .shadow(color: Color.appAccent.opacity(0.30), radius: 5, x: 0, y: 2)
+                        Image(systemName: practice.isPlaying || practice.countingIn ? "pause.fill" : "play.fill")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(.white)
+                    }
                 }
 
                 // Stop
                 Button {
+                    AppHaptics.light()
                     practice.stopSession()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 22))
+                        .font(.system(size: 24))
                         .foregroundColor(.appSecondary)
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background(Color.appSurface)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
-            .padding(.horizontal, 8)
+            .padding(.vertical, 11)
+            .background(
+                Color.appSurface
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .strokeBorder(Color.appDivider.opacity(0.6), lineWidth: 0.5)
+                    )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.12), radius: 12, x: 0, y: -3)
+            .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: -1)
+            .padding(.horizontal, 10)
             .onTapGesture {
                 practice.showFullPlayer = true
             }

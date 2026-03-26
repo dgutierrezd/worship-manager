@@ -279,40 +279,70 @@ struct FilterChip: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            AppHaptics.selection()
+            action()
+        } label: {
             HStack(spacing: 4) {
                 if let icon {
                     Image(systemName: icon)
-                        .font(.system(size: 10))
+                        .font(.system(size: 10, weight: .semibold))
                 }
                 Text(label)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: 13, weight: .semibold))
             }
             .foregroundColor(isSelected ? .white : .appPrimary)
             .padding(.horizontal, 14)
-            .padding(.vertical, 7)
-            .background(isSelected ? Color.appPrimary : Color.appSurface)
+            .padding(.vertical, 8)
+            .background(
+                Group {
+                    if isSelected {
+                        AnyView(AppGradients.gold)
+                    } else {
+                        AnyView(Color.appSurface)
+                    }
+                }
+            )
             .clipShape(Capsule())
-            .overlay(Capsule().stroke(Color.appDivider, lineWidth: isSelected ? 0 : 1))
+            .overlay(
+                Capsule()
+                    .stroke(isSelected ? Color.clear : Color.appDivider, lineWidth: 1)
+            )
+            .shadow(color: isSelected ? Color.appAccent.opacity(0.30) : .clear, radius: 5, x: 0, y: 2)
         }
+        .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isSelected)
     }
 }
 
-// MARK: - Song Row (improved)
+// MARK: - Song Row
 
 struct SongRow: View {
     let song: Song
 
+    /// Deterministic accent color based on song title initial
+    private var iconColor: Color {
+        let colors: [Color] = [.featureSongs, .featureServices, .featureSchedule, .featureTeam]
+        let idx = abs((song.title.first?.asciiValue.map(Int.init) ?? 0)) % colors.count
+        return colors[idx]
+    }
+
     var body: some View {
         HStack(spacing: 12) {
-            // Music note icon with key color
+            // Colored music icon
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(song.defaultKey != nil ? Color.appPrimary.opacity(0.08) : Color.appDivider.opacity(0.4))
+                    .fill(
+                        LinearGradient(
+                            colors: [iconColor, iconColor.opacity(0.70)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                     .frame(width: 44, height: 44)
+                    .shadow(color: iconColor.opacity(0.22), radius: 4, x: 0, y: 2)
                 Image(systemName: "music.note")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(song.defaultKey != nil ? .appPrimary : .appSecondary)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.white)
             }
 
             VStack(alignment: .leading, spacing: 4) {
@@ -321,7 +351,7 @@ struct SongRow: View {
                     .foregroundColor(.appPrimary)
                     .lineLimit(1)
 
-                HStack(spacing: 8) {
+                HStack(spacing: 6) {
                     if let artist = song.artist {
                         Text(artist)
                             .font(.appCaption)
@@ -329,28 +359,32 @@ struct SongRow: View {
                             .lineLimit(1)
                     }
                     if let dur = song.formattedDuration {
-                        Text(dur)
+                        Text("· \(dur)")
                             .font(.appCaption)
                             .foregroundColor(.appSecondary)
                     }
                     if let theme = song.theme, !theme.isEmpty {
-                        Text(theme)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.appAccent)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.appAccent.opacity(0.1))
-                            .clipShape(Capsule())
+                        HStack(spacing: 3) {
+                            Image(systemName: "sparkles")
+                                .font(.system(size: 8, weight: .bold))
+                            Text(theme)
+                                .font(.appSmall)
+                        }
+                        .foregroundColor(.appAccent)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 2)
+                        .background(Color.appAccent.opacity(0.10))
+                        .clipShape(Capsule())
                     }
                 }
             }
 
-            Spacer()
+            Spacer(minLength: 6)
 
             if let key = song.defaultKey {
                 KeyBadge(key: key)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 5)
     }
 }
