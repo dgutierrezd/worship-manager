@@ -46,46 +46,64 @@ struct BandHomeView: View {
 
     private var bandHeader: some View {
         ZStack(alignment: .bottom) {
-            // Gold hero gradient background
+            // Soft blue aurora background
             AppGradients.hero
-                .frame(height: 240)
+                .frame(height: 260)
                 .ignoresSafeArea(edges: .top)
 
-            VStack(spacing: 10) {
+            // Brand glow behind avatar
+            AppGradients.brandGlow
+                .frame(width: 240, height: 240)
+                .offset(y: -28)
+                .blendMode(.plusLighter)
+                .allowsHitTesting(false)
+
+            VStack(spacing: 12) {
                 if let band = bandVM.currentBand {
-                    // Avatar (no role-based distinction)
+                    // Avatar with subtle brand ring
                     BandAvatarView(
                         band: band,
-                        size: 80,
+                        size: 84,
                         showLeaderRing: false
                     )
-                    .shadow(color: Color.appAccent.opacity(0.20), radius: 12, x: 0, y: 4)
+                    .overlay(
+                        Circle()
+                            .strokeBorder(Color.appAccent.opacity(0.28), lineWidth: 1)
+                    )
+                    .shadow(color: Color.appAccent.opacity(0.25), radius: 16, x: 0, y: 8)
 
                     Text(band.name)
-                        .font(.appTitle)
+                        .font(.appLargeTitle)
                         .foregroundColor(.appPrimary)
+                        .tracking(-0.3)
 
-                    HStack(spacing: 6) {
+                    HStack(spacing: 8) {
                         if let church = band.church {
                             Text(church)
                                 .font(.appCaption)
                                 .foregroundColor(.appSecondary)
-                            Text("·")
-                                .foregroundColor(.appDivider)
+                            Circle()
+                                .fill(Color.appDivider)
+                                .frame(width: 3, height: 3)
                         }
                         Image(systemName: "person.2.fill")
-                            .font(.system(size: 11))
-                            .foregroundColor(.appSecondary)
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(.appAccent)
                         Text("\(band.memberCount ?? 0) \("members".localized)")
                             .font(.appCaption)
                             .foregroundColor(.appSecondary)
                     }
-
-                    // Role badge intentionally hidden — the band treats all members equally.
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(Color.appSurface.opacity(0.70))
+                            .overlay(Capsule().stroke(Color.appDivider, lineWidth: 0.5))
+                    )
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 28)
+            .padding(.vertical, 32)
             .padding(.horizontal, 16)
         }
     }
@@ -405,27 +423,36 @@ struct QuickAccessCard: View {
     let accentColor: Color
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12)
+                    // Soft color-tinted halo
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(accentColor.opacity(0.14))
+                        .frame(width: 48, height: 48)
+
+                    // Vibrant gradient pill
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .fill(
                             LinearGradient(
-                                colors: [accentColor, accentColor.opacity(0.7)],
+                                colors: [accentColor, accentColor.opacity(0.78)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
-                        .frame(width: 44, height: 44)
-                        .shadow(color: accentColor.opacity(0.30), radius: 6, x: 0, y: 3)
+                        .frame(width: 42, height: 42)
+                        .shadow(color: accentColor.opacity(0.45), radius: 10, x: 0, y: 6)
+
                     Image(systemName: icon)
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundColor(.white)
                 }
                 Spacer()
-                Image(systemName: "chevron.right")
+                Image(systemName: "arrow.up.right")
                     .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(.appSecondary.opacity(0.4))
+                    .foregroundColor(.appSecondary.opacity(0.45))
+                    .padding(6)
+                    .background(Circle().fill(Color.appDivider.opacity(0.5)))
             }
 
             VStack(alignment: .leading, spacing: 3) {
@@ -440,10 +467,11 @@ struct QuickAccessCard: View {
             }
         }
         .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.appSurface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 3)
-        .shadow(color: .black.opacity(0.03), radius: 2, x: 0, y: 1)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .shadow(color: Color.appShadow, radius: 14, x: 0, y: 6)
+        .shadow(color: Color.appShadow.opacity(0.5), radius: 2, x: 0, y: 1)
     }
 }
 
@@ -481,7 +509,7 @@ struct SongChip: View {
         .background(Color.appSurface)
         .clipShape(Capsule())
         .overlay(Capsule().stroke(Color.appDivider, lineWidth: 1))
-        .shadow(color: .black.opacity(0.04), radius: 4, x: 0, y: 2)
+        .shadow(color: Color.appShadow, radius: 6, x: 0, y: 3)
     }
 }
 
