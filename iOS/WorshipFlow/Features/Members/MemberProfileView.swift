@@ -8,7 +8,8 @@ struct MemberProfileView: View {
 
     @State private var showRemoveAlert = false
 
-    var isLeader: Bool { bandVM.currentBand?.isLeader == true }
+    // All band members are treated equally — leader privileges are not surfaced in the UI.
+    var canManage: Bool { bandVM.currentBand?.isLeader == true }
 
     var body: some View {
         VStack(spacing: 24) {
@@ -34,41 +35,18 @@ struct MemberProfileView: View {
                         .foregroundColor(.appSecondary)
                 }
 
-                Text(member.isLeader
-                     ? "leader".localized
-                     : "member_role".localized)
-                    .font(.appCaption)
-                    .foregroundColor(.appAccent)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 4)
-                    .background(Color.appAccent.opacity(0.15))
-                    .clipShape(Capsule())
             }
 
             Spacer()
 
-            if isLeader && member.id != bandVM.currentBand?.createdBy {
-                VStack(spacing: 12) {
-                    Button {
-                        Task {
-                            let newRole = member.isLeader ? "member" : "leader"
-                            _ = try? await BandService.updateMemberRole(
-                                bandId: bandId, userId: member.id, role: newRole
-                            )
-                            dismiss()
-                        }
-                    } label: {
-                        Text(member.isLeader ? "Demote to Member" : "Promote to Leader")
-                            .secondaryButton()
-                    }
-
-                    Button { showRemoveAlert = true } label: {
-                        Text("remove_member".localized)
-                            .font(.appHeadline)
-                            .foregroundColor(.statusNo)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                    }
+            // Only band creator can remove members — role promotion/demotion UI removed.
+            if canManage && member.id != bandVM.currentBand?.createdBy {
+                Button { showRemoveAlert = true } label: {
+                    Text("remove_member".localized)
+                        .font(.appHeadline)
+                        .foregroundColor(.statusNo)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
                 }
                 .padding(.horizontal, 24)
             }

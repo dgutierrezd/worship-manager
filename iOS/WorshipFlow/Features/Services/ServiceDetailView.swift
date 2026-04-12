@@ -14,7 +14,8 @@ struct ServiceDetailView: View {
     @State private var calendarAdded = false
     @State private var showCalendarError = false
 
-    var isLeader: Bool { bandVM.currentBand?.isLeader == true }
+    // Any band member can edit services — no role-based gating.
+    var canEdit: Bool { bandVM.currentBand != nil }
 
     var totalDurationString: String {
         let total = vm.setlistSongs.compactMap { $0.songs?.durationSec }.reduce(0, +)
@@ -53,7 +54,7 @@ struct ServiceDetailView: View {
                                 .foregroundColor(.appAccent)
                         }
                     }
-                    if isLeader {
+                    if canEdit {
                         Menu {
                             Button {
                                 showAddSong = true
@@ -100,11 +101,11 @@ struct ServiceDetailView: View {
                         ServiceSongRow(item: item)
                     }
                     .onMove { source, destination in
-                        guard isLeader else { return }
+                        guard canEdit else { return }
                         vm.moveSetlistSong(setlistId: setlist.id, from: source, to: destination)
                     }
                     .onDelete { indexSet in
-                        guard isLeader else { return }
+                        guard canEdit else { return }
                         Task {
                             for idx in indexSet {
                                 let item = vm.setlistSongs[idx]
@@ -144,7 +145,7 @@ struct ServiceDetailView: View {
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
-        .toolbar { if isLeader { EditButton() } }
+        .toolbar { if canEdit { EditButton() } }
     }
 
     // MARK: - Team Tab
@@ -161,7 +162,7 @@ struct ServiceDetailView: View {
                         AssignmentRow(assignment: assignment)
                     }
                     .onDelete { indexSet in
-                        guard isLeader else { return }
+                        guard canEdit else { return }
                         Task {
                             for idx in indexSet {
                                 await assignmentVM.removeAssignment(assignmentVM.assignments[idx])
@@ -171,7 +172,7 @@ struct ServiceDetailView: View {
                 }
             }
 
-            if isLeader {
+            if canEdit {
                 Section {
                     Button {
                         showManageTeam = true
@@ -276,7 +277,7 @@ struct ServiceDetailView: View {
                 Text("No songs yet")
                     .font(.appBody)
                     .foregroundColor(.appSecondary)
-                if isLeader {
+                if canEdit {
                     Button { showAddSong = true } label: {
                         Text("Add First Song")
                             .font(.appCaption)
@@ -300,7 +301,7 @@ struct ServiceDetailView: View {
                 Text("No team assigned yet")
                     .font(.appBody)
                     .foregroundColor(.appSecondary)
-                if isLeader {
+                if canEdit {
                     Button { showManageTeam = true } label: {
                         Text("Assign Team")
                             .font(.appCaption)

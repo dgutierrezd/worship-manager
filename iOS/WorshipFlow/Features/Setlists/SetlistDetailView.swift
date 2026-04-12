@@ -6,7 +6,8 @@ struct SetlistDetailView: View {
     @StateObject private var vm = SetlistViewModel()
     @State private var showAddSong = false
 
-    var isLeader: Bool { bandVM.currentBand?.isLeader == true }
+    // Any band member can edit setlists — no role-based gating.
+    var canEdit: Bool { bandVM.currentBand != nil }
 
     var body: some View {
         List {
@@ -104,7 +105,7 @@ struct SetlistDetailView: View {
             }
 
             // Add song
-            if isLeader {
+            if canEdit {
                 Section {
                     Button {
                         showAddSong = true
@@ -117,7 +118,7 @@ struct SetlistDetailView: View {
         }
         .navigationTitle(setlist.name)
         .toolbar {
-            if isLeader {
+            if canEdit {
                 EditButton()
             }
         }

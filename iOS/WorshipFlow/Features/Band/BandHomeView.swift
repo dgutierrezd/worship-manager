@@ -53,11 +53,11 @@ struct BandHomeView: View {
 
             VStack(spacing: 10) {
                 if let band = bandVM.currentBand {
-                    // Avatar with leader ring
+                    // Avatar (no role-based distinction)
                     BandAvatarView(
                         band: band,
                         size: 80,
-                        showLeaderRing: band.myRole == "leader"
+                        showLeaderRing: false
                     )
                     .shadow(color: Color.appAccent.opacity(0.20), radius: 12, x: 0, y: 4)
 
@@ -81,9 +81,7 @@ struct BandHomeView: View {
                             .foregroundColor(.appSecondary)
                     }
 
-                    if let role = band.myRole {
-                        RoleBadge(role: role)
-                    }
+                    // Role badge intentionally hidden — the band treats all members equally.
                 }
             }
             .frame(maxWidth: .infinity)

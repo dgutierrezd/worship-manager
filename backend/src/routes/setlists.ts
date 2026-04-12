@@ -5,6 +5,7 @@ import {
   bandAccessMiddleware,
   BandRequest,
 } from "../middleware/bandAccess.middleware";
+import { notifyBandMembers } from "../services/notification.service";
 
 // Band-scoped setlist routes — mounted at /bands
 const bandSetlistsRouter = Router();
@@ -68,6 +69,37 @@ bandSetlistsRouter.post(
       if (error) {
         res.status(500).json({ error: error.message });
         return;
+      }
+
+      // Send push notification to band members (only for real, non-template services)
+      if (!is_template) {
+        let bodyText = name;
+        if (date) {
+          const parts: string[] = [];
+          // Build a local-ish date like "Sun, Apr 14"
+          try {
+            const d = new Date(`${date}T00:00:00`);
+            parts.push(
+              d.toLocaleDateString("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+              })
+            );
+          } catch {
+            parts.push(date);
+          }
+          if (time) parts.push(time);
+          if (location) parts.push(location);
+          bodyText = `${name} · ${parts.join(" · ")}`;
+        }
+
+        await notifyBandMembers(
+          req.bandId!,
+          req.userId!,
+          "New Service Scheduled",
+          bodyText
+        );
       }
 
       res.status(201).json(data);

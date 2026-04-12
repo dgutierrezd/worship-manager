@@ -16,30 +16,13 @@ struct MembersView: View {
         }
     }
 
-    var leaders: [Member] { filteredMembers.filter { $0.isLeader } }
-    var regularMembers: [Member] { filteredMembers.filter { !$0.isLeader } }
-
     var body: some View {
         NavigationStack {
             List {
-                // Leaders section
-                if !leaders.isEmpty {
-                    Section("Leadership") {
-                        ForEach(leaders) { member in
-                            NavigationLink {
-                                MemberProfileView(member: member, bandId: bandVM.currentBand?.id ?? "")
-                            } label: {
-                                MemberRow(member: member)
-                            }
-                            .listRowBackground(Color.appSurface)
-                        }
-                    }
-                }
-
-                // Members section
-                if !regularMembers.isEmpty {
-                    Section("Members (\(regularMembers.count))") {
-                        ForEach(regularMembers) { member in
+                // All members in a single, equal section
+                if !filteredMembers.isEmpty {
+                    Section("Members (\(filteredMembers.count))") {
+                        ForEach(filteredMembers) { member in
                             NavigationLink {
                                 MemberProfileView(member: member, bandId: bandVM.currentBand?.id ?? "")
                             } label: {
@@ -121,26 +104,10 @@ struct MemberRow: View {
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 7) {
-                    Text(member.fullName)
-                        .font(.appHeadline)
-                        .foregroundColor(.appPrimary)
-                        .lineLimit(1)
-
-                    if member.isLeader {
-                        HStack(spacing: 3) {
-                            Image(systemName: "star.fill")
-                                .font(.system(size: 8, weight: .bold))
-                            Text("Leader")
-                                .font(.system(size: 10, weight: .bold))
-                        }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 3)
-                        .background(AppGradients.gold)
-                        .clipShape(Capsule())
-                    }
-                }
+                Text(member.fullName)
+                    .font(.appHeadline)
+                    .foregroundColor(.appPrimary)
+                    .lineLimit(1)
 
                 if let instrument = member.instrument {
                     HStack(spacing: 5) {
