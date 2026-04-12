@@ -48,7 +48,8 @@ struct SongDetailView: View {
                     Text("Overview").tag(0)
                     Text("Chords").tag(1)
                     Text("Lyrics").tag(2)
-                    Text("Notes").tag(3)
+                    Text("Tracks").tag(3)
+                    Text("Notes").tag(4)
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal, 16)
@@ -59,7 +60,8 @@ struct SongDetailView: View {
                     case 0: overviewTab
                     case 1: chordsTab
                     case 2: lyricsTab
-                    case 3: notesTab
+                    case 3: MultitracksView(songId: song.id)
+                    case 4: notesTab
                     default: EmptyView()
                     }
                 }

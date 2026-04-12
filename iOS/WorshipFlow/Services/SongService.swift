@@ -61,6 +61,48 @@ enum SongService {
         return try await APIClient.shared.put("/chords/\(chordId)", body: body)
     }
 
+    // MARK: - Multitracks (Stems)
+
+    static func fetchStems(songId: String) async throws -> [SongStem] {
+        try await APIClient.shared.get("/songs/\(songId)/stems")
+    }
+
+    static func addStem(
+        songId: String,
+        kind: String,
+        label: String,
+        url: String,
+        position: Int? = nil
+    ) async throws -> SongStem {
+        var body: [String: Any] = [
+            "kind": kind,
+            "label": label,
+            "url": url,
+        ]
+        if let position { body["position"] = position }
+        return try await APIClient.shared.post("/songs/\(songId)/stems", body: body)
+    }
+
+    static func updateStem(
+        songId: String,
+        stemId: String,
+        label: String? = nil,
+        kind: String? = nil,
+        url: String? = nil,
+        position: Int? = nil
+    ) async throws -> SongStem {
+        var body: [String: Any] = [:]
+        if let label    { body["label"]    = label }
+        if let kind     { body["kind"]     = kind }
+        if let url      { body["url"]      = url }
+        if let position { body["position"] = position }
+        return try await APIClient.shared.patch("/songs/\(songId)/stems/\(stemId)", body: body)
+    }
+
+    static func deleteStem(songId: String, stemId: String) async throws {
+        try await APIClient.shared.delete("/songs/\(songId)/stems/\(stemId)")
+    }
+
     // MARK: - AI Import (Claude)
     // Note: Song *lookup* now happens client-side via ClaudeService.lookupSongs().
     // This method only handles *saving* the Claude results to the band's library.

@@ -119,3 +119,27 @@
 // Calendar
 "add_to_calendar" = "Agregar al Calendario";
 "added_to_calendar" = "Agregado al Calendario";
+
+// Multitracks
+"tracks" = "Pistas";
+"add_track" = "Agregar Pista";
+"edit_track" = "Editar Pista";
+"delete_track" = "¿Eliminar pista?";
+"delete_track_message" = "¿Quitar '%@' de esta canción?";
+"no_tracks_yet" = "Aún no hay pistas";
+"no_tracks_subtitle" = "Agrega un enlace de transmisión para que tu banda pueda tocar junto a la canción.";
+"loading_tracks" = "Cargando pistas…";
+"streaming_url" = "URL de Streaming";
+"streaming_url_hint" = "Pega un enlace directo de audio. Dropbox, Google Drive, OneDrive y cualquier enlace web directo son compatibles.";
+"how_to_direct_link" = "Cómo obtener un enlace directo";
+"mute" = "Silenciar";
+"solo" = "Solo";
+"track_kind_click" = "Click";
+"track_kind_guide" = "Guía";
+"track_kind_drums" = "Batería";
+"track_kind_bass" = "Bajo";
+"track_kind_keys" = "Teclados";
+"track_kind_pad" = "Pad";
+"track_kind_vocal" = "Voz";
+"track_kind_guitar" = "Guitarra";
+"track_kind_other" = "Otro";

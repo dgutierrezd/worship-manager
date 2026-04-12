@@ -119,3 +119,27 @@
 // Calendar
 "add_to_calendar" = "Add to Calendar";
 "added_to_calendar" = "Added to Calendar";
+
+// Multitracks
+"tracks" = "Tracks";
+"add_track" = "Add Track";
+"edit_track" = "Edit Track";
+"delete_track" = "Delete Track?";
+"delete_track_message" = "Remove '%@' from this song?";
+"no_tracks_yet" = "No tracks yet";
+"no_tracks_subtitle" = "Add a streaming link to any stem so your band can play along.";
+"loading_tracks" = "Loading tracks…";
+"streaming_url" = "Streaming URL";
+"streaming_url_hint" = "Paste a direct audio link. Dropbox, Google Drive, OneDrive and any direct web link are supported.";
+"how_to_direct_link" = "How to get a direct link";
+"mute" = "Mute";
+"solo" = "Solo";
+"track_kind_click" = "Click";
+"track_kind_guide" = "Guide";
+"track_kind_drums" = "Drums";
+"track_kind_bass" = "Bass";
+"track_kind_keys" = "Keys";
+"track_kind_pad" = "Pad";
+"track_kind_vocal" = "Vocal";
+"track_kind_guitar" = "Guitar";
+"track_kind_other" = "Other";

@@ -258,6 +258,275 @@ bandSongsRouter.delete(
 // Standalone song routes — mounted at /songs
 const songsRouter = Router();
 
+// MARK: - Song Stems (multitracks)
+
+/**
+ * Normalize a user-provided streaming URL so that major cloud providers
+ * serve the raw file instead of an HTML landing page.
+ *
+ *  - Dropbox:  ?dl=0 → ?raw=1
+ *  - OneDrive: append ?download=1
+ */
+function normalizeStreamingUrl(raw: string): string {
+  try {
+    const u = new URL(raw.trim());
+    const host = u.hostname.toLowerCase();
+
+    if (host.endsWith("dropbox.com")) {
+      u.searchParams.delete("dl");
+      u.searchParams.set("raw", "1");
+      return u.toString();
+    }
+    if (host.endsWith("1drv.ms") || host.endsWith("onedrive.live.com")) {
+      u.searchParams.set("download", "1");
+      return u.toString();
+    }
+    return u.toString();
+  } catch {
+    return raw.trim();
+  }
+}
+
+/** iCloud public share links always return an HTML landing page, not the file. */
+function isUnsupportedStreamingHost(raw: string): string | null {
+  try {
+    const host = new URL(raw.trim()).hostname.toLowerCase();
+    if (host.endsWith("icloud.com")) {
+      return "iCloud share links can't stream audio. Upload the file to Dropbox, Google Drive, OneDrive, or any direct audio host, and paste that link instead.";
+    }
+    return null;
+  } catch {
+    return "Please provide a valid URL.";
+  }
+}
+
+const ALLOWED_STEM_KINDS = new Set([
+  "click",
+  "guide",
+  "drums",
+  "bass",
+  "keys",
+  "pad",
+  "vocal",
+  "guitar",
+  "other",
+]);
+
+/** Assert the caller is a member of the band that owns the given song. */
+async function assertSongBandAccess(
+  songId: string,
+  userId: string
+): Promise<{ ok: true; bandId: string } | { ok: false; status: number; error: string }> {
+  const { data: song, error: songErr } = await supabaseAdmin
+    .from("songs")
+    .select("id, band_id")
+    .eq("id", songId)
+    .single();
+
+  if (songErr || !song) {
+    return { ok: false, status: 404, error: "Song not found" };
+  }
+
+  const { data: membership, error: memErr } = await supabaseAdmin
+    .from("band_members")
+    .select("user_id")
+    .eq("band_id", song.band_id)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (memErr) {
+    return { ok: false, status: 500, error: memErr.message };
+  }
+  if (!membership) {
+    return { ok: false, status: 403, error: "Not a member of this band" };
+  }
+
+  return { ok: true, bandId: song.band_id };
+}
+
+// GET /songs/:id/stems — List stems for a song
+songsRouter.get(
+  "/:id/stems",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const songId = req.params.id;
+    const access = await assertSongBandAccess(songId, req.userId!);
+    if (!access.ok) {
+      res.status(access.status).json({ error: access.error });
+      return;
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("song_stems")
+      .select("*")
+      .eq("song_id", songId)
+      .order("position", { ascending: true })
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    res.json(data);
+  }
+);
+
+// POST /songs/:id/stems — Add a stem (URL-only)
+songsRouter.post(
+  "/:id/stems",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const songId = req.params.id;
+    const { kind, label, url, position } = req.body as {
+      kind?: unknown;
+      label?: unknown;
+      url?: unknown;
+      position?: unknown;
+    };
+
+    if (typeof kind !== "string" || !ALLOWED_STEM_KINDS.has(kind)) {
+      res.status(400).json({ error: "Invalid stem kind" });
+      return;
+    }
+    if (typeof label !== "string" || label.trim().length === 0) {
+      res.status(400).json({ error: "label is required" });
+      return;
+    }
+    if (typeof url !== "string" || url.trim().length === 0) {
+      res.status(400).json({ error: "url is required" });
+      return;
+    }
+
+    const unsupported = isUnsupportedStreamingHost(url);
+    if (unsupported) {
+      res.status(400).json({ error: unsupported });
+      return;
+    }
+
+    const access = await assertSongBandAccess(songId, req.userId!);
+    if (!access.ok) {
+      res.status(access.status).json({ error: access.error });
+      return;
+    }
+
+    const normalized = normalizeStreamingUrl(url);
+
+    const { data, error } = await supabaseAdmin
+      .from("song_stems")
+      .insert({
+        song_id: songId,
+        band_id: access.bandId,
+        kind,
+        label: label.trim(),
+        url: normalized,
+        position: typeof position === "number" ? position : 0,
+        created_by: req.userId,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    res.status(201).json(data);
+  }
+);
+
+// PATCH /songs/:id/stems/:stemId — Edit a stem
+songsRouter.patch(
+  "/:id/stems/:stemId",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const { id: songId, stemId } = req.params;
+    const { kind, label, url, position } = req.body as {
+      kind?: unknown;
+      label?: unknown;
+      url?: unknown;
+      position?: unknown;
+    };
+
+    const access = await assertSongBandAccess(songId, req.userId!);
+    if (!access.ok) {
+      res.status(access.status).json({ error: access.error });
+      return;
+    }
+
+    const updates: Record<string, unknown> = {};
+    if (typeof kind === "string") {
+      if (!ALLOWED_STEM_KINDS.has(kind)) {
+        res.status(400).json({ error: "Invalid stem kind" });
+        return;
+      }
+      updates.kind = kind;
+    }
+    if (typeof label === "string" && label.trim().length > 0) {
+      updates.label = label.trim();
+    }
+    if (typeof url === "string" && url.trim().length > 0) {
+      const unsupported = isUnsupportedStreamingHost(url);
+      if (unsupported) {
+        res.status(400).json({ error: unsupported });
+        return;
+      }
+      updates.url = normalizeStreamingUrl(url);
+    }
+    if (typeof position === "number") {
+      updates.position = position;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      res.status(400).json({ error: "No valid fields to update" });
+      return;
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("song_stems")
+      .update(updates)
+      .eq("id", stemId)
+      .eq("song_id", songId)
+      .select()
+      .single();
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    res.json(data);
+  }
+);
+
+// DELETE /songs/:id/stems/:stemId — Remove a stem
+songsRouter.delete(
+  "/:id/stems/:stemId",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const { id: songId, stemId } = req.params;
+
+    const access = await assertSongBandAccess(songId, req.userId!);
+    if (!access.ok) {
+      res.status(access.status).json({ error: access.error });
+      return;
+    }
+
+    const { error } = await supabaseAdmin
+      .from("song_stems")
+      .delete()
+      .eq("id", stemId)
+      .eq("song_id", songId);
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    res.json({ message: "Stem deleted" });
+  }
+);
+
 // GET /songs/:id/chords — All chord sheets for a song
 songsRouter.get(
   "/:id/chords",

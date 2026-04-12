@@ -53,7 +53,8 @@ WorshipManager/
         │   ├── Settings/           # SettingsView, ProfileView, LanguageView
         │   └── Songs/              # SongLibraryView, SongDetailView, AddSongView, EditSongView,
         │                           #   ChordsEditorView, SongsViewModel
-        ├── Models/                 # Band, Song, Setlist, SetlistSong, Rehearsal, RehearsalRSVP,
+        │       └── Multitracks/    # MultitrackPlayerEngine, MultitracksView/VM, StemRowView, AddStemSheet
+        ├── Models/                 # Band, Song, SongStem, Setlist, SetlistSong, Rehearsal, RehearsalRSVP,
         │                           #   ChordSheet, ChordProgression, ChordEntry, ChordSection,
         │                           #   Member, Profile, ServiceAssignment
         └── Services/               # APIClient, AuthService, BandService, SongService,
@@ -210,6 +211,18 @@ Never commit `.env`. Use `.env.example` for documentation.
 | POST | `/songs/:id/chords` | Bearer | Create chord sheet. Body: `content` (JSON string of `ChordProgression`), `title?, instrument?` |
 | PUT | `/chords/:id` | Bearer | Update chord sheet. Body: `title?, content?, instrument?` |
 
+### Song Stems (Multitracks)
+Stems are **URL-only** — we never host audio. The user uploads stems to their own cloud (Dropbox / Google Drive / OneDrive / any direct web host) and pastes the streaming link into the app. The backend auto-normalizes Dropbox (`?dl=0` → `?raw=1`) and OneDrive (`?download=1`) links on write, and rejects `icloud.com` share links (they return HTML landing pages, not files).
+
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | `/songs/:id/stems` | Bearer+SongBandMember | List stems for a song, ordered by position |
+| POST | `/songs/:id/stems` | Bearer+SongBandMember | Add stem. Body: `kind, label, url, position?` — `kind ∈ click,guide,drums,bass,keys,pad,vocal,guitar,other` |
+| PATCH | `/songs/:id/stems/:stemId` | Bearer+SongBandMember | Update `label?, kind?, url?, position?` |
+| DELETE | `/songs/:id/stems/:stemId` | Bearer+SongBandMember | Remove stem |
+
+Band access is derived from the song's `band_id` (not a URL param), enforced in-route via `assertSongBandAccess()`.
+
 ### Setlists / Services
 | Method | Path | Auth | Description |
 |---|---|---|---|
@@ -248,6 +261,7 @@ Never commit `.env`. Use `.env.example` for documentation.
 | `band_members` | `band_id`, `user_id`, `role` (leader\|member), `instrument` | Unique(band_id, user_id) |
 | `songs` | `id`, `band_id`, `title`, `artist`, `default_key`, `tempo_bpm`, `duration_sec`, `notes`, `lyrics`, `tags` (TEXT[]), `theme`, `youtube_url`, `spotify_url` | |
 | `chord_sheets` | `id`, `song_id`, `instrument`, `title`, `content` (JSON string of ChordProgression) | |
+| `song_stems` | `id`, `song_id`, `band_id`, `kind`, `label`, `url`, `position` | Multitracks stored as URL references only — no audio in our bucket |
 | `setlists` | `id`, `band_id`, `name`, `date` (DATE), `notes`, `is_template`, `service_type`, `location`, `theme` | service_type: sunday_morning, sunday_evening, wednesday, special |
 | `setlist_songs` | `setlist_id`, `song_id`, `position`, `key_override`, `notes` | Unique(setlist_id, position) |
 | `rehearsals` | `id`, `band_id`, `setlist_id`, `title`, `location`, `scheduled_at` (TIMESTAMPTZ), `notes` | |
@@ -276,6 +290,7 @@ SetlistSong  { id, setlistId, songId, position, keyOverride, notes, songs: Song?
 Rehearsal    { id, bandId, setlistId, title, location, scheduledAt (ISO8601), notes, setlists: SetlistRef? }
 RehearsalRSVP { rehearsalId, userId, status }
 ChordSheet   { id, songId, instrument, title, content (JSON string) }
+SongStem     { id, songId, bandId, kind, label, url, position }  // URL-only multitrack reference
 ChordProgression { sections: [ChordSection] }  // Stored as JSON in chord_sheets.content
 ChordSection { id, name, chords: [ChordEntry] }
 ChordEntry   { id, degree(1-7), isPass, modifier }  // Nashville Number System

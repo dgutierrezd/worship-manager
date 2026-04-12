@@ -65,6 +65,21 @@ CREATE TABLE chord_sheets (
   updated_at  TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Song Stems (multitracks) — stored as URL references (no audio hosted in our bucket)
+CREATE TABLE song_stems (
+  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  song_id     UUID REFERENCES songs(id) ON DELETE CASCADE,
+  band_id     UUID REFERENCES bands(id) ON DELETE CASCADE,
+  kind        TEXT NOT NULL, -- click|guide|drums|bass|keys|pad|vocal|guitar|other
+  label       TEXT NOT NULL,
+  url         TEXT NOT NULL,
+  position    INT NOT NULL DEFAULT 0,
+  created_by  UUID REFERENCES auth.users(id),
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX song_stems_song_id_idx ON song_stems(song_id);
+CREATE INDEX song_stems_band_id_idx ON song_stems(band_id);
+
 -- Setlists
 CREATE TABLE setlists (
   id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -131,6 +146,7 @@ ALTER TABLE bands             ENABLE ROW LEVEL SECURITY;
 ALTER TABLE band_members      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE songs             ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chord_sheets      ENABLE ROW LEVEL SECURITY;
+ALTER TABLE song_stems        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE setlists          ENABLE ROW LEVEL SECURITY;
 ALTER TABLE setlist_songs     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rehearsals        ENABLE ROW LEVEL SECURITY;
@@ -189,6 +205,10 @@ CREATE POLICY "Member can view chords" ON chord_sheets
   );
 CREATE POLICY "Member can manage chords" ON chord_sheets
   FOR ALL USING (created_by = auth.uid());
+
+-- Song Stems (multitracks): readable by band members; writes go through backend
+CREATE POLICY "Member can view stems" ON song_stems
+  FOR SELECT USING (band_id IN (SELECT get_user_band_ids()));
 
 -- Setlists
 CREATE POLICY "Member can view setlists" ON setlists
