@@ -9,13 +9,22 @@ settings:
     SWIFT_VERSION: "5.9"
     GENERATE_INFOPLIST_FILE: YES
     MARKETING_VERSION: "1.0.0"
-    CURRENT_PROJECT_VERSION: 6
+    CURRENT_PROJECT_VERSION: 7
+packages:
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: "11.0.0"
 targets:
   WorshipFlow:
     type: application
     platform: iOS
     sources:
       - WorshipFlow
+    dependencies:
+      - package: Firebase
+        product: FirebaseMessaging
+      - package: Firebase
+        product: FirebaseCore
     settings:
       base:
         INFOPLIST_KEY_UIUserInterfaceStyle: Light
@@ -25,8 +34,10 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UIBackgroundModes: "remote-notification"
         PRODUCT_BUNDLE_IDENTIFIER: com.dgutierrezd.worshipflow
         CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: WorshipFlow/WorshipFlow.entitlements
         DEVELOPMENT_TEAM: UMM993JNZH
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "WorshipFlow needs access to your photo library to set a band image."
         INFOPLIST_KEY_NSCalendarsUsageDescription: "WorshipFlow uses your calendar to add services and rehearsals as events."

@@ -53,6 +53,7 @@
 		98686BDD432D1EB119725E01 /* BandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD73F9DA701E8060EACF1007 /* BandViewModel.swift */; };
 		9BD692CBBD3B920F958A1150 /* SongsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A6F372629ED30C8D84646E /* SongsViewModel.swift */; };
 		9C70A1A4409697EA5F04A732 /* LyricChordEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53844263BCD6454C23096682 /* LyricChordEditorView.swift */; };
+		9E5FBFDD85A0388D9A4F5852 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 3241FF5CC26BA856607EE3F1 /* FirebaseMessaging */; };
 		9E68A4FE6A443D930F806502 /* CreateRehearsalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADB450DD057021E75C24BC6 /* CreateRehearsalView.swift */; };
 		9EB5646EEF9EC09643C219F2 /* MultitrackPlayerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF90E4B1D92D93DD2FB0A960 /* MultitrackPlayerEngine.swift */; };
 		A127C239D2C8ABE1D96C6CDA /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64188005DEC3434634BE4339 /* SkeletonView.swift */; };
@@ -73,6 +74,9 @@
 		CBAD7B9EC54A29F6EECFB878 /* ServiceAssignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CF197EE2ACA3B309F3E7E8 /* ServiceAssignment.swift */; };
 		D2DB16843ED292B748FDEF0F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED23EFBDEB700190D9F983EB /* NotificationService.swift */; };
 		DB903E8DADFC35D6F99372FD /* LanguageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909871DBB3E4544A114AE2B2 /* LanguageView.swift */; };
+		DD65F8EE6C5FDFBA9D80AAD0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DE6B913DFE0E6DD0CE607F /* AppDelegate.swift */; };
+		DF9B5AF5AEBE6411AB8B0FCA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4062AC940CC6346A6DBC768B /* GoogleService-Info.plist */; };
+		E0B277E0F87E6DBC0229985C /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = D49A6347E3F686E64DF7CB7B /* FirebaseCore */; };
 		E29E5226573E7E1B537F1DF5 /* BandHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AAC69E6BBC8403B8773156 /* BandHomeView.swift */; };
 		E38A1CE08C7006A7FA536A56 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5704527C346DC45FEEA01D8E /* Config.swift */; };
 		E749D35D361FE2360A98FE2C /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEE3DD6438E298245FE7011 /* SignUpView.swift */; };
@@ -109,6 +113,7 @@
 		34AAC69E6BBC8403B8773156 /* BandHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandHomeView.swift; sourceTree = "<group>"; };
 		3E10DA60D1BCDEECAA416C66 /* RehearsalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalsView.swift; sourceTree = "<group>"; };
 		3EEA9884E5D96F8724C2936A /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		4062AC940CC6346A6DBC768B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		462BDCC51C0FFBF9C5DE74B5 /* RehearsalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalsViewModel.swift; sourceTree = "<group>"; };
 		4972AE8B089DEE3B7ED14BC8 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		53844263BCD6454C23096682 /* LyricChordEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricChordEditorView.swift; sourceTree = "<group>"; };
@@ -120,6 +125,7 @@
 		577D2D9987BF181DF2190216 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5D755319DA3D23CD5B9DB7E1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5FD0E194FD7B10CE7EAB362A /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
+		61DE6B913DFE0E6DD0CE607F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64188005DEC3434634BE4339 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		6469B8E211B9A01F898EB197 /* WorshipFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorshipFlowApp.swift; sourceTree = "<group>"; };
 		650C58EA79F6B0B4E943121E /* AIImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIImportView.swift; sourceTree = "<group>"; };
@@ -157,6 +163,7 @@
 		BDF5E63AC89831C59FF215CD /* Rehearsal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rehearsal.swift; sourceTree = "<group>"; };
 		BE15420AAB67916207B72502 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		BF90E4B1D92D93DD2FB0A960 /* MultitrackPlayerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitrackPlayerEngine.swift; sourceTree = "<group>"; };
+		C18C6A5C54E5F0D32CD0EDAC /* WorshipFlow.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WorshipFlow.entitlements; sourceTree = "<group>"; };
 		C312C0E68365DF2DCDFD7FEC /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
 		C4079F2D64EDF752DC928274 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		C9F03182B1A6FBACB236954E /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
@@ -180,6 +187,18 @@
 		FD73F9DA701E8060EACF1007 /* BandViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		0358F3D68A0E8B8885F43F68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E5FBFDD85A0388D9A4F5852 /* FirebaseMessaging in Frameworks */,
+				E0B277E0F87E6DBC0229985C /* FirebaseCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
 		17362310C26046BA282FEB4A /* Products */ = {
 			isa = PBXGroup;
@@ -192,6 +211,8 @@
 		174337D5976E9D7564E1FC72 /* WorshipFlow */ = {
 			isa = PBXGroup;
 			children = (
+				4062AC940CC6346A6DBC768B /* GoogleService-Info.plist */,
+				C18C6A5C54E5F0D32CD0EDAC /* WorshipFlow.entitlements */,
 				55545C1F969CB2FA6E822026 /* App */,
 				645EE8C3CC58C6A65B0CFC12 /* Core */,
 				AF99E620C92FCC777C602814 /* Features */,
@@ -275,6 +296,7 @@
 		55545C1F969CB2FA6E822026 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				61DE6B913DFE0E6DD0CE607F /* AppDelegate.swift */,
 				5704527C346DC45FEEA01D8E /* Config.swift */,
 				6469B8E211B9A01F898EB197 /* WorshipFlowApp.swift */,
 			);
@@ -464,6 +486,7 @@
 			buildPhases = (
 				EBB3782858BEA1371AE1E59B /* Sources */,
 				9F1F0A560B1BED05774257B4 /* Resources */,
+				0358F3D68A0E8B8885F43F68 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -471,6 +494,8 @@
 			);
 			name = WorshipFlow;
 			packageProductDependencies = (
+				3241FF5CC26BA856607EE3F1 /* FirebaseMessaging */,
+				D49A6347E3F686E64DF7CB7B /* FirebaseCore */,
 			);
 			productName = WorshipFlow;
 			productReference = F6606BE96CC0ECE873AA7327 /* WorshipFlow.app */;
@@ -501,6 +526,9 @@
 			);
 			mainGroup = 90C88E9F7356C251B8827B5F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7F5CDA0177FC6CF697EED6C0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 17362310C26046BA282FEB4A /* Products */;
 			projectDirPath = "";
@@ -517,6 +545,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09E2F653DB777BA134EE3B97 /* Assets.xcassets in Resources */,
+				DF9B5AF5AEBE6411AB8B0FCA /* GoogleService-Info.plist in Resources */,
 				797E49889DDFA6FA512CAA05 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -534,6 +563,7 @@
 				15879EE01E644122B64D7A93 /* AddSongToSetlistView.swift in Sources */,
 				FF1556FAB699DD77594D3F6F /* AddSongView.swift in Sources */,
 				F98941E5C115B66E434A1416 /* AddStemSheet.swift in Sources */,
+				DD65F8EE6C5FDFBA9D80AAD0 /* AppDelegate.swift in Sources */,
 				4422B3AEB479F2824FC214D4 /* AppTheme.swift in Sources */,
 				E9F220FDCB20AC314F3B5F02 /* AuthService.swift in Sources */,
 				5529D38B088F2DCD2B2C3E08 /* AuthViewModel.swift in Sources */,
@@ -631,6 +661,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WorshipFlow/WorshipFlow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UMM993JNZH;
@@ -639,6 +670,7 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "WorshipFlow needs access to your photo library to set a band image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -657,6 +689,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WorshipFlow/WorshipFlow.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UMM993JNZH;
@@ -665,6 +698,7 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "WorshipFlow needs access to your photo library to set a band image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -713,7 +747,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -779,7 +813,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -826,6 +860,30 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7F5CDA0177FC6CF697EED6C0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3241FF5CC26BA856607EE3F1 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7F5CDA0177FC6CF697EED6C0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		D49A6347E3F686E64DF7CB7B /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7F5CDA0177FC6CF697EED6C0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D9BDC6EDBEA4FDE59DEC557F /* Project object */;
 }
