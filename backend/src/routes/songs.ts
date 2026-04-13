@@ -5,7 +5,6 @@ import {
   bandAccessMiddleware,
   BandRequest,
 } from "../middleware/bandAccess.middleware";
-import { lookupSongs, AISongResult } from "../services/groq.service";
 
 // Band-scoped song routes — mounted at /bands
 const bandSongsRouter = Router();
@@ -82,118 +81,63 @@ bandSongsRouter.post(
   }
 );
 
-// POST /bands/:id/songs/ai-lookup — AI-powered song lookup (does NOT save anything)
+// POST /bands/:id/songs/bulk — Insert many songs at once (title + optional artist).
+// Body: { songs: Array<{ title: string; artist?: string | null }> }
+// Returns: { songs: Song[] } — the created rows in the same order as the input.
+//
+// Designed for the "paste a list of titles" UX: limited to 200 per call, and
+// silently dedupes empty titles. Uses a single bulk insert for performance.
 bandSongsRouter.post(
-  "/:id/songs/ai-lookup",
+  "/:id/songs/bulk",
   authMiddleware,
   bandAccessMiddleware,
   async (req: BandRequest, res: Response): Promise<void> => {
-    const { names } = req.body as { names?: unknown };
-
-    if (!Array.isArray(names) || names.length === 0) {
-      res.status(400).json({ error: "names must be a non-empty array of song name strings" });
-      return;
-    }
-    if (names.length > 10) {
-      res.status(400).json({ error: "Maximum 10 songs per lookup" });
-      return;
-    }
-
-    const nameStrings = (names as unknown[])
-      .filter((n): n is string => typeof n === "string" && n.trim().length > 0)
-      .map((n) => n.trim());
-
-    if (nameStrings.length === 0) {
-      res.status(400).json({ error: "All names must be non-empty strings" });
-      return;
-    }
-
-    try {
-      const results = await lookupSongs(nameStrings);
-      res.json({ results });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "AI lookup failed";
-      res.status(500).json({ error: message });
-    }
-  }
-);
-
-// POST /bands/:id/songs/ai-import — Save AI-sourced songs + chord sheets
-bandSongsRouter.post(
-  "/:id/songs/ai-import",
-  authMiddleware,
-  bandAccessMiddleware,
-  async (req: BandRequest, res: Response): Promise<void> => {
-    const { songs } = req.body as { songs?: AISongResult[] };
+    const { songs } = req.body as {
+      songs?: Array<{ title?: unknown; artist?: unknown }>;
+    };
 
     if (!Array.isArray(songs) || songs.length === 0) {
       res.status(400).json({ error: "songs must be a non-empty array" });
       return;
     }
+    if (songs.length > 200) {
+      res.status(400).json({ error: "Maximum 200 songs per bulk insert" });
+      return;
+    }
 
-    const createdSongs: Record<string, unknown>[] = [];
+    const rows = songs
+      .map((s) => {
+        const title = typeof s?.title === "string" ? s.title.trim() : "";
+        const artistRaw = typeof s?.artist === "string" ? s.artist.trim() : "";
+        if (!title) return null;
+        return {
+          band_id: req.bandId,
+          title,
+          artist: artistRaw.length > 0 ? artistRaw : null,
+          created_by: req.userId,
+        };
+      })
+      .filter((r): r is NonNullable<typeof r> => r !== null);
+
+    if (rows.length === 0) {
+      res.status(400).json({ error: "No valid song titles in payload" });
+      return;
+    }
 
     try {
-      for (const song of songs) {
-        // 1. Insert the song row
-        const { data: newSong, error: songError } = await supabaseAdmin
-          .from("songs")
-          .insert({
-            band_id: req.bandId,
-            title: song.title,
-            artist: song.artist || null,
-            default_key: song.default_key || null,
-            tempo_bpm: song.tempo_bpm || null,
-            duration_sec: song.duration_sec || null,
-            lyrics: song.lyrics || null,
-            theme: song.theme || null,
-            youtube_url: song.youtube_url || null,
-            spotify_url: song.spotify_url || null,
-            created_by: req.userId,
-          })
-          .select()
-          .single();
+      const { data, error } = await supabaseAdmin
+        .from("songs")
+        .insert(rows)
+        .select();
 
-        if (songError || !newSong) {
-          console.error("Failed to insert AI song:", songError?.message);
-          continue;
-        }
-
-        createdSongs.push(newSong);
-
-        // 2. Create chord sheet if sections were provided
-        if (Array.isArray(song.chord_sections) && song.chord_sections.length > 0) {
-          const sections = song.chord_sections.map((section) => ({
-            id: crypto.randomUUID(),
-            name: section.name,
-            chords: section.chords.map((chord) => ({
-              id: crypto.randomUUID(),
-              degree: chord.degree,
-              is_pass: false,           // must match iOS ChordEntry.CodingKeys ("is_pass")
-              modifier: chord.modifier ?? null,
-            })),
-          }));
-
-          const content = JSON.stringify({ sections });
-
-          const { error: chordError } = await supabaseAdmin
-            .from("chord_sheets")
-            .insert({
-              song_id: newSong.id,
-              title: "AI Generated",
-              content,
-              created_by: req.userId,
-            });
-
-          if (chordError) {
-            console.error("Failed to insert chord sheet for AI song:", chordError.message);
-          }
-        }
+      if (error) {
+        res.status(500).json({ error: error.message });
+        return;
       }
 
-      res.status(201).json({ songs: createdSongs });
+      res.status(201).json({ songs: data ?? [] });
     } catch {
-      res.status(500).json({ error: "Failed to import songs" });
+      res.status(500).json({ error: "Failed to bulk-create songs" });
     }
   }
 );

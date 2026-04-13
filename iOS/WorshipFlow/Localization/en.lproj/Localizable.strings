@@ -143,3 +143,20 @@
 "track_kind_vocal" = "Vocal";
 "track_kind_guitar" = "Guitar";
 "track_kind_other" = "Other";
+
+// Bulk add songs / inline create
+"bulk_add_songs" = "Add Many Songs";
+"songs_one_per_line" = "Songs (one per line)";
+"bulk_add_hint_title" = "Paste a list of songs";
+"bulk_add_hint_body" = "Use one song per line. Add the artist after a dash if you want — title only is fine too.";
+"preview" = "Preview";
+"add_n" = "Add %d";
+"added_n_songs" = "Added %d songs";
+"bulk_add_failed" = "Couldn't add the songs. Please try again.";
+"create_new_song" = "Create new song";
+"title" = "Title";
+"artist_optional" = "Artist (optional)";
+"create_and_add" = "Create & Add";
+"your_library" = "Your Library";
+"search_songs" = "Search songs";
+"cancel" = "Cancel";

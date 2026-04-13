@@ -5,8 +5,7 @@ class SongsViewModel: ObservableObject {
     @Published var songs: [Song] = []
     @Published var chordSheets: [ChordSheet] = []
     @Published var isLoading = false
-    @Published var isAILoading = false
-    @Published var aiResults: [AISongResult] = []
+    @Published var isBulkLoading = false
     @Published var error: String?
 
     var bandId: String?
@@ -109,33 +108,32 @@ class SongsViewModel: ObservableObject {
         }
     }
 
-    // MARK: - AI Import (Claude)
+    // MARK: - Bulk Add
 
-    /// Calls Claude directly to look up song data. No backend round-trip needed for lookup.
-    func aiLookup(names: [String]) async {
-        isAILoading = true
+    /// Bulk-create many songs at once. Each entry is a (title, optional artist) pair.
+    /// Returns the number of songs successfully added, or `nil` if the call failed.
+    @discardableResult
+    func bulkAddSongs(_ entries: [(title: String, artist: String?)]) async -> Int? {
+        guard let bandId else { return nil }
+        let payload = entries
+            .map { (title: $0.title.trimmingCharacters(in: .whitespacesAndNewlines),
+                    artist: $0.artist?.trimmingCharacters(in: .whitespacesAndNewlines)) }
+            .filter { !$0.title.isEmpty }
+        guard !payload.isEmpty else { return 0 }
+
+        isBulkLoading = true
         error = nil
+        defer { isBulkLoading = false }
+
         do {
-            aiResults = try await ClaudeService.lookupSongs(names: names)
+            let created = try await SongService.bulkAddSongs(bandId: bandId, songs: payload)
+            songs.append(contentsOf: created)
+            songs.sort { $0.title.lowercased() < $1.title.lowercased() }
+            return created.count
         } catch {
             self.error = error.localizedDescription
+            return nil
         }
-        isAILoading = false
-    }
-
-    func aiImport(songs toImport: [AISongResult]) async {
-        guard let bandId else { return }
-        isAILoading = true
-        error = nil
-        do {
-            let imported = try await SongService.aiImport(bandId: bandId, songs: toImport)
-            self.songs.append(contentsOf: imported)
-            self.songs.sort { $0.title.lowercased() < $1.title.lowercased() }
-            aiResults = []
-        } catch {
-            self.error = error.localizedDescription
-        }
-        isAILoading = false
     }
 
     // MARK: - Chord Sheets

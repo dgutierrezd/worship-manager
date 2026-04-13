@@ -143,3 +143,20 @@
 "track_kind_vocal" = "Voz";
 "track_kind_guitar" = "Guitarra";
 "track_kind_other" = "Otro";
+
+// Agregar canciones en lote / crear inline
+"bulk_add_songs" = "Agregar varias canciones";
+"songs_one_per_line" = "Canciones (una por línea)";
+"bulk_add_hint_title" = "Pega una lista de canciones";
+"bulk_add_hint_body" = "Una canción por línea. Si quieres, agrega el artista después de un guion — con solo el título también funciona.";
+"preview" = "Vista previa";
+"add_n" = "Agregar %d";
+"added_n_songs" = "Se agregaron %d canciones";
+"bulk_add_failed" = "No se pudieron agregar las canciones. Intenta de nuevo.";
+"create_new_song" = "Crear nueva canción";
+"title" = "Título";
+"artist_optional" = "Artista (opcional)";
+"create_and_add" = "Crear y agregar";
+"your_library" = "Tu biblioteca";
+"search_songs" = "Buscar canciones";
+"cancel" = "Cancelar";

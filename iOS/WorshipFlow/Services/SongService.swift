@@ -103,22 +103,23 @@ enum SongService {
         try await APIClient.shared.delete("/songs/\(songId)/stems/\(stemId)")
     }
 
-    // MARK: - AI Import (Claude)
-    // Note: Song *lookup* now happens client-side via ClaudeService.lookupSongs().
-    // This method only handles *saving* the Claude results to the band's library.
+    // MARK: - Bulk add
 
-    /// Saves Claude-sourced songs (with chord sheets) to the band's library. Returns created Song records.
-    static func aiImport(bandId: String, songs: [AISongResult]) async throws -> [Song] {
-        // Convert Codable array → [[String: Any]] for APIClient (which uses JSONSerialization)
-        let encoded = try JSONEncoder().encode(songs)
-        guard let songsArray = try JSONSerialization.jsonObject(with: encoded) as? [[String: Any]] else {
-            throw APIError.decodingError
+    /// Inserts many songs in a single request. Each entry is `(title, optional artist)`.
+    /// Returns the created `Song` records in insertion order.
+    static func bulkAddSongs(
+        bandId: String,
+        songs: [(title: String, artist: String?)]
+    ) async throws -> [Song] {
+        let payload: [[String: Any]] = songs.map { entry in
+            var row: [String: Any] = ["title": entry.title]
+            if let artist = entry.artist, !artist.isEmpty { row["artist"] = artist }
+            return row
         }
-        let body: [String: Any] = ["songs": songsArray]
         struct Response: Decodable { let songs: [Song] }
         let response: Response = try await APIClient.shared.post(
-            "/bands/\(bandId)/songs/ai-import",
-            body: body
+            "/bands/\(bandId)/songs/bulk",
+            body: ["songs": payload]
         )
         return response.songs
     }

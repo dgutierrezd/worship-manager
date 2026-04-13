@@ -12,7 +12,7 @@ struct SongLibraryView: View {
     @State private var sortOption: SortOption = .alphabetical
     @State private var showAddSong = false
     @State private var showFilters = false
-    @State private var showAIImport = false
+    @State private var showBulkAdd = false
 
     enum SortOption: String, CaseIterable {
         case alphabetical = "A–Z"
@@ -144,27 +144,28 @@ struct SongLibraryView: View {
             .navigationTitle("songs".localized)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    HStack(spacing: 4) {
-                        Button {
-                            showAIImport = true
-                        } label: {
-                            Image(systemName: "sparkles")
-                                .fontWeight(.semibold)
-                        }
+                    Menu {
                         Button {
                             showAddSong = true
                         } label: {
-                            Image(systemName: "plus")
-                                .fontWeight(.semibold)
+                            Label("new_song".localized, systemImage: "plus")
                         }
+                        Button {
+                            showBulkAdd = true
+                        } label: {
+                            Label("bulk_add_songs".localized, systemImage: "text.badge.plus")
+                        }
+                    } label: {
+                        Image(systemName: "plus")
+                            .fontWeight(.semibold)
                     }
                 }
             }
             .sheet(isPresented: $showAddSong) {
                 AddSongView(vm: vm)
             }
-            .sheet(isPresented: $showAIImport) {
-                AIImportView(vm: vm)
+            .sheet(isPresented: $showBulkAdd) {
+                BulkAddSongsView(vm: vm)
             }
             .refreshable {
                 guard let bandId = bandVM.currentBand?.id else { return }
