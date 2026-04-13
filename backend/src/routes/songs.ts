@@ -208,14 +208,17 @@ const songsRouter = Router();
  * Normalize a user-provided streaming URL so that major cloud providers
  * serve the raw file instead of an HTML landing page.
  *
- *  - Dropbox: force `?dl=1` (removes any `dl=0` / `raw=*`). This makes
- *      BOTH the legacy `/s/...` and modern `/scl/fi/...` share-link
- *      formats 302-redirect to `ucXXX.dl.dropboxusercontent.com`, which
- *      streams the file with `Access-Control-Allow-Origin: *` — required
- *      for the web Multitrack player's `fetch` + `decodeAudioData` to
- *      succeed. `raw=1` only reliably worked on the legacy `/s/...`
- *      format; on `/scl/fi/...` links Dropbox still served an HTML
- *      preview page, which broke Web Audio with a CORS error.
+ *  - Dropbox: rewrite `www.dropbox.com` → `dl.dropboxusercontent.com`
+ *      and strip `dl` / `raw` flags. This bypasses Dropbox's normal 302
+ *      redirect chain and returns the file bytes in a single response
+ *      with `Access-Control-Allow-Origin: *` — required for the web
+ *      Multitrack player's `fetch` + `decodeAudioData` to succeed on
+ *      both legacy `/s/...` and modern `/scl/fi/...?rlkey=...` share
+ *      formats. Previously we tried `?raw=1` and `?dl=1`, but both
+ *      either served an HTML preview or dropped CORS headers after the
+ *      redirect in some browsers / networks. The `rlkey=` and `st=`
+ *      tokens continue to work on the `dl.dropboxusercontent.com`
+ *      subdomain unchanged.
  *  - OneDrive: append `?download=1`.
  */
 function normalizeStreamingUrl(raw: string): string {
@@ -223,9 +226,10 @@ function normalizeStreamingUrl(raw: string): string {
     const u = new URL(raw.trim());
     const host = u.hostname.toLowerCase();
 
-    if (host.endsWith("dropbox.com")) {
+    if (host === "www.dropbox.com" || host === "dropbox.com") {
+      u.hostname = "dl.dropboxusercontent.com";
+      u.searchParams.delete("dl");
       u.searchParams.delete("raw");
-      u.searchParams.set("dl", "1");
       return u.toString();
     }
     if (host.endsWith("1drv.ms") || host.endsWith("onedrive.live.com")) {
