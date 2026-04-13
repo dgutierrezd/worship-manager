@@ -15,11 +15,17 @@ CREATE TABLE IF NOT EXISTS setlist_rsvps (
 ALTER TABLE setlist_rsvps ENABLE ROW LEVEL SECURITY;
 
 -- Any band member can read RSVPs for setlists in their bands.
+-- Note: we use a direct subquery against band_members instead of the
+-- get_user_band_ids() helper so this migration is self-contained — it
+-- works whether or not the helper exists in this project.
 CREATE POLICY "Members can view setlist RSVPs"
   ON setlist_rsvps FOR SELECT
   USING (
     setlist_id IN (
-      SELECT id FROM setlists WHERE band_id IN (SELECT get_user_band_ids())
+      SELECT id FROM setlists
+      WHERE band_id IN (
+        SELECT band_id FROM band_members WHERE user_id = auth.uid()
+      )
     )
   );
 
