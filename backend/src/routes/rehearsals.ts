@@ -203,6 +203,30 @@ rehearsalsRouter.get(
   }
 );
 
+// GET /rehearsals/:id/rsvps — all RSVPs for a rehearsal, with profile names.
+// Used to render the attendance roster on the rehearsal detail page.
+rehearsalsRouter.get(
+  "/:id/rsvps",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const rehearsalId = req.params.id;
+    try {
+      const { data, error } = await supabaseAdmin
+        .from("rehearsal_rsvps")
+        .select("rehearsal_id, user_id, status, updated_at, profiles(full_name, avatar_url, instrument)")
+        .eq("rehearsal_id", rehearsalId);
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+      }
+      res.json(data);
+    } catch {
+      res.status(500).json({ error: "Failed to fetch rehearsal RSVPs" });
+    }
+  }
+);
+
 // POST /rehearsals/:id/rsvp
 rehearsalsRouter.post(
   "/:id/rsvp",

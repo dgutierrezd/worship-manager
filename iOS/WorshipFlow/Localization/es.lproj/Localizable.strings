@@ -170,3 +170,7 @@
 "choose_setlist" = "Elegir una lista…";
 "no_setlists_yet" = "Aún no hay listas";
 "none" = "Ninguna";
+
+// Lista de asistencia
+"attendance" = "Asistencia";
+"no_responses_yet" = "Aún no hay respuestas";

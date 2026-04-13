@@ -37,4 +37,9 @@ enum RehearsalService {
     static func getMyRSVPs(bandId: String) async throws -> [RehearsalRSVP] {
         try await APIClient.shared.get("/rehearsals/my-rsvps?band_id=\(bandId)")
     }
+
+    /// All members' RSVPs for a single rehearsal, with profile info for the roster UI.
+    static func getRSVPs(rehearsalId: String) async throws -> [AttendanceRSVP] {
+        try await APIClient.shared.get("/rehearsals/\(rehearsalId)/rsvps")
+    }
 }

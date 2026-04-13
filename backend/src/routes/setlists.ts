@@ -210,7 +210,7 @@ setlistsRouter.get(
     try {
       const { data, error } = await supabaseAdmin
         .from("setlist_rsvps")
-        .select("setlist_id, user_id, status, updated_at, profiles(full_name, avatar_url)")
+        .select("setlist_id, user_id, status, updated_at, profiles(full_name, avatar_url, instrument)")
         .eq("setlist_id", setlistId);
 
       if (error) {

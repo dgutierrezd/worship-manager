@@ -17,6 +17,18 @@ export interface SetlistRSVPRow {
   status: RSVPStatus;
 }
 
+/** Attendance roster entry returned by GET /<entity>/:id/rsvps. */
+export interface AttendanceRSVP {
+  user_id: string;
+  status: RSVPStatus;
+  updated_at: string | null;
+  profiles: {
+    full_name: string | null;
+    avatar_url: string | null;
+    instrument: string | null;
+  } | null;
+}
+
 export const setlistsApi = {
   list: (bandId: string) =>
     apiClient.get<Setlist[]>(`/bands/${bandId}/setlists`),
@@ -49,4 +61,7 @@ export const setlistsApi = {
 
   rsvp: (setlistId: string, status: RSVPStatus) =>
     apiClient.post<SetlistRSVPRow>(`/setlists/${setlistId}/rsvp`, { status }),
+
+  rsvps: (setlistId: string) =>
+    apiClient.get<AttendanceRSVP[]>(`/setlists/${setlistId}/rsvps`),
 };

@@ -27,6 +27,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Modal } from "@/components/ui/modal";
 import { SkeletonList } from "@/components/ui/skeleton";
 import { EditServiceModal } from "@/components/services/edit-service-modal";
+import { AttendanceRoster } from "@/components/attendance-roster";
 import {
   errorMessage,
   formatShortDate,
@@ -73,10 +74,17 @@ export default function ServiceDetailPage() {
     (r) => r.setlist_id === id,
   )?.status;
 
+  const rosterQuery = useQuery({
+    queryKey: ["setlist-rsvps", id],
+    queryFn: () => setlistsApi.rsvps(id),
+  });
+
   const rsvpMutation = useMutation({
     mutationFn: (status: RSVPStatus) => setlistsApi.rsvp(id, status),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["setlist-rsvps-mine", bandId] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["setlist-rsvps-mine", bandId] });
+      queryClient.invalidateQueries({ queryKey: ["setlist-rsvps", id] });
+    },
   });
 
   const addSongMutation = useMutation({
@@ -320,6 +328,13 @@ export default function ServiceDetailPage() {
             ))}
           </ol>
         )}
+      </section>
+
+      <section className="mt-8">
+        <AttendanceRoster
+          rsvps={rosterQuery.data}
+          isLoading={rosterQuery.isLoading}
+        />
       </section>
 
       <AddOrCreateSongModal

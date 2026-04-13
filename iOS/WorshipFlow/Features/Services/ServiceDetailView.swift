@@ -14,6 +14,10 @@ struct ServiceDetailView: View {
     @State private var calendarAdded = false
     @State private var showCalendarError = false
 
+    // Attendance roster (band-wide RSVP list for this service)
+    @State private var rosterRSVPs: [AttendanceRSVP] = []
+    @State private var rosterLoading = false
+
     // Any band member can edit services — no role-based gating.
     var canEdit: Bool { bandVM.currentBand != nil }
 
@@ -89,6 +93,7 @@ struct ServiceDetailView: View {
             if let bandId = bandVM.currentBand?.id {
                 await vm.loadMyRSVPs(bandId: bandId)
             }
+            await loadRoster()
         }
     }
 
@@ -147,10 +152,30 @@ struct ServiceDetailView: View {
                     }
                 }
             }
+
+            // Attendance roster (band-wide RSVPs)
+            Section {
+                AttendanceRosterCard(rsvps: rosterRSVPs, isLoading: rosterLoading)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+            }
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .toolbar { if canEdit { EditButton() } }
+    }
+
+    // MARK: - Roster loading
+
+    private func loadRoster() async {
+        rosterLoading = true
+        defer { rosterLoading = false }
+        do {
+            rosterRSVPs = try await SetlistService.getRSVPs(setlistId: setlist.id)
+        } catch {
+            // Non-fatal — roster simply stays empty.
+        }
     }
 
     // MARK: - Team Tab
@@ -289,6 +314,9 @@ struct ServiceDetailView: View {
 
                 Divider().padding(.vertical, 6)
                 rsvpRow
+                    .onChange(of: vm.rsvpStatus(for: setlist.id)) { _, _ in
+                        Task { await loadRoster() }
+                    }
             }
         }
         .listRowBackground(Color.appSurface)

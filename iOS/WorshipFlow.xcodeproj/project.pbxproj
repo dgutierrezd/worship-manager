@@ -29,6 +29,7 @@
 		4469F695F9E17EE76094E346 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1DA91269827C53BB3135F1 /* Member.swift */; };
 		48B1D487DE2C7BD85AE6429C /* SetlistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE0269F537F026CE05ABB80 /* SetlistService.swift */; };
 		491429C1CFCFB0F36D791F73 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873BF5146CB1576F57EEDC81 /* SongService.swift */; };
+		4CEE4EFBF9C97B6876000242 /* AttendanceRosterCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7256776845C0771458EDC3A /* AttendanceRosterCard.swift */; };
 		4E491CB544ADE20D335C1E91 /* SetlistRSVP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA6AEF9FD456D31E72849A /* SetlistRSVP.swift */; };
 		4E7B95AFCE0CCF61252C16F7 /* MultitracksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8EF169BB6D39D8B58FDA /* MultitracksView.swift */; };
 		5529D38B088F2DCD2B2C3E08 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810159D579A346CD46081B5A /* AuthViewModel.swift */; };
@@ -46,6 +47,7 @@
 		7FA5A053830C6FBBA8DDC0A3 /* ServiceAssignmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795AF03D529AF62BB831A3F8 /* ServiceAssignmentViewModel.swift */; };
 		83C8A86AB5DEFF219F39691A /* Band.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFDC0CDAE78CEAE87B1BB58 /* Band.swift */; };
 		83EAF0E23DE53955099DB3B2 /* StemRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A4DD6151FD58C47DFE4AC8 /* StemRowView.swift */; };
+		87672FBFCEBDEAE36F5EB498 /* AttendanceRSVP.swift in Sources */ = {isa = PBXBuildFile; fileRef = A581FF76912E60C3A3C56F49 /* AttendanceRSVP.swift */; };
 		897E3E4A1F4976480FF67B87 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44A8C5938FD4B01887730D3 /* LoadingButton.swift */; };
 		9044EAD42B376FC89DAC8176 /* MemberProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344CD4776A0AC425B1490A1F /* MemberProfileView.swift */; };
 		904D04AF6EC8FEC59A265709 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F03182B1A6FBACB236954E /* Profile.swift */; };
@@ -149,6 +151,7 @@
 		98A4DD6151FD58C47DFE4AC8 /* StemRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StemRowView.swift; sourceTree = "<group>"; };
 		9F6D0B19944E1C2397DCC3B0 /* AddSongToSetlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSongToSetlistView.swift; sourceTree = "<group>"; };
 		A19273B2A68F35B5AFCD44E2 /* Setlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setlist.swift; sourceTree = "<group>"; };
+		A581FF76912E60C3A3C56F49 /* AttendanceRSVP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceRSVP.swift; sourceTree = "<group>"; };
 		A82C76E1BE661B71343D8829 /* EditSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSongView.swift; sourceTree = "<group>"; };
 		A944E2964D971DA162342DC3 /* RehearsalDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalDetailView.swift; sourceTree = "<group>"; };
 		AA0EFF3A02E2D7BA803001BC /* ServicesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesView.swift; sourceTree = "<group>"; };
@@ -181,6 +184,7 @@
 		F40EF23443220891CF541FC6 /* RehearsalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RehearsalService.swift; sourceTree = "<group>"; };
 		F6606BE96CC0ECE873AA7327 /* WorshipFlow.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WorshipFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C3A68CF9140961BEB2CD9D /* SetlistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistsView.swift; sourceTree = "<group>"; };
+		F7256776845C0771458EDC3A /* AttendanceRosterCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceRosterCard.swift; sourceTree = "<group>"; };
 		F8A13830AA55E6B4FD08BF1F /* CreateSetlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSetlistView.swift; sourceTree = "<group>"; };
 		FD73F9DA701E8060EACF1007 /* BandViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -381,6 +385,7 @@
 		A179D152B88FA46972D9A840 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				F7256776845C0771458EDC3A /* AttendanceRosterCard.swift */,
 				CBE00E5F68547E8FCCC48A17 /* BandAvatarView.swift */,
 				5403BC2C20B77C4A9C9E40D2 /* EmptyStateView.swift */,
 				3EEA9884E5D96F8724C2936A /* FlowLayout.swift */,
@@ -459,6 +464,7 @@
 		FD8B2E6F0ED569E138C40245 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A581FF76912E60C3A3C56F49 /* AttendanceRSVP.swift */,
 				8DFDC0CDAE78CEAE87B1BB58 /* Band.swift */,
 				20FFF9574E775A195F339848 /* ChordProgression.swift */,
 				AFA4B6D325EDFE9ABF08F750 /* ChordSheet.swift */,
@@ -560,6 +566,8 @@
 				F98941E5C115B66E434A1416 /* AddStemSheet.swift in Sources */,
 				DD65F8EE6C5FDFBA9D80AAD0 /* AppDelegate.swift in Sources */,
 				4422B3AEB479F2824FC214D4 /* AppTheme.swift in Sources */,
+				87672FBFCEBDEAE36F5EB498 /* AttendanceRSVP.swift in Sources */,
+				4CEE4EFBF9C97B6876000242 /* AttendanceRosterCard.swift in Sources */,
 				E9F220FDCB20AC314F3B5F02 /* AuthService.swift in Sources */,
 				5529D38B088F2DCD2B2C3E08 /* AuthViewModel.swift in Sources */,
 				83C8A86AB5DEFF219F39691A /* Band.swift in Sources */,

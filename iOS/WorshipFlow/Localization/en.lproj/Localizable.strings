@@ -170,3 +170,7 @@
 "choose_setlist" = "Choose a setlist…";
 "no_setlists_yet" = "No setlists yet";
 "none" = "None";
+
+// Attendance roster
+"attendance" = "Attendance";
+"no_responses_yet" = "No responses yet";

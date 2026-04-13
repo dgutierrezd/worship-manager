@@ -6,6 +6,10 @@ struct RehearsalDetailView: View {
     @State private var calendarAdded = false
     @State private var showCalendarError = false
 
+    // Attendance roster for this rehearsal
+    @State private var rosterRSVPs: [AttendanceRSVP] = []
+    @State private var rosterLoading = false
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -163,6 +167,10 @@ struct RehearsalDetailView: View {
                     Button("OK", role: .cancel) {}
                 }
 
+                // MARK: Attendance Roster
+                AttendanceRosterCard(rsvps: rosterRSVPs, isLoading: rosterLoading)
+                    .padding(.horizontal, 20)
+
                 // MARK: Notes
                 if let notes = rehearsal.notes, !notes.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
@@ -191,6 +199,20 @@ struct RehearsalDetailView: View {
         }
         .background(Color.appBackground)
         .navigationBarTitleDisplayMode(.inline)
+        .task { await loadRoster() }
+        .onChange(of: vm.rsvpStatus(for: rehearsal.id)) { _, _ in
+            Task { await loadRoster() }
+        }
+    }
+
+    private func loadRoster() async {
+        rosterLoading = true
+        defer { rosterLoading = false }
+        do {
+            rosterRSVPs = try await RehearsalService.getRSVPs(rehearsalId: rehearsal.id)
+        } catch {
+            // Non-fatal — roster simply stays empty.
+        }
     }
 
     private func addToCalendar() async {

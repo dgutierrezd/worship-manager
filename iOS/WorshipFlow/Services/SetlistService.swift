@@ -80,4 +80,9 @@ enum SetlistService {
     static func getMyRSVPs(bandId: String) async throws -> [SetlistRSVP] {
         try await APIClient.shared.get("/setlists/my-rsvps?band_id=\(bandId)")
     }
+
+    /// All members' RSVPs for a single service, with profile info for the roster UI.
+    static func getRSVPs(setlistId: String) async throws -> [AttendanceRSVP] {
+        try await APIClient.shared.get("/setlists/\(setlistId)/rsvps")
+    }
 }
