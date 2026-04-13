@@ -160,3 +160,13 @@
 "your_library" = "Tu biblioteca";
 "search_songs" = "Buscar canciones";
 "cancel" = "Cancelar";
+
+// RSVP de servicio + vinculación de setlist
+"will_you_attend" = "¿Vas a asistir?";
+"setlist_optional" = "Lista de canciones (opcional)";
+"selected" = "seleccionadas";
+"no_songs_in_library_hint" = "Tu biblioteca está vacía. Agrega canciones primero y luego arma la lista en el detalle del servicio.";
+"link_setlist_optional" = "Vincular una lista (opcional)";
+"choose_setlist" = "Elegir una lista…";
+"no_setlists_yet" = "Aún no hay listas";
+"none" = "Ninguna";

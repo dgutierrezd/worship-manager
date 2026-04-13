@@ -6,13 +6,18 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
+  Check,
   ChevronDown,
   ChevronUp,
+  Minus,
   Music2,
   Pencil,
   Plus,
   Trash2,
+  X,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { RSVPStatus } from "@/types";
 import { useBandStore } from "@/lib/stores/band-store";
 import { setlistsApi } from "@/lib/api/setlists";
 import { songsApi } from "@/lib/api/songs";
@@ -56,6 +61,23 @@ export default function ServiceDetailPage() {
   });
 
   const setlist = setlistsQuery.data?.find((s) => s.id === id);
+
+  // Service RSVPs (current user)
+  const myRsvpsQuery = useQuery({
+    queryKey: ["setlist-rsvps-mine", bandId],
+    queryFn: () => setlistsApi.myRsvps(bandId),
+    enabled: !!bandId,
+  });
+
+  const myRsvpStatus: RSVPStatus | undefined = myRsvpsQuery.data?.find(
+    (r) => r.setlist_id === id,
+  )?.status;
+
+  const rsvpMutation = useMutation({
+    mutationFn: (status: RSVPStatus) => setlistsApi.rsvp(id, status),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["setlist-rsvps-mine", bandId] }),
+  });
 
   const addSongMutation = useMutation({
     mutationFn: (songId: string) =>
@@ -177,6 +199,36 @@ export default function ServiceDetailPage() {
             {setlist.notes}
           </p>
         )}
+
+        {/* RSVP — same UX as rehearsals */}
+        <div className="mt-6 border-t border-divider pt-4">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-secondary">
+            Will you attend?
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <RsvpPill
+              label="Going"
+              icon={<Check className="h-4 w-4" />}
+              tone="going"
+              selected={myRsvpStatus === "going"}
+              onClick={() => rsvpMutation.mutate("going")}
+            />
+            <RsvpPill
+              label="Maybe"
+              icon={<Minus className="h-4 w-4" />}
+              tone="maybe"
+              selected={myRsvpStatus === "maybe"}
+              onClick={() => rsvpMutation.mutate("maybe")}
+            />
+            <RsvpPill
+              label="Not going"
+              icon={<X className="h-4 w-4" />}
+              tone="no"
+              selected={myRsvpStatus === "not_going"}
+              onClick={() => rsvpMutation.mutate("not_going")}
+            />
+          </div>
+        </div>
       </header>
 
       <section className="mt-8">
@@ -454,5 +506,54 @@ function AddOrCreateSongModal({
         )}
       </div>
     </Modal>
+  );
+}
+
+// MARK: - RSVP Pill (service)
+
+function RsvpPill({
+  label,
+  icon,
+  tone,
+  selected,
+  onClick,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  tone: "going" | "maybe" | "no";
+  selected: boolean;
+  onClick: () => void;
+}) {
+  // Tailwind classes are not dynamically composable, so we map here.
+  const map = {
+    going: {
+      bg: selected ? "bg-going text-white" : "bg-going/10 text-going",
+      border: selected ? "border-going" : "border-going/30",
+    },
+    maybe: {
+      bg: selected ? "bg-maybe text-white" : "bg-maybe/10 text-maybe",
+      border: selected ? "border-maybe" : "border-maybe/30",
+    },
+    no: {
+      bg: selected ? "bg-no text-white" : "bg-no/10 text-no",
+      border: selected ? "border-no" : "border-no/30",
+    },
+  } as const;
+  const c = map[tone];
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition active:scale-95",
+        c.bg,
+        c.border,
+        selected && "shadow-card",
+      )}
+    >
+      {icon}
+      {label}
+    </button>
   );
 }

@@ -112,6 +112,118 @@ bandSetlistsRouter.post(
 // Standalone setlist routes — mounted at /setlists
 const setlistsRouter = Router();
 
+// GET /setlists/my-rsvps?band_id=... — current user's RSVPs across all
+// setlists in a band. Mirrors /rehearsals/my-rsvps.
+setlistsRouter.get(
+  "/my-rsvps",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const bandId = req.query.band_id as string;
+    if (!bandId) {
+      res.status(400).json({ error: "band_id query parameter is required" });
+      return;
+    }
+
+    try {
+      const { data: setlists, error: sErr } = await supabaseAdmin
+        .from("setlists")
+        .select("id")
+        .eq("band_id", bandId);
+
+      if (sErr) {
+        res.status(500).json({ error: sErr.message });
+        return;
+      }
+      const setlistIds = (setlists ?? []).map((s: { id: string }) => s.id);
+      if (setlistIds.length === 0) {
+        res.json([]);
+        return;
+      }
+
+      const { data, error } = await supabaseAdmin
+        .from("setlist_rsvps")
+        .select("setlist_id, status")
+        .eq("user_id", req.userId!)
+        .in("setlist_id", setlistIds);
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+      }
+
+      res.json(data);
+    } catch {
+      res.status(500).json({ error: "Failed to fetch service RSVPs" });
+    }
+  }
+);
+
+// POST /setlists/:id/rsvp — upsert this user's RSVP for the service.
+setlistsRouter.post(
+  "/:id/rsvp",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const setlistId = req.params.id;
+    const { status } = req.body;
+
+    if (!status || !["going", "not_going", "maybe"].includes(status)) {
+      res
+        .status(400)
+        .json({ error: "Status must be 'going', 'not_going', or 'maybe'" });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabaseAdmin
+        .from("setlist_rsvps")
+        .upsert(
+          {
+            setlist_id: setlistId,
+            user_id: req.userId,
+            status,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "setlist_id,user_id" }
+        )
+        .select()
+        .single();
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+      }
+
+      res.json(data);
+    } catch {
+      res.status(500).json({ error: "Failed to update RSVP" });
+    }
+  }
+);
+
+// GET /setlists/:id/rsvps — all RSVPs for a service, with profile names.
+// Used to show "who's going" to a service detail page.
+setlistsRouter.get(
+  "/:id/rsvps",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const setlistId = req.params.id;
+    try {
+      const { data, error } = await supabaseAdmin
+        .from("setlist_rsvps")
+        .select("setlist_id, user_id, status, updated_at, profiles(full_name, avatar_url)")
+        .eq("setlist_id", setlistId);
+
+      if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+      }
+      res.json(data);
+    } catch {
+      res.status(500).json({ error: "Failed to fetch service RSVPs" });
+    }
+  }
+);
+
 // PUT /setlists/:id
 setlistsRouter.put(
   "/:id",

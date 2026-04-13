@@ -6,18 +6,59 @@ class SetlistViewModel: ObservableObject {
     @Published var setlistSongs: [SetlistSong] = []
     @Published var isLoading = false
     @Published var error: String?
+    /// Map of `setlistId → status` for the current user's service RSVPs.
+    @Published var rsvpStatuses: [String: String] = [:]
 
     private var bandId: String?
+
+    func rsvpStatus(for setlistId: String) -> String? {
+        rsvpStatuses[setlistId]
+    }
 
     func loadSetlists(bandId: String) async {
         self.bandId = bandId
         isLoading = true
         do {
-            setlists = try await SetlistService.getSetlists(bandId: bandId)
+            async let setlistsTask = SetlistService.getSetlists(bandId: bandId)
+            async let rsvpsTask    = SetlistService.getMyRSVPs(bandId: bandId)
+            let (loadedSetlists, loadedRSVPs) = try await (setlistsTask, rsvpsTask)
+            setlists = loadedSetlists
+            var statuses: [String: String] = [:]
+            for r in loadedRSVPs {
+                if let sid = r.setlistId { statuses[sid] = r.status }
+            }
+            rsvpStatuses = statuses
         } catch {
             self.error = error.localizedDescription
         }
         isLoading = false
+    }
+
+    /// Load just the current user's RSVPs across the band's services.
+    /// Useful when the detail view is reached via deep-link / push without
+    /// going through the list first.
+    func loadMyRSVPs(bandId: String) async {
+        do {
+            let rsvps = try await SetlistService.getMyRSVPs(bandId: bandId)
+            var statuses = rsvpStatuses
+            for r in rsvps {
+                if let sid = r.setlistId { statuses[sid] = r.status }
+            }
+            rsvpStatuses = statuses
+        } catch {
+            // Non-fatal — RSVP UI just won't pre-select anything.
+        }
+    }
+
+    /// Set my RSVP for a service. Optimistically updates local state.
+    func rsvp(setlistId: String, status: String) async {
+        rsvpStatuses[setlistId] = status        // optimistic
+        do {
+            let response = try await SetlistService.rsvp(setlistId: setlistId, status: status)
+            rsvpStatuses[setlistId] = response.status
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
     func createSetlist(

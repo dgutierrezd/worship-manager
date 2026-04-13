@@ -129,6 +129,15 @@ CREATE TABLE rehearsal_rsvps (
   PRIMARY KEY (rehearsal_id, user_id)
 );
 
+-- Setlist (service) RSVPs — same shape as rehearsal_rsvps
+CREATE TABLE setlist_rsvps (
+  setlist_id UUID REFERENCES setlists(id) ON DELETE CASCADE,
+  user_id    UUID REFERENCES profiles(id) ON DELETE CASCADE,
+  status     TEXT DEFAULT 'pending' CHECK (status IN ('going', 'not_going', 'maybe', 'pending')),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (setlist_id, user_id)
+);
+
 -- Device tokens for push notifications
 CREATE TABLE device_tokens (
   id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -151,6 +160,7 @@ ALTER TABLE setlists          ENABLE ROW LEVEL SECURITY;
 ALTER TABLE setlist_songs     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rehearsals        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rehearsal_rsvps   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE setlist_rsvps     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE device_tokens     ENABLE ROW LEVEL SECURITY;
 
 -- Helper function: safely gets user's band IDs without triggering RLS recursion

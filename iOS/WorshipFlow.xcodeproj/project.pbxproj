@@ -29,6 +29,7 @@
 		4469F695F9E17EE76094E346 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1DA91269827C53BB3135F1 /* Member.swift */; };
 		48B1D487DE2C7BD85AE6429C /* SetlistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE0269F537F026CE05ABB80 /* SetlistService.swift */; };
 		491429C1CFCFB0F36D791F73 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 873BF5146CB1576F57EEDC81 /* SongService.swift */; };
+		4E491CB544ADE20D335C1E91 /* SetlistRSVP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA6AEF9FD456D31E72849A /* SetlistRSVP.swift */; };
 		4E7B95AFCE0CCF61252C16F7 /* MultitracksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53D8EF169BB6D39D8B58FDA /* MultitracksView.swift */; };
 		5529D38B088F2DCD2B2C3E08 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810159D579A346CD46081B5A /* AuthViewModel.swift */; };
 		584B85E5727784D03040AE9E /* BulkAddSongsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2453B0FD6CDCEA9F55D7A3A9 /* BulkAddSongsView.swift */; };
@@ -124,6 +125,7 @@
 		577D2D9987BF181DF2190216 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5D755319DA3D23CD5B9DB7E1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5FD0E194FD7B10CE7EAB362A /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
+		60FA6AEF9FD456D31E72849A /* SetlistRSVP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetlistRSVP.swift; sourceTree = "<group>"; };
 		61DE6B913DFE0E6DD0CE607F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64188005DEC3434634BE4339 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		6469B8E211B9A01F898EB197 /* WorshipFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorshipFlowApp.swift; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 				BDF5E63AC89831C59FF215CD /* Rehearsal.swift */,
 				70CF197EE2ACA3B309F3E7E8 /* ServiceAssignment.swift */,
 				A19273B2A68F35B5AFCD44E2 /* Setlist.swift */,
+				60FA6AEF9FD456D31E72849A /* SetlistRSVP.swift */,
 				D3819DF1EFAB63A2098795DD /* Song.swift */,
 				8C0F339505B507FB7A2314CE /* SongStem.swift */,
 			);
@@ -616,6 +619,7 @@
 				BE818E0F94988C6F0977EAA3 /* ServicesView.swift in Sources */,
 				7613813444F9E31D4A60682D /* Setlist.swift in Sources */,
 				BD5094971D369E3FF2985438 /* SetlistDetailView.swift in Sources */,
+				4E491CB544ADE20D335C1E91 /* SetlistRSVP.swift in Sources */,
 				48B1D487DE2C7BD85AE6429C /* SetlistService.swift in Sources */,
 				1AABDC8CB04A9582FC05DD48 /* SetlistViewModel.swift in Sources */,
 				604BDB79332EE1D5C53D2D74 /* SetlistsView.swift in Sources */,

@@ -84,6 +84,11 @@ struct ServiceDetailView: View {
         .task {
             await vm.loadSetlistSongs(setlistId: setlist.id)
             await assignmentVM.loadAssignments(setlistId: setlist.id)
+            // Load just this user's RSVP for this single service so the
+            // pre-selected status is shown immediately on push navigation.
+            if let bandId = bandVM.currentBand?.id {
+                await vm.loadMyRSVPs(bandId: bandId)
+            }
         }
     }
 
@@ -189,6 +194,43 @@ struct ServiceDetailView: View {
 
     // MARK: - Sub-views
 
+    /// RSVP buttons for the service. Same UX as the rehearsal RSVP row.
+    @ViewBuilder
+    private var rsvpRow: some View {
+        let myStatus = vm.rsvpStatus(for: setlist.id)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: "hand.raised.fill")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(.appAccent)
+                Text("will_you_attend".localized)
+                    .font(.appCaption)
+                    .foregroundColor(.appSecondary)
+            }
+            HStack(spacing: 8) {
+                RSVPButton(
+                    title: "rsvp_going".localized,
+                    icon: "checkmark",
+                    color: .statusGoing,
+                    isSelected: myStatus == "going"
+                ) { Task { await vm.rsvp(setlistId: setlist.id, status: "going") } }
+                RSVPButton(
+                    title: "rsvp_maybe".localized,
+                    icon: "questionmark",
+                    color: .statusMaybe,
+                    isSelected: myStatus == "maybe"
+                ) { Task { await vm.rsvp(setlistId: setlist.id, status: "maybe") } }
+                RSVPButton(
+                    title: "rsvp_no".localized,
+                    icon: "xmark",
+                    color: .statusNo,
+                    isSelected: myStatus == "not_going"
+                ) { Task { await vm.rsvp(setlistId: setlist.id, status: "not_going") } }
+                Spacer(minLength: 0)
+            }
+        }
+    }
+
     private var serviceHeaderSection: some View {
         Section {
             VStack(alignment: .leading, spacing: 10) {
@@ -244,6 +286,9 @@ struct ServiceDetailView: View {
                     .disabled(calendarAdded)
                     .padding(.top, 4)
                 }
+
+                Divider().padding(.vertical, 6)
+                rsvpRow
             }
         }
         .listRowBackground(Color.appSurface)

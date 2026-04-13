@@ -68,4 +68,16 @@ enum SetlistService {
     static func reorderSetlistSongs(setlistId: String, positions: [[String: Any]]) async throws {
         let _: MessageResponse = try await APIClient.shared.patch("/setlists/\(setlistId)/songs/reorder", body: ["positions": positions])
     }
+
+    // MARK: - RSVPs
+
+    /// Set the current user's RSVP for a service.
+    static func rsvp(setlistId: String, status: String) async throws -> SetlistRSVP {
+        try await APIClient.shared.post("/setlists/\(setlistId)/rsvp", body: ["status": status])
+    }
+
+    /// Current user's RSVPs across every service in a band (one row per service the user has responded to).
+    static func getMyRSVPs(bandId: String) async throws -> [SetlistRSVP] {
+        try await APIClient.shared.get("/setlists/my-rsvps?band_id=\(bandId)")
+    }
 }

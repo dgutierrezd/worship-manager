@@ -160,3 +160,13 @@
 "your_library" = "Your Library";
 "search_songs" = "Search songs";
 "cancel" = "Cancel";
+
+// Service RSVP + setlist linking
+"will_you_attend" = "Will you attend?";
+"setlist_optional" = "Setlist (optional)";
+"selected" = "selected";
+"no_songs_in_library_hint" = "Your library is empty. Add songs first, then build the setlist on the service detail page.";
+"link_setlist_optional" = "Link a setlist (optional)";
+"choose_setlist" = "Choose a setlist…";
+"no_setlists_yet" = "No setlists yet";
+"none" = "None";
