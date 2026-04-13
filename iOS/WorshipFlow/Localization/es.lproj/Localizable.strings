@@ -174,3 +174,24 @@
 // Lista de asistencia
 "attendance" = "Asistencia";
 "no_responses_yet" = "Aún no hay respuestas";
+
+// Diagnóstico de notificaciones
+"push_diagnostics" = "Diagnóstico de notificaciones";
+"on_this_device" = "En este dispositivo";
+"on_the_backend" = "En el backend";
+"end_to_end_test" = "Prueba completa";
+"end_to_end_footer" = "Envía una notificación real a tus dispositivos vía Firebase. Cada resultado indica por qué no llegó si falla.";
+"backend_diag_footer" = "Los tokens están enmascarados. Los primeros 12 caracteres deben coincidir con el token FCM mostrado arriba en al menos una fila.";
+"send_test_push" = "Enviarme una prueba";
+"test_push_summary" = "Enviadas: %d / %d dispositivos";
+"permission" = "Permiso";
+"firebase_admin" = "Firebase Admin";
+"registered_devices" = "Dispositivos registrados";
+"ready" = "Listo";
+"not_initialised" = "No inicializado";
+"loading" = "Cargando…";
+"not_determined" = "No determinado";
+"denied" = "Denegado — actívalo en Ajustes → Worship Manager";
+"authorized" = "Autorizado";
+"provisional" = "Provisional";
+"ephemeral" = "Efímero";

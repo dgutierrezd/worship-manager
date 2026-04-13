@@ -174,3 +174,24 @@
 // Attendance roster
 "attendance" = "Attendance";
 "no_responses_yet" = "No responses yet";
+
+// Push diagnostics
+"push_diagnostics" = "Push Diagnostics";
+"on_this_device" = "On This Device";
+"on_the_backend" = "On the Backend";
+"end_to_end_test" = "End-to-End Test";
+"end_to_end_footer" = "Sends a real push to your registered devices via Firebase. Each result tells you exactly why a push didn't arrive.";
+"backend_diag_footer" = "Tokens are masked. The first 12 chars should match the FCM token shown above for at least one row.";
+"send_test_push" = "Send Test Push to Me";
+"test_push_summary" = "Sent: %d / %d devices";
+"permission" = "Permission";
+"firebase_admin" = "Firebase Admin";
+"registered_devices" = "Registered devices";
+"ready" = "Ready";
+"not_initialised" = "Not initialised";
+"loading" = "Loading…";
+"not_determined" = "Not determined";
+"denied" = "Denied — enable in iOS Settings → Worship Manager";
+"authorized" = "Authorized";
+"provisional" = "Provisional";
+"ephemeral" = "Ephemeral";

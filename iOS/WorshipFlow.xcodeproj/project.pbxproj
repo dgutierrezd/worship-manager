@@ -71,6 +71,7 @@
 		C05D14DCFACA5EAC71887555 /* CreateBandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E836104D7CC9CB89C9320AB7 /* CreateBandView.swift */; };
 		C108137ABCF4848B3EDF809A /* ServiceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F941BA59C05CCF987ACABB5 /* ServiceDetailView.swift */; };
 		C27B83165A26B0F9B06E0E79 /* PracticeAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7085479841F144A7A40A8A84 /* PracticeAudioEngine.swift */; };
+		C44243C028287C50507E3202 /* PushDiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37DE7B9C84F9CED2B7E6312 /* PushDiagnosticsView.swift */; };
 		C4B27BC9B6E4734CB1806D2D /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDA40EE7A7F65192AF211AC /* MainTabView.swift */; };
 		C66C79B652A9051C6BED49E4 /* SongStem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0F339505B507FB7A2314CE /* SongStem.swift */; };
 		CBAD7B9EC54A29F6EECFB878 /* ServiceAssignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CF197EE2ACA3B309F3E7E8 /* ServiceAssignment.swift */; };
@@ -171,6 +172,7 @@
 		C9F03182B1A6FBACB236954E /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		CBE00E5F68547E8FCCC48A17 /* BandAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandAvatarView.swift; sourceTree = "<group>"; };
 		D0BFA3916AE6523D02F6D838 /* SongLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongLibraryView.swift; sourceTree = "<group>"; };
+		D37DE7B9C84F9CED2B7E6312 /* PushDiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushDiagnosticsView.swift; sourceTree = "<group>"; };
 		D3819DF1EFAB63A2098795DD /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		DD3D7A8BCC0219161F7E0F76 /* CreateServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceView.swift; sourceTree = "<group>"; };
 		DDC7BF046D4874F51138F927 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 			children = (
 				909871DBB3E4544A114AE2B2 /* LanguageView.swift */,
 				66EBE9584D2C5BECA3D8F41D /* ProfileView.swift */,
+				D37DE7B9C84F9CED2B7E6312 /* PushDiagnosticsView.swift */,
 				BE15420AAB67916207B72502 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -612,6 +615,7 @@
 				03519469E19CC2315BF37C98 /* PracticeSessionView.swift in Sources */,
 				904D04AF6EC8FEC59A265709 /* Profile.swift in Sources */,
 				FC80A488F1C3A192D50A27B1 /* ProfileView.swift in Sources */,
+				C44243C028287C50507E3202 /* PushDiagnosticsView.swift in Sources */,
 				BEE27E11F98D1D0BBA76C060 /* RSVPButton.swift in Sources */,
 				FBD94BECDB7924791522AD22 /* Rehearsal.swift in Sources */,
 				75C4265C3AD581B0928D7C4A /* RehearsalDetailView.swift in Sources */,

@@ -49,6 +49,11 @@ struct SettingsView: View {
                 } label: {
                     Label("language".localized, systemImage: "globe")
                 }
+                NavigationLink {
+                    PushDiagnosticsView()
+                } label: {
+                    Label("push_diagnostics".localized, systemImage: "bell.badge.waveform")
+                }
             }
 
             Section {
