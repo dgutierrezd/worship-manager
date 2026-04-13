@@ -2,6 +2,10 @@ import { Router, Response } from "express";
 import admin from "firebase-admin";
 import { supabaseAdmin } from "../config/supabase";
 import { authMiddleware, AuthRequest } from "../middleware/auth.middleware";
+// Side-effect import: ensures Firebase Admin is initialised by the time
+// any route in this file runs. The init lives at module top level in
+// notification.service.ts, so importing it here is enough.
+import "../services/notification.service";
 
 const router = Router();
 
@@ -104,16 +108,20 @@ router.post(
     const results = await Promise.all(
       tokens.map(async (t) => {
         try {
-          const messageId = await messaging.send({
-            token: t.token,
-            notification: {
-              title: "🔔 Test push from Worship Manager",
-              body: `Sent at ${new Date().toLocaleTimeString()}`,
-            },
-            apns: {
-              payload: { aps: { sound: "default", badge: 1 } },
-            },
-          });
+          // Wrap in Promise.resolve so a synchronous throw from FCM
+          // (e.g. malformed credentials) becomes a normal rejection.
+          const messageId = await Promise.resolve(
+            messaging.send({
+              token: t.token,
+              notification: {
+                title: "🔔 Test push from Worship Manager",
+                body: `Sent at ${new Date().toLocaleTimeString()}`,
+              },
+              apns: {
+                payload: { aps: { sound: "default", badge: 1 } },
+              },
+            })
+          );
           return {
             token_preview: `${t.token.slice(0, 12)}…`,
             ok: true,
@@ -121,11 +129,25 @@ router.post(
           };
         } catch (err) {
           const e = err as { code?: string; message?: string };
+          // Friendly hints for the most common credential failures so the
+          // iOS diagnostics screen tells the user exactly what to fix.
+          let hint: string | undefined;
+          if (e.message?.includes("asymmetric key when using RS256")) {
+            hint =
+              "FCM_PRIVATE_KEY is malformed on the server. In Vercel → Settings → Environment Variables, edit FCM_PRIVATE_KEY and paste the value of 'private_key' from your Firebase service-account JSON — including the -----BEGIN PRIVATE KEY----- header but WITHOUT the surrounding double quotes. Then redeploy.";
+          } else if (e.code === "messaging/registration-token-not-registered") {
+            hint =
+              "APNs rejected this token (most common cause: simulator token, or the .p8 in Firebase doesn't match your bundle ID / Team ID). Test on a real device or re-upload the APNs Auth Key in Firebase Console.";
+          } else if (e.code === "messaging/invalid-argument") {
+            hint =
+              "FCM rejected the request shape — most likely the APNs Auth Key in Firebase has the wrong Key ID or Team ID.";
+          }
           return {
             token_preview: `${t.token.slice(0, 12)}…`,
             ok: false,
             code: e.code ?? "unknown",
             message: e.message ?? String(err),
+            hint,
           };
         }
       })

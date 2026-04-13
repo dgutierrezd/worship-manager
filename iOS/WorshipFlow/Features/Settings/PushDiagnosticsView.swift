@@ -118,6 +118,13 @@ struct PushDiagnosticsView: View {
                                         .font(.appSmall)
                                         .foregroundColor(.appSecondary)
                                 }
+                                if let hint = r.hint {
+                                    Text(hint)
+                                        .font(.appSmall)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(.appAccent)
+                                        .padding(.top, 2)
+                                }
                             }
                             .padding(.vertical, 2)
                         }
@@ -275,9 +282,10 @@ private struct TestPushResult: Decodable {
         let messageId: String?
         let code: String?
         let message: String?
+        let hint: String?
 
         enum CodingKeys: String, CodingKey {
-            case ok, messageId, code, message
+            case ok, messageId, code, message, hint
             case tokenPreview = "token_preview"
         }
     }

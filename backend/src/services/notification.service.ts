@@ -1,18 +1,61 @@
 import admin from "firebase-admin";
 import { supabaseAdmin } from "../config/supabase";
 
-// Initialize Firebase Admin (only once)
+/**
+ * Normalises a PEM private key that came from a hosting-provider env var
+ * (Vercel, Render, Heroku, etc.). Handles every common paste mistake:
+ *
+ *  1. Surrounding double or single quotes (Vercel sometimes preserves the
+ *     JSON quotes if you copy `"private_key": "..."` verbatim).
+ *  2. Literal `\n` escape sequences instead of real newlines.
+ *  3. CRLF line endings (Windows clipboards).
+ *  4. Trailing whitespace.
+ */
+function normaliseFcmPrivateKey(raw: string | undefined): string | undefined {
+  if (!raw) return undefined;
+  let key = raw.trim();
+  if ((key.startsWith('"') && key.endsWith('"')) ||
+      (key.startsWith("'") && key.endsWith("'"))) {
+    key = key.slice(1, -1);
+  }
+  // Convert literal "\n" sequences to real newlines.
+  key = key.replace(/\\n/g, "\n");
+  // Normalise CRLF → LF.
+  key = key.replace(/\r\n/g, "\n");
+  return key;
+}
+
+// Initialize Firebase Admin (only once per cold start)
 if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FCM_PROJECT_ID,
-        privateKey: process.env.FCM_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-        clientEmail: process.env.FCM_CLIENT_EMAIL,
-      }),
-    });
-  } catch {
-    console.warn("Firebase Admin initialization skipped (missing credentials)");
+  const projectId  = process.env.FCM_PROJECT_ID;
+  const clientEmail = process.env.FCM_CLIENT_EMAIL;
+  const privateKey  = normaliseFcmPrivateKey(process.env.FCM_PRIVATE_KEY);
+
+  if (!projectId || !clientEmail || !privateKey) {
+    console.warn(
+      "[FCM] Skipping Firebase Admin init — missing env vars:",
+      {
+        FCM_PROJECT_ID:   !!projectId,
+        FCM_CLIENT_EMAIL: !!clientEmail,
+        FCM_PRIVATE_KEY:  !!privateKey,
+      }
+    );
+  } else if (!privateKey.includes("BEGIN PRIVATE KEY")) {
+    console.error(
+      "[FCM] FCM_PRIVATE_KEY does not look like a PEM key " +
+      "(missing BEGIN PRIVATE KEY header). Check the Vercel env var — " +
+      "paste the value of `private_key` from the service-account JSON " +
+      "WITHOUT the surrounding quotes."
+    );
+  } else {
+    try {
+      admin.initializeApp({
+        credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
+      });
+      console.log("[FCM] Firebase Admin initialised for project:", projectId);
+    } catch (err) {
+      console.error("[FCM] Firebase Admin init failed:", err);
+    }
   }
 }
 
