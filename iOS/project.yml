@@ -9,7 +9,7 @@ settings:
     SWIFT_VERSION: "5.9"
     GENERATE_INFOPLIST_FILE: YES
     MARKETING_VERSION: "1.0.0"
-    CURRENT_PROJECT_VERSION: 7
+    CURRENT_PROJECT_VERSION: 8
 packages:
   Firebase:
     url: https://github.com/firebase/firebase-ios-sdk
@@ -39,6 +39,13 @@ targets:
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_ENTITLEMENTS: WorshipFlow/WorshipFlow.entitlements
         DEVELOPMENT_TEAM: UMM993JNZH
-        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "WorshipFlow needs access to your photo library to set a band image."
-        INFOPLIST_KEY_NSCalendarsUsageDescription: "WorshipFlow uses your calendar to add services and rehearsals as events."
         INFOPLIST_KEY_CFBundleDisplayName: "Worship Manager"
+        # Spanish is the primary language. This drives the "Base" locale
+        # used for system-rendered strings and the default App Store listing.
+        DEVELOPMENT_LANGUAGE: es
+        INFOPLIST_KEY_CFBundleLocalizations: "es en"
+        # System permission prompts are shown in the user's device language,
+        # so we provide the primary copy in Spanish here. Per-language
+        # overrides live in *.lproj/InfoPlist.strings.
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Worship Manager necesita acceso a tu biblioteca de fotos para establecer la imagen de la banda."
+        INFOPLIST_KEY_NSCalendarsUsageDescription: "Worship Manager usa tu calendario para añadir servicios y ensayos como eventos."

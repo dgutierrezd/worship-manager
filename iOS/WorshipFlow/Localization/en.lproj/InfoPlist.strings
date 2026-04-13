@@ -1,0 +1,4 @@
+/* English overrides for system-rendered bundle strings. */
+"CFBundleDisplayName" = "Worship Manager";
+"NSPhotoLibraryUsageDescription" = "Worship Manager needs access to your photo library to set a band image.";
+"NSCalendarsUsageDescription" = "Worship Manager uses your calendar to add services and rehearsals as events.";

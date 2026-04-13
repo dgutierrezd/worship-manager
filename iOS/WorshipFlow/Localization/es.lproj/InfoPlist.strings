@@ -1,0 +1,4 @@
+/* Spanish (primary) overrides for system-rendered bundle strings. */
+"CFBundleDisplayName" = "Worship Manager";
+"NSPhotoLibraryUsageDescription" = "Worship Manager necesita acceso a tu biblioteca de fotos para establecer la imagen de la banda.";
+"NSCalendarsUsageDescription" = "Worship Manager usa tu calendario para añadir servicios y ensayos como eventos.";
