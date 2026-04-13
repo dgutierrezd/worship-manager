@@ -208,8 +208,15 @@ const songsRouter = Router();
  * Normalize a user-provided streaming URL so that major cloud providers
  * serve the raw file instead of an HTML landing page.
  *
- *  - Dropbox:  ?dl=0 → ?raw=1
- *  - OneDrive: append ?download=1
+ *  - Dropbox: force `?dl=1` (removes any `dl=0` / `raw=*`). This makes
+ *      BOTH the legacy `/s/...` and modern `/scl/fi/...` share-link
+ *      formats 302-redirect to `ucXXX.dl.dropboxusercontent.com`, which
+ *      streams the file with `Access-Control-Allow-Origin: *` — required
+ *      for the web Multitrack player's `fetch` + `decodeAudioData` to
+ *      succeed. `raw=1` only reliably worked on the legacy `/s/...`
+ *      format; on `/scl/fi/...` links Dropbox still served an HTML
+ *      preview page, which broke Web Audio with a CORS error.
+ *  - OneDrive: append `?download=1`.
  */
 function normalizeStreamingUrl(raw: string): string {
   try {
@@ -217,8 +224,8 @@ function normalizeStreamingUrl(raw: string): string {
     const host = u.hostname.toLowerCase();
 
     if (host.endsWith("dropbox.com")) {
-      u.searchParams.delete("dl");
-      u.searchParams.set("raw", "1");
+      u.searchParams.delete("raw");
+      u.searchParams.set("dl", "1");
       return u.toString();
     }
     if (host.endsWith("1drv.ms") || host.endsWith("onedrive.live.com")) {
