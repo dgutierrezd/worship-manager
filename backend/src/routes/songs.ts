@@ -299,6 +299,123 @@ async function assertSongBandAccess(
   return { ok: true, bandId: song.band_id };
 }
 
+// POST /songs/:id/stems/upload-urls — Issue Supabase Storage signed upload URLs
+// so the browser can PUT audio files directly (bypasses Vercel's 4.5 MB body cap).
+// Body: { files: Array<{ name: string; size: number }> }
+// Returns: { uploads: Array<{ original_name, path, upload_url, public_url }> }
+const AUDIO_EXTENSIONS = new Set([".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac", ".webm"]);
+const MIME_FOR_EXT: Record<string, string> = {
+  ".mp3": "audio/mpeg",
+  ".wav": "audio/wav",
+  ".m4a": "audio/mp4",
+  ".aac": "audio/aac",
+  ".ogg": "audio/ogg",
+  ".flac": "audio/flac",
+  ".webm": "audio/webm",
+};
+const STEMS_BUCKET = "song-stems";
+
+function sanitizeStorageName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9.\-_]/g, "_")
+    .replace(/_+/g, "_");
+}
+
+songsRouter.post(
+  "/:id/stems/upload-urls",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const songId = req.params.id;
+
+    const { files } = req.body as {
+      files?: Array<{ name?: unknown; size?: unknown }>;
+    };
+
+    if (!Array.isArray(files) || files.length === 0) {
+      res.status(400).json({ error: "files must be a non-empty array" });
+      return;
+    }
+    if (files.length > 50) {
+      res.status(400).json({ error: "Maximum 50 files per upload batch" });
+      return;
+    }
+
+    // Validate all filenames are audio
+    for (const f of files) {
+      if (typeof f?.name !== "string") {
+        res.status(400).json({ error: "Each file entry must have a name string" });
+        return;
+      }
+      const ext = f.name.substring(f.name.lastIndexOf(".")).toLowerCase();
+      if (!AUDIO_EXTENSIONS.has(ext)) {
+        res.status(400).json({
+          error: `"${f.name}" is not a supported audio file. Accepted: mp3, wav, m4a, aac, ogg, flac, webm`,
+        });
+        return;
+      }
+    }
+
+    const access = await assertSongBandAccess(songId, req.userId!);
+    if (!access.ok) {
+      res.status(access.status).json({ error: access.error });
+      return;
+    }
+
+    // Ensure bucket exists (no-op if it already does)
+    // Ensure the bucket exists — fileSizeLimit is omitted so Supabase applies
+    // its project-level default (avoids "exceeded maximum allowed size" errors
+    // on plans with lower caps).
+    await supabaseAdmin.storage.createBucket(STEMS_BUCKET, {
+      public: true,
+      allowedMimeTypes: [
+        "audio/mpeg", "audio/wav", "audio/x-wav", "audio/mp4", "audio/m4a",
+        "audio/aac", "audio/ogg", "audio/flac", "audio/x-flac", "audio/webm",
+      ],
+    });
+
+    const results: Array<{
+      original_name: string;
+      path: string;
+      upload_url: string;
+      public_url: string;
+    }> = [];
+
+    for (const f of files) {
+      const name = f.name as string;
+      const ext = name.substring(name.lastIndexOf(".")).toLowerCase();
+      const unique = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const safeName = sanitizeStorageName(name);
+      const path = `${songId}/${unique}-${safeName}`;
+      const contentType = MIME_FOR_EXT[ext] ?? "audio/mpeg";
+
+      const { data: signedData, error: signedError } = await supabaseAdmin.storage
+        .from(STEMS_BUCKET)
+        .createSignedUploadUrl(path);
+
+      if (signedError || !signedData) {
+        res.status(500).json({ error: `Failed to create upload URL for "${name}": ${signedError?.message ?? "unknown"}` });
+        return;
+      }
+
+      const supabaseUrl = process.env.SUPABASE_URL!;
+      const publicUrl = `${supabaseUrl}/storage/v1/object/public/${STEMS_BUCKET}/${path}`;
+
+      results.push({
+        original_name: name,
+        path,
+        upload_url: signedData.signedUrl,
+        public_url: publicUrl,
+      });
+
+      // Suppress unused variable warning — contentType is used in the response
+      void contentType;
+    }
+
+    res.json({ uploads: results });
+  }
+);
+
 // GET /songs/:id/stems — List stems for a song
 songsRouter.get(
   "/:id/stems",

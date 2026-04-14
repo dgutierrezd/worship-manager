@@ -77,4 +77,22 @@ export const songsApi = {
 
   removeStem: (songId: string, stemId: string) =>
     apiClient.delete(`/songs/${songId}/stems/${stemId}`),
+
+  /**
+   * Request Supabase Storage signed upload URLs so the browser can PUT files
+   * directly to storage without routing through the Vercel serverless function
+   * (which has a 4.5 MB body cap).
+   */
+  getUploadUrls: (
+    songId: string,
+    files: Array<{ name: string; size: number }>,
+  ) =>
+    apiClient.post<{
+      uploads: Array<{
+        original_name: string;
+        path: string;
+        upload_url: string;
+        public_url: string;
+      }>;
+    }>(`/songs/${songId}/stems/upload-urls`, { files }),
 };
