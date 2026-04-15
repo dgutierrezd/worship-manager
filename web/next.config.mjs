@@ -1,6 +1,8 @@
 import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+// No explicit path — next-intl auto-discovers ./i18n/request.ts (project root).
+// Avoids webpack fsPath resolution failures in Vercel's build environment.
+const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
