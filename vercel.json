@@ -14,6 +14,10 @@
     {
       "src": "/api/(.*)",
       "dest": "backend/src/server.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "web/$1"
     }
   ]
 }
