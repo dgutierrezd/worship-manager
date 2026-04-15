@@ -14,11 +14,24 @@ class LanguageManager: ObservableObject {
 
     nonisolated(unsafe) var bundle: Bundle = .main
 
+    /// App default language. Spanish is the primary language for this
+    /// product; users can switch to English from Settings → Language.
+    private static let defaultLanguage = "es"
+
+    /// Supported locales. Anything outside this list falls back to
+    /// `defaultLanguage` so we never load an `.lproj` bundle that
+    /// doesn't exist.
+    private static let supportedLanguages: Set<String> = ["es", "en"]
+
     private init() {
-        let saved = UserDefaults.standard.string(forKey: "app_language")
-            ?? Locale.current.language.languageCode?.identifier
-            ?? "en"
-        self.currentLanguage = saved
+        // Honor the user's saved preference if they've explicitly picked one;
+        // otherwise default new installs to Spanish regardless of device locale.
+        if let saved = UserDefaults.standard.string(forKey: "app_language"),
+           Self.supportedLanguages.contains(saved) {
+            self.currentLanguage = saved
+        } else {
+            self.currentLanguage = Self.defaultLanguage
+        }
         loadBundle()
     }
 

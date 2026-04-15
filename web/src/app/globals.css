@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------- */
+/*  Design tokens — modern navy palette                                   */
+/*  • primary   = deep navy (body text, primary buttons)                  */
+/*  • accent    = vivid electric blue (CTAs, highlights, rings)           */
+/*  • sidebar-* = dark sidebar treatment (premium SaaS feel)              */
+/* ---------------------------------------------------------------------- */
+
+:root {
+  /* Surfaces */
+  --app-background: 245 247 252;        /* cool off-white */
+  --app-surface: 255 255 255;           /* cards, modals */
+  --app-surface-muted: 238 242 248;     /* subtle tints */
+
+  /* Text */
+  --app-primary: 11 27 59;              /* #0B1B3B — deep navy */
+  --app-secondary: 100 112 140;         /* muted slate */
+  --app-divider: 224 230 242;           /* soft blue-gray */
+
+  /* Accents */
+  --app-accent: 37 99 235;              /* #2563EB — electric blue */
+  --app-accent-strong: 29 78 216;       /* #1D4ED8 — hover */
+  --app-accent-muted: 219 234 254;      /* #DBEAFE — bg tint */
+
+  /* Status colors */
+  --app-success: 16 185 129;            /* emerald-500 */
+  --app-warning: 245 158 11;            /* amber-500 */
+  --app-danger: 239 68 68;              /* red-500 */
+  --app-going: 16 185 129;
+  --app-maybe: 245 158 11;
+  --app-no: 239 68 68;
+
+  /* Dark sidebar */
+  --app-sidebar-bg: 7 18 43;            /* near-black navy */
+  --app-sidebar-bg-2: 12 27 60;         /* elevated panels */
+  --app-sidebar-fg: 226 232 245;
+  --app-sidebar-muted: 135 152 185;
+  --app-sidebar-divider: 22 36 68;
+
+  /* Typography */
+  --font-sans: "Inter", "SF Pro Text", system-ui, sans-serif;
+  --font-display: "Space Grotesk", "SF Pro Display", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", monospace;
+}
+
+/* ---------------------------------------------------------------------- */
+/*  Base layer                                                            */
+/* ---------------------------------------------------------------------- */
+
+@layer base {
+  html,
+  body {
+    @apply bg-background text-primary antialiased;
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: rgb(var(--app-accent) / 0.25);
+  }
+
+  /* Subtle, native-looking scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--app-divider)) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--app-divider));
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--app-secondary) / 0.5);
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/*  Reusable component utility classes                                    */
+/* ---------------------------------------------------------------------- */
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-divider bg-surface shadow-card;
+  }
+
+  .card-elevated {
+    @apply rounded-2xl border border-divider bg-surface shadow-elevated;
+  }
+
+  /* Buttons — pill-shape, crisp focus states */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5
+      text-sm font-semibold text-white shadow-sm transition
+      hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2
+      focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background
+      disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-2.5
+      text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgb(37_99_235_/_0.5)] transition
+      hover:bg-[rgb(var(--app-accent-strong))] hover:shadow-[0_10px_28px_-6px_rgb(37_99_235_/_0.55)]
+      focus-visible:outline-none focus-visible:ring-2
+      focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background
+      disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm
+      font-medium text-secondary transition hover:bg-surfaceMuted hover:text-primary;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-danger px-5 py-2.5
+      text-sm font-semibold text-white transition hover:bg-danger/90 disabled:opacity-60;
+  }
+
+  /* Inputs — tighter and more tactile */
+  .input {
+    @apply w-full rounded-xl border border-divider bg-surface px-4 py-2.5 text-sm text-primary
+      placeholder:text-secondary/70 transition
+      focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-secondary;
+  }
+
+  .section-title {
+    @apply font-display text-2xl font-semibold tracking-tight text-primary;
+  }
+
+  .skeleton {
+    @apply animate-shimmer rounded-xl;
+    background: linear-gradient(
+      90deg,
+      rgb(var(--app-surface-muted)),
+      rgb(var(--app-divider)),
+      rgb(var(--app-surface-muted))
+    );
+    background-size: 200% 100%;
+  }
+
+  /* Soft glass panel — used on auth screens */
+  .glass {
+    background: rgb(var(--app-surface) / 0.72);
+    backdrop-filter: saturate(140%) blur(16px);
+    -webkit-backdrop-filter: saturate(140%) blur(16px);
+  }
+
+  /* Subtle grain texture overlay for hero sections */
+  .noise {
+    position: relative;
+  }
+  .noise::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay;
+  }
+}

@@ -94,12 +94,14 @@ bandSetlistsRouter.post(
           bodyText = `${name} · ${parts.join(" · ")}`;
         }
 
-        await notifyBandMembers(
-          req.bandId!,
-          req.userId!,
-          "New Service Scheduled",
-          bodyText
-        );
+        await notifyBandMembers({
+          bandId:        req.bandId!,
+          excludeUserId: req.userId!,
+          title:         "New Service Scheduled",
+          body:          bodyText,
+          kind:          "service",
+          entityId:      data?.id,
+        });
       }
 
       res.status(201).json(data);
@@ -220,6 +222,46 @@ setlistsRouter.get(
       res.json(data);
     } catch {
       res.status(500).json({ error: "Failed to fetch service RSVPs" });
+    }
+  }
+);
+
+// GET /setlists/:id — fetch a single setlist by id. Used by the iOS
+// deep-link router so tapping a push notification can open the service
+// detail screen even when the home list hasn't been loaded yet.
+// Placed AFTER the static /my-rsvps route so Express matches that first.
+setlistsRouter.get(
+  "/:id",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const setlistId = req.params.id;
+    try {
+      const { data, error } = await supabaseAdmin
+        .from("setlists")
+        .select("*")
+        .eq("id", setlistId)
+        .single();
+
+      if (error || !data) {
+        res.status(404).json({ error: "Setlist not found" });
+        return;
+      }
+
+      const { data: membership } = await supabaseAdmin
+        .from("band_members")
+        .select("band_id")
+        .eq("band_id", data.band_id)
+        .eq("user_id", req.userId!)
+        .maybeSingle();
+
+      if (!membership) {
+        res.status(403).json({ error: "Not a member of this band" });
+        return;
+      }
+
+      res.json(data);
+    } catch {
+      res.status(500).json({ error: "Failed to fetch setlist" });
     }
   }
 );

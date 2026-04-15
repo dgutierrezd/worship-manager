@@ -80,12 +80,14 @@ bandRehearsalsRouter.post(
         minute: "2-digit",
       });
 
-      await notifyBandMembers(
-        req.bandId!,
-        req.userId!,
-        "New Rehearsal Scheduled",
-        `${title} on ${formattedDate} at ${formattedTime}${location ? ` · ${location}` : ""}`
-      );
+      await notifyBandMembers({
+        bandId:        req.bandId!,
+        excludeUserId: req.userId!,
+        title:         "New Rehearsal Scheduled",
+        body:          `${title} on ${formattedDate} at ${formattedTime}${location ? ` · ${location}` : ""}`,
+        kind:          "rehearsal",
+        entityId:      data?.id,
+      });
 
       res.status(201).json(data);
     } catch {
@@ -223,6 +225,46 @@ rehearsalsRouter.get(
       res.json(data);
     } catch {
       res.status(500).json({ error: "Failed to fetch rehearsal RSVPs" });
+    }
+  }
+);
+
+// GET /rehearsals/:id — fetch a single rehearsal by id. Used by the iOS
+// deep-link router so tapping a push notification can open the rehearsal
+// detail screen even when the home list hasn't been loaded yet.
+// Placed AFTER /my-rsvps and /:id/rsvps so Express matches those first.
+rehearsalsRouter.get(
+  "/:id",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const rehearsalId = req.params.id;
+    try {
+      const { data, error } = await supabaseAdmin
+        .from("rehearsals")
+        .select("*, setlists(name)")
+        .eq("id", rehearsalId)
+        .single();
+
+      if (error || !data) {
+        res.status(404).json({ error: "Rehearsal not found" });
+        return;
+      }
+
+      const { data: membership } = await supabaseAdmin
+        .from("band_members")
+        .select("band_id")
+        .eq("band_id", data.band_id)
+        .eq("user_id", req.userId!)
+        .maybeSingle();
+
+      if (!membership) {
+        res.status(403).json({ error: "Not a member of this band" });
+        return;
+      }
+
+      res.json(data);
+    } catch {
+      res.status(500).json({ error: "Failed to fetch rehearsal" });
     }
   }
 );

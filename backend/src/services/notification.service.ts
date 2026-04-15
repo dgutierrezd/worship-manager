@@ -59,15 +59,38 @@ if (!admin.apps.length) {
   }
 }
 
-export async function notifyBandMembers(
-  bandId: string,
-  excludeUserId: string,
-  title: string,
-  body: string
-): Promise<void> {
-  try {
-    if (!admin.apps.length) return;
+/**
+ * Notification kind — controls deep-link routing on the iOS client.
+ * Keep the string values in sync with the iOS NotificationKind enum.
+ */
+export type NotificationKind = "service" | "rehearsal" | "system";
 
+export interface NotifyOptions {
+  bandId: string;
+  excludeUserId: string;
+  title: string;
+  body: string;
+  kind: NotificationKind;
+  /** Setlist or rehearsal id — used for deep-link routing on tap. */
+  entityId?: string;
+}
+
+/**
+ * Sends a push to every band member (except the sender) AND persists one
+ * row per recipient in the `notifications` table so the in-app inbox
+ * always reflects the full history, even if a device was offline at the
+ * time of fan-out.
+ *
+ * The FCM payload includes a `data` block with `kind` + `entity_id` so
+ * the iOS app can deep-link straight to the relevant detail screen on
+ * tap. Notification keys (title/body) are duplicated into `data` so
+ * the same payload also works for silent / data-only delivery if we
+ * ever switch.
+ */
+export async function notifyBandMembers(opts: NotifyOptions): Promise<void> {
+  const { bandId, excludeUserId, title, body, kind, entityId } = opts;
+
+  try {
     // Fetch all member user IDs except the sender
     const { data: members } = await supabaseAdmin
       .from("band_members")
@@ -78,7 +101,26 @@ export async function notifyBandMembers(
     const userIds = members?.map((m) => m.user_id) ?? [];
     if (userIds.length === 0) return;
 
-    // Fetch device tokens for those users
+    // 1. Persist inbox rows for every recipient (best-effort — never blocks
+    //    push delivery if the table doesn't exist or RLS denies).
+    try {
+      await supabaseAdmin.from("notifications").insert(
+        userIds.map((uid) => ({
+          user_id:   uid,
+          band_id:   bandId,
+          kind,
+          title,
+          body,
+          entity_id: entityId ?? null,
+        }))
+      );
+    } catch (err) {
+      console.warn("[notifications] inbox insert failed:", err);
+    }
+
+    // 2. Send the push, if Firebase is initialised.
+    if (!admin.apps.length) return;
+
     const { data: tokens } = await supabaseAdmin
       .from("device_tokens")
       .select("token")
@@ -86,12 +128,17 @@ export async function notifyBandMembers(
 
     if (!tokens || tokens.length === 0) return;
 
+    const dataPayload: Record<string, string> = { kind };
+    if (entityId) dataPayload.entity_id = entityId;
+    if (bandId)   dataPayload.band_id   = bandId;
+
     const messages = tokens.map((t) => ({
       token: t.token,
       notification: { title, body },
+      data: dataPayload,
       apns: {
         payload: {
-          aps: { sound: "default", badge: 1 },
+          aps: { sound: "default", badge: 1, "content-available": 1 },
         },
       },
     }));

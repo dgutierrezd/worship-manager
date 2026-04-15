@@ -63,13 +63,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNU
         completionHandler([.banner, .list, .sound, .badge])
     }
 
-    /// Invoked when the user taps a notification.
+    /// Invoked when the user taps a notification (foreground or background).
+    /// Forwards the FCM `data` payload to the in-app deep-link router so
+    /// the right detail screen opens.
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        // Reserved for deep-link routing in a future iteration.
+        let userInfo = response.notification.request.content.userInfo
+        Task { @MainActor in
+            DeepLinkRouter.shared.handle(payload: userInfo)
+        }
         completionHandler()
     }
 }

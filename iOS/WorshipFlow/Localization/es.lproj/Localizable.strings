@@ -195,3 +195,9 @@
 "authorized" = "Autorizado";
 "provisional" = "Provisional";
 "ephemeral" = "Efímero";
+
+// Bandeja de notificaciones
+"done" = "Listo";
+"mark_all_read" = "Marcar todo leído";
+"no_notifications_title" = "Aún no hay notificaciones";
+"no_notifications_subtitle" = "Aquí verás nuevos servicios, ensayos y actualizaciones de la banda.";

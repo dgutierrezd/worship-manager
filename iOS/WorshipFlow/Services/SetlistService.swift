@@ -50,6 +50,12 @@ enum SetlistService {
         try await APIClient.shared.delete("/setlists/\(id)")
     }
 
+    /// Fetch a single setlist. Used by the deep-link router when the user
+    /// taps a push notification and the home list hasn't been loaded yet.
+    static func getSetlist(id: String) async throws -> Setlist {
+        try await APIClient.shared.get("/setlists/\(id)")
+    }
+
     static func getSetlistSongs(setlistId: String) async throws -> [SetlistSong] {
         try await APIClient.shared.get("/setlists/\(setlistId)/songs")
     }

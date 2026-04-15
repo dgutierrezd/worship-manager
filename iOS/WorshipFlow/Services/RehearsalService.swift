@@ -30,6 +30,12 @@ enum RehearsalService {
         try await APIClient.shared.delete("/rehearsals/\(id)")
     }
 
+    /// Fetch a single rehearsal. Used by the deep-link router when the user
+    /// taps a push notification and the home list hasn't been loaded yet.
+    static func getRehearsal(id: String) async throws -> Rehearsal {
+        try await APIClient.shared.get("/rehearsals/\(id)")
+    }
+
     static func rsvp(rehearsalId: String, status: String) async throws -> RehearsalRSVP {
         try await APIClient.shared.post("/rehearsals/\(rehearsalId)/rsvp", body: ["status": status])
     }

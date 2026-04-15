@@ -195,3 +195,9 @@
 "authorized" = "Authorized";
 "provisional" = "Provisional";
 "ephemeral" = "Ephemeral";
+
+// Notification inbox
+"done" = "Done";
+"mark_all_read" = "Mark all read";
+"no_notifications_title" = "No notifications yet";
+"no_notifications_subtitle" = "You'll see new services, rehearsals and band updates here.";

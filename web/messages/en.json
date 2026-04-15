@@ -1,0 +1,134 @@
+{
+  "common": {
+    "appName": "Worship Manager",
+    "active": "Active",
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "join": "Join",
+    "viewAll": "View all",
+    "leader": "Leader",
+    "member": "Member",
+    "signedIn": "Signed in",
+    "signOut": "Sign out"
+  },
+  "welcome": {
+    "badge": "Built for worship teams",
+    "heroTitle": "Worship",
+    "heroTitleAccent": "Manager",
+    "heroDescription": "Everything your worship team needs to plan services, rehearse, and lead with excellence — in one beautifully simple app.",
+    "createAccount": "Create account",
+    "signIn": "Sign in",
+    "features": {
+      "library": {
+        "title": "Shared song library",
+        "description": "Chord sheets, keys, tempo, and notes in one place."
+      },
+      "services": {
+        "title": "Services & setlists",
+        "description": "Plan every service with drag-and-drop setlists."
+      },
+      "team": {
+        "title": "Team coordination",
+        "description": "RSVP rehearsals and keep everyone in sync."
+      }
+    }
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to your Worship Manager account",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "noAccount": "Don't have an account?",
+    "createOne": "Create one"
+  },
+  "signup": {
+    "title": "Create account",
+    "subtitle": "Start planning services with your team",
+    "fullName": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "instrumentLabel": "Instrument (optional)",
+    "instrumentPlaceholder": "Select an instrument",
+    "instruments": {
+      "vocals": "Vocals",
+      "guitar": "Guitar",
+      "bass": "Bass",
+      "drums": "Drums",
+      "keys": "Keys",
+      "piano": "Piano",
+      "other": "Other"
+    },
+    "submit": "Create account",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "songs": "Songs",
+    "rehearsals": "Rehearsals",
+    "team": "Team",
+    "settings": "Settings",
+    "signOutAria": "Sign out"
+  },
+  "home": {
+    "stats": {
+      "services": "Services",
+      "songs": "Songs",
+      "rehearsals": "Rehearsals"
+    },
+    "quickAccessTitle": "Quick access",
+    "quickLinks": {
+      "services": {
+        "label": "Services",
+        "description": "Plan upcoming services"
+      },
+      "songs": {
+        "label": "Songs",
+        "description": "Browse the library"
+      },
+      "schedule": {
+        "label": "Schedule",
+        "description": "Rehearsals & RSVPs"
+      },
+      "team": {
+        "label": "Team",
+        "description": "Manage your band"
+      }
+    },
+    "nextRehearsal": "Next rehearsal",
+    "upcomingServices": "Upcoming services",
+    "recentSongs": "Recent songs"
+  },
+  "settings": {
+    "eyebrow": "Account",
+    "title": "Settings",
+    "description": "Your profile, bands, and account.",
+    "profile": "Profile",
+    "bands": "My bands",
+    "joinBand": "Join",
+    "createBand": "Create",
+    "editBandAria": "Edit band",
+    "regenerateCodeAria": "Regenerate invite code",
+    "deleteBandAria": "Delete band",
+    "confirmDelete": "Delete \"{name}\"? This cannot be undone.",
+    "language": {
+      "title": "Language",
+      "description": "Choose which language the app is shown in.",
+      "spanish": "Spanish",
+      "english": "English"
+    }
+  },
+  "bandRequired": {
+    "loadErrorTitle": "Couldn't load bands",
+    "welcomeTitle": "Welcome to Worship Manager",
+    "welcomeDescription": "Create a band to start planning services, or join an existing band with an invite code.",
+    "createBand": "Create band",
+    "joinWithCode": "Join with code"
+  }
+}

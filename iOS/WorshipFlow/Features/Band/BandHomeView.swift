@@ -7,6 +7,26 @@ struct BandHomeView: View {
     @StateObject private var rehearsalVM = RehearsalsViewModel()
     @StateObject private var setlistVM = SetlistViewModel()
     @StateObject private var songsVM = SongsViewModel()
+    @StateObject private var inboxVM = NotificationInboxViewModel()
+    @ObservedObject private var deepLink = DeepLinkRouter.shared
+
+    /// Nav-stack path — allows programmatic push from push-notification taps
+    /// and inbox taps via `DeepLinkRouter`.
+    @State private var path = NavigationPath()
+
+    /// Typed deep-link destinations pushed onto `path`. Carries just the
+    /// id so Swift can synthesize Hashable trivially; the concrete model
+    /// is resolved from the VM's loaded list (or `routeCache` for items
+    /// fetched on-demand from a push tap).
+    enum HomeRoute: Hashable {
+        case service(id: String)
+        case rehearsal(id: String)
+    }
+
+    @State private var showInbox = false
+    @State private var deepLinkError: String?
+    @State private var routeCacheSetlists: [String: Setlist] = [:]
+    @State private var routeCacheRehearsals: [String: Rehearsal] = [:]
 
     var upcomingServices: [Setlist] {
         setlistVM.setlists.filter { $0.isUpcoming }.prefix(4).map { $0 }
@@ -18,7 +38,7 @@ struct BandHomeView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 VStack(spacing: 0) {
                     bandHeader
@@ -36,10 +56,134 @@ struct BandHomeView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showInbox = true
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            Image(systemName: "bell.fill")
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundColor(.appPrimary)
+                                .padding(8)
+
+                            if inboxVM.unreadCount > 0 {
+                                Text(inboxVM.unreadCount > 99 ? "99+" : "\(inboxVM.unreadCount)")
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 5)
+                                    .padding(.vertical, 2)
+                                    .background(Color.red)
+                                    .clipShape(Capsule())
+                                    .offset(x: 2, y: -2)
+                            }
+                        }
+                    }
+                    .accessibilityLabel(Text("notifications".localized))
+                }
+            }
+            .navigationDestination(for: HomeRoute.self) { route in
+                switch route {
+                case .service(let id):
+                    if let setlist = setlistVM.setlists.first(where: { $0.id == id })
+                        ?? routeCacheSetlists[id] {
+                        ServiceDetailView(setlist: setlist)
+                            .environmentObject(bandVM)
+                    } else {
+                        MissingItemView(message: "This service is no longer available.")
+                    }
+                case .rehearsal(let id):
+                    if let rehearsal = rehearsalVM.rehearsals.first(where: { $0.id == id })
+                        ?? routeCacheRehearsals[id] {
+                        RehearsalDetailView(rehearsal: rehearsal, vm: rehearsalVM)
+                    } else {
+                        MissingItemView(message: "This rehearsal is no longer available.")
+                    }
+                }
+            }
+            .sheet(isPresented: $showInbox, onDismiss: {
+                Task { await inboxVM.refreshUnreadCount() }
+            }) {
+                NotificationInboxView()
+            }
             .refreshable { await loadAll() }
             .task { await loadAll() }
+            .task { await inboxVM.refreshUnreadCount() }
+            .onChange(of: deepLink.pendingRoute) { _, newValue in
+                guard let newValue else { return }
+                Task { await consumeDeepLink(newValue) }
+            }
+            .alert("Could not open", isPresented: .init(
+                get: { deepLinkError != nil },
+                set: { if !$0 { deepLinkError = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(deepLinkError ?? "")
+            }
         }
         .background(Color.appBackground)
+    }
+
+    // MARK: - Deep link handling
+
+    /// Resolves a `DeepLinkRoute` (service / rehearsal id from a push or
+    /// inbox tap) to a concrete model and pushes it onto the nav stack.
+    /// Tries the locally cached list first for instant navigation; falls
+    /// back to a single-item REST fetch if not present (e.g. first-launch
+    /// from a push tap).
+    private func consumeDeepLink(_ route: DeepLinkRoute) async {
+        defer { deepLink.clear() }
+
+        switch route {
+        case .service(let id):
+            if setlistVM.setlists.contains(where: { $0.id == id }) {
+                path.append(HomeRoute.service(id: id))
+                return
+            }
+            do {
+                let fetched = try await SetlistService.getSetlist(id: id)
+                routeCacheSetlists[fetched.id] = fetched
+                path.append(HomeRoute.service(id: fetched.id))
+            } catch {
+                deepLinkError = "That service is no longer available."
+            }
+
+        case .rehearsal(let id):
+            if rehearsalVM.rehearsals.contains(where: { $0.id == id }) {
+                path.append(HomeRoute.rehearsal(id: id))
+                return
+            }
+            do {
+                let fetched = try await RehearsalService.getRehearsal(id: id)
+                routeCacheRehearsals[fetched.id] = fetched
+                path.append(HomeRoute.rehearsal(id: fetched.id))
+            } catch {
+                deepLinkError = "That rehearsal is no longer available."
+            }
+        }
+    }
+
+    // MARK: - Missing item fallback
+
+    /// Tiny placeholder shown if the deep-link target can't be resolved
+    /// (item was deleted, or the fetch failed after the route was pushed).
+    private struct MissingItemView: View {
+        let message: String
+        var body: some View {
+            VStack(spacing: 12) {
+                Image(systemName: "exclamationmark.circle.fill")
+                    .font(.system(size: 36))
+                    .foregroundColor(.appSecondary)
+                Text(message)
+                    .font(.appBody)
+                    .foregroundColor(.appSecondary)
+                    .multilineTextAlignment(.center)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.appBackground)
+        }
     }
 
     // MARK: - Band Header (Hero)

@@ -42,6 +42,89 @@ router.post(
   }
 );
 
+// GET /notifications — current user's inbox, newest first.
+// Optional ?limit=N (default 50, max 200), ?unread=true
+router.get(
+  "/",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const limit = Math.min(Number(req.query.limit) || 50, 200);
+    const unreadOnly = req.query.unread === "true";
+
+    let q = supabaseAdmin
+      .from("notifications")
+      .select("*")
+      .eq("user_id", req.userId!)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (unreadOnly) q = q.is("read_at", null);
+
+    const { data, error } = await q;
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    res.json(data ?? []);
+  }
+);
+
+// GET /notifications/unread-count
+router.get(
+  "/unread-count",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const { count, error } = await supabaseAdmin
+      .from("notifications")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", req.userId!)
+      .is("read_at", null);
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    res.json({ count: count ?? 0 });
+  }
+);
+
+// POST /notifications/:id/read — mark a single notification as read.
+router.post(
+  "/:id/read",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const id = req.params.id;
+    const { error } = await supabaseAdmin
+      .from("notifications")
+      .update({ read_at: new Date().toISOString() })
+      .eq("id", id)
+      .eq("user_id", req.userId!);
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    res.json({ message: "ok" });
+  }
+);
+
+// POST /notifications/read-all — mark every unread notification as read.
+router.post(
+  "/read-all",
+  authMiddleware,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const { error } = await supabaseAdmin
+      .from("notifications")
+      .update({ read_at: new Date().toISOString() })
+      .eq("user_id", req.userId!)
+      .is("read_at", null);
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    res.json({ message: "ok" });
+  }
+);
+
 // GET /notifications/diagnostics — returns the calling user's registered
 // FCM tokens and whether Firebase Admin is initialised. Useful for the
 // in-app push diagnostics screen.

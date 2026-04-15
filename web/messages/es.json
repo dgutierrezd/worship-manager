@@ -1,0 +1,134 @@
+{
+  "common": {
+    "appName": "Worship Manager",
+    "active": "Activo",
+    "loading": "Cargando…",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "join": "Unirse",
+    "viewAll": "Ver todo",
+    "leader": "Líder",
+    "member": "Miembro",
+    "signedIn": "Conectado",
+    "signOut": "Cerrar sesión"
+  },
+  "welcome": {
+    "badge": "Creado para equipos de alabanza",
+    "heroTitle": "Worship",
+    "heroTitleAccent": "Manager",
+    "heroDescription": "Todo lo que tu equipo de alabanza necesita para planear servicios, ensayar y dirigir con excelencia — en una app hermosamente simple.",
+    "createAccount": "Crear cuenta",
+    "signIn": "Iniciar sesión",
+    "features": {
+      "library": {
+        "title": "Biblioteca de canciones compartida",
+        "description": "Cifrados, tonos, tempo y notas en un solo lugar."
+      },
+      "services": {
+        "title": "Servicios y setlists",
+        "description": "Planea cada servicio con setlists arrastrables."
+      },
+      "team": {
+        "title": "Coordinación de equipo",
+        "description": "Confirmen ensayos y mantengan a todos sincronizados."
+      }
+    }
+  },
+  "login": {
+    "title": "Bienvenido de nuevo",
+    "subtitle": "Inicia sesión en tu cuenta de Worship Manager",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "noAccount": "¿No tienes cuenta?",
+    "createOne": "Crea una"
+  },
+  "signup": {
+    "title": "Crear cuenta",
+    "subtitle": "Comienza a planear servicios con tu equipo",
+    "fullName": "Nombre completo",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "instrumentLabel": "Instrumento (opcional)",
+    "instrumentPlaceholder": "Selecciona un instrumento",
+    "instruments": {
+      "vocals": "Voz",
+      "guitar": "Guitarra",
+      "bass": "Bajo",
+      "drums": "Batería",
+      "keys": "Teclado",
+      "piano": "Piano",
+      "other": "Otro"
+    },
+    "submit": "Crear cuenta",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "signIn": "Inicia sesión"
+  },
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "songs": "Canciones",
+    "rehearsals": "Ensayos",
+    "team": "Equipo",
+    "settings": "Ajustes",
+    "signOutAria": "Cerrar sesión"
+  },
+  "home": {
+    "stats": {
+      "services": "Servicios",
+      "songs": "Canciones",
+      "rehearsals": "Ensayos"
+    },
+    "quickAccessTitle": "Acceso rápido",
+    "quickLinks": {
+      "services": {
+        "label": "Servicios",
+        "description": "Planea próximos servicios"
+      },
+      "songs": {
+        "label": "Canciones",
+        "description": "Explora la biblioteca"
+      },
+      "schedule": {
+        "label": "Agenda",
+        "description": "Ensayos y confirmaciones"
+      },
+      "team": {
+        "label": "Equipo",
+        "description": "Administra tu banda"
+      }
+    },
+    "nextRehearsal": "Próximo ensayo",
+    "upcomingServices": "Próximos servicios",
+    "recentSongs": "Canciones recientes"
+  },
+  "settings": {
+    "eyebrow": "Cuenta",
+    "title": "Ajustes",
+    "description": "Tu perfil, bandas y cuenta.",
+    "profile": "Perfil",
+    "bands": "Mis bandas",
+    "joinBand": "Unirse",
+    "createBand": "Crear",
+    "editBandAria": "Editar banda",
+    "regenerateCodeAria": "Regenerar código de invitación",
+    "deleteBandAria": "Eliminar banda",
+    "confirmDelete": "¿Eliminar «{name}»? Esta acción no se puede deshacer.",
+    "language": {
+      "title": "Idioma",
+      "description": "Elige en qué idioma se muestra la aplicación.",
+      "spanish": "Español",
+      "english": "Inglés"
+    }
+  },
+  "bandRequired": {
+    "loadErrorTitle": "No se pudieron cargar las bandas",
+    "welcomeTitle": "Te damos la bienvenida a Worship Manager",
+    "welcomeDescription": "Crea una banda para empezar a planear servicios, o únete a una existente con un código de invitación.",
+    "createBand": "Crear banda",
+    "joinWithCode": "Unirme con código"
+  }
+}
