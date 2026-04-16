@@ -1,4 +1,6 @@
 {
-  "version": 2,
-  "buildCommand": "echo 'Deploy backend/ and web/ as separate Vercel projects'"
+  "buildCommand": "cd web && npm install && npm run build",
+  "outputDirectory": "web/.next",
+  "installCommand": "cd web && npm install",
+  "framework": "nextjs"
 }
