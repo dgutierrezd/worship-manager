@@ -17,24 +17,115 @@
   },
   "welcome": {
     "badge": "Creado para equipos de alabanza",
-    "heroTitle": "Worship",
-    "heroTitleAccent": "Manager",
-    "heroDescription": "Todo lo que tu equipo de alabanza necesita para planear servicios, ensayar y dirigir con excelencia — en una app hermosamente simple.",
+    "heroTitle": "Lidera la alabanza con",
+    "heroTitleAccent": "excelencia",
+    "heroDescription": "Todo lo que tu equipo de alabanza necesita — biblioteca de canciones, cifrados, planificación de servicios, ensayos y coordinación de equipo. Todo en una plataforma hermosamente simple.",
     "createAccount": "Crear cuenta",
     "signIn": "Iniciar sesión",
+    "trust": {
+      "free": "Gratis para comenzar",
+      "noCard": "Sin tarjeta de crédito",
+      "ios": "App iOS incluida"
+    },
+    "featuresEyebrow": "Todas las funciones",
+    "featuresTitle": "Todo lo que tu equipo necesita",
+    "featuresSubtitle": "Cada herramienta que un equipo de alabanza moderno necesita, diseñada para la forma en que trabajas.",
     "features": {
       "library": {
-        "title": "Biblioteca de canciones compartida",
-        "description": "Cifrados, tonos, tempo y notas en un solo lugar."
+        "title": "Biblioteca de canciones",
+        "description": "Gestiona tu catálogo completo con tonos, tempo, duración, etiquetas y letra — compartido con toda la banda."
+      },
+      "chords": {
+        "title": "Cifrados y sistema Nashville",
+        "description": "Escribe acordes por instrumento usando el sistema de números Nashville. Transpón cualquier canción al instante."
       },
       "services": {
         "title": "Servicios y setlists",
-        "description": "Planea cada servicio con setlists arrastrables."
+        "description": "Planea cada servicio con setlists ordenados. Asigna tonos, agrega notas y gestiona distintos tipos de servicio."
+      },
+      "rehearsals": {
+        "title": "Programación de ensayos",
+        "description": "Programa ensayos, vincúlalos a setlists y recibe notificaciones push para que nadie falte al ensayo."
       },
       "team": {
         "title": "Coordinación de equipo",
-        "description": "Confirmen ensayos y mantengan a todos sincronizados."
+        "description": "Invita compañeros con un código de 6 caracteres. Registra confirmaciones, gestiona roles y mantén a todos alineados."
+      },
+      "multitracks": {
+        "title": "Multitracks y metrónomo",
+        "description": "Vincula pistas desde Dropbox o Drive y reprodúcelas en la app. Metrónomo integrado a cualquier tempo, sin archivos de audio."
       }
+    },
+    "spotlight1": {
+      "eyebrow": "Biblioteca de canciones",
+      "title": "Todo tu catálogo, organizado y compartido",
+      "description": "Agrega canciones con detalle completo — artista, tono, tempo, letra, etiquetas, enlaces de YouTube y Spotify. Todos los miembros ven la misma biblioteca en tiempo real.",
+      "bullets": {
+        "a": "Cifrados por canción con soporte para el sistema de números Nashville",
+        "b": "Transposición de tono con un toque, en cualquier instrumento",
+        "c": "Etiqueta canciones por tema, busca por título o filtra por cualquier campo"
+      }
+    },
+    "spotlight2": {
+      "eyebrow": "Servicios y setlists",
+      "title": "Planea cada servicio de principio a fin",
+      "description": "Construye setlists ordenados vinculados a fechas de servicio reales. Cambia el tono por canción, agrega notas para el equipo y gestiona domingos, miércoles o eventos especiales.",
+      "bullets": {
+        "a": "Reordenamiento de canciones dentro de cualquier setlist",
+        "b": "Asigna un tono diferente por canción sin modificar la biblioteca",
+        "c": "Vincula un setlist a un ensayo para que el equipo llegue preparado"
+      }
+    },
+    "spotlight3": {
+      "eyebrow": "Ensayos y equipo",
+      "title": "Mantén a todos sincronizados antes del servicio",
+      "description": "Programa ensayos, recopila confirmaciones de asistencia y envía notificaciones push automáticas — para que toda la banda siempre esté en la misma página.",
+      "bullets": {
+        "a": "Confirmación con un toque: Voy, Tal vez o No puedo",
+        "b": "Notificaciones push automáticas al crear un ensayo",
+        "c": "Vincula ensayos a setlists para que el equipo sepa qué practicar"
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "Cómo funciona",
+      "title": "Listo en minutos",
+      "subtitle": "Sin configuración complicada. Crea una banda, agrega tu música y empieza a planear.",
+      "step1": {
+        "title": "Crea tu banda",
+        "description": "Regístrate y crea una banda en segundos. Comparte el código de invitación de 6 caracteres y todo tu equipo estará dentro de inmediato."
+      },
+      "step2": {
+        "title": "Construye tu biblioteca",
+        "description": "Agrega canciones con cifrados, tonos, tempo y notas. Usa el sistema Nashville para mantener flexibilidad de tono en cualquier instrumento."
+      },
+      "step3": {
+        "title": "Planea y ensaya",
+        "description": "Construye setlists para próximos servicios, programa ensayos, recoge confirmaciones — y lidera con confianza el domingo."
+      }
+    },
+    "extras": {
+      "extra1": {
+        "title": "Transposición de tono",
+        "description": "Transpón cifrados a cualquier tono al instante usando el sistema de números Nashville."
+      },
+      "extra2": {
+        "title": "Cifrados por instrumento",
+        "description": "Crea hojas de acordes separadas para guitarra, teclado, bajo y más, vinculadas a una sola canción."
+      },
+      "extra3": {
+        "title": "Multitracks y pistas",
+        "description": "Vincula clicks, guías vocales o pistas desde Dropbox, Drive o OneDrive."
+      },
+      "extra4": {
+        "title": "Notificaciones push",
+        "description": "Alertas automáticas al crear ensayos para que el equipo nunca pierda una actualización."
+      }
+    },
+    "cta": {
+      "eyebrow": "Comienza hoy",
+      "title": "¿Listo para liderar mejor?",
+      "description": "Únete a equipos de alabanza que ya usan Worship Manager para planear, practicar y liderar con excelencia.",
+      "button": "Crear cuenta gratis"
     }
   },
   "login": {

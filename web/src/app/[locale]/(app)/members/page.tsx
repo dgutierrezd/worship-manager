@@ -1,12 +1,11 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Copy, Crown, Users2 } from "lucide-react";
+import { Copy, Users2 } from "lucide-react";
 import { useState } from "react";
 import { useBandStore } from "@/lib/stores/band-store";
 import { membersApi } from "@/lib/api/members";
 import { PageHeader } from "@/components/ui/page-header";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SkeletonList } from "@/components/ui/skeleton";
@@ -99,11 +98,6 @@ export default function MembersPage() {
                     <p className="truncate font-semibold text-primary">
                       {m.full_name}
                     </p>
-                    {m.role === "leader" && (
-                      <Badge variant="accent">
-                        <Crown className="h-3 w-3" /> Leader
-                      </Badge>
-                    )}
                   </div>
                   {m.instrument && (
                     <p className="text-xs text-secondary">{m.instrument}</p>

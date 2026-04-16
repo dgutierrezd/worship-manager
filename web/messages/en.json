@@ -17,24 +17,115 @@
   },
   "welcome": {
     "badge": "Built for worship teams",
-    "heroTitle": "Worship",
-    "heroTitleAccent": "Manager",
-    "heroDescription": "Everything your worship team needs to plan services, rehearse, and lead with excellence — in one beautifully simple app.",
+    "heroTitle": "Lead worship with",
+    "heroTitleAccent": "excellence",
+    "heroDescription": "Everything your worship team needs — song library, chord sheets, service planning, rehearsal scheduling, and team coordination. All in one beautifully simple platform.",
     "createAccount": "Create account",
     "signIn": "Sign in",
+    "trust": {
+      "free": "Free to get started",
+      "noCard": "No credit card required",
+      "ios": "iOS app included"
+    },
+    "featuresEyebrow": "Full feature set",
+    "featuresTitle": "Everything your team needs",
+    "featuresSubtitle": "Every tool a modern worship team needs, thoughtfully designed for the way you work.",
     "features": {
       "library": {
-        "title": "Shared song library",
-        "description": "Chord sheets, keys, tempo, and notes in one place."
+        "title": "Song library",
+        "description": "Manage your full song catalog with keys, tempo, duration, tags, and lyrics — shared across the whole band."
+      },
+      "chords": {
+        "title": "Chord sheets & Nashville numbers",
+        "description": "Write chord charts per instrument using the Nashville Number System. Transpose any song to a new key instantly."
       },
       "services": {
         "title": "Services & setlists",
-        "description": "Plan every service with drag-and-drop setlists."
+        "description": "Plan every service with ordered setlists. Assign keys, add notes, and support multiple service types."
+      },
+      "rehearsals": {
+        "title": "Rehearsal scheduling",
+        "description": "Schedule rehearsals, link them to setlists, and get push notifications so no one misses a practice."
       },
       "team": {
         "title": "Team coordination",
-        "description": "RSVP rehearsals and keep everyone in sync."
+        "description": "Invite teammates with a 6-character code. Track RSVPs, manage roles, and keep everyone aligned."
+      },
+      "multitracks": {
+        "title": "Multitracks & metronome",
+        "description": "Link stems from Dropbox or Drive and play them in-app. Built-in click track at any tempo — no audio files needed."
       }
+    },
+    "spotlight1": {
+      "eyebrow": "Song library",
+      "title": "Your entire catalog, organized and shared",
+      "description": "Add songs with full detail — artist, key, tempo, lyrics, tags, YouTube and Spotify links. Every band member sees the same library in real time.",
+      "bullets": {
+        "a": "Per-song chord sheets with Nashville Number System support",
+        "b": "One-tap key transposition to any key, on any instrument",
+        "c": "Tag songs by theme, search by title, filter by any field"
+      }
+    },
+    "spotlight2": {
+      "eyebrow": "Services & setlists",
+      "title": "Plan every service, start to finish",
+      "description": "Build ordered setlists tied to real service dates. Override the key per song, add notes for the team, and support Sunday morning, evening, Wednesday, or special events.",
+      "bullets": {
+        "a": "Drag-and-drop song reordering within any setlist",
+        "b": "Assign a key override per song without changing the library",
+        "c": "Link a setlist to a rehearsal so the team arrives prepared"
+      }
+    },
+    "spotlight3": {
+      "eyebrow": "Rehearsals & team",
+      "title": "Stay in sync before the service",
+      "description": "Schedule rehearsals, collect RSVPs from every team member, and send automatic push notifications — so the whole band is always on the same page.",
+      "bullets": {
+        "a": "One-tap RSVP: Going, Maybe, or Can't go",
+        "b": "Push notifications sent automatically when a rehearsal is created",
+        "c": "Link rehearsals to setlists so the team knows what to practice"
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "How it works",
+      "title": "Up and running in minutes",
+      "subtitle": "No complicated setup. Create a band, add your music, and start planning.",
+      "step1": {
+        "title": "Create your band",
+        "description": "Sign up and create a band in seconds. Share the 6-character invite code and your whole team is in immediately."
+      },
+      "step2": {
+        "title": "Build your library",
+        "description": "Add songs with chord charts, keys, tempo, and notes. Use Nashville Numbers to stay key-flexible across any instrument."
+      },
+      "step3": {
+        "title": "Plan & rehearse",
+        "description": "Build setlists for upcoming services, schedule rehearsals, collect RSVPs — then lead with confidence on Sunday."
+      }
+    },
+    "extras": {
+      "extra1": {
+        "title": "Key transposition",
+        "description": "Instantly transpose chord sheets to any key using the Nashville Number System."
+      },
+      "extra2": {
+        "title": "Per-instrument charts",
+        "description": "Create separate chord sheets for guitar, keys, bass, and more — all tied to one song."
+      },
+      "extra3": {
+        "title": "Multitracks & stems",
+        "description": "Link click tracks, guide vocals, or stems from Dropbox, Drive, or OneDrive."
+      },
+      "extra4": {
+        "title": "Push notifications",
+        "description": "Automatic push alerts when rehearsals are created, so the team never misses an update."
+      }
+    },
+    "cta": {
+      "eyebrow": "Get started today",
+      "title": "Ready to lead better?",
+      "description": "Join worship teams already using Worship Manager to plan, practice, and lead with excellence.",
+      "button": "Create free account"
     }
   },
   "login": {
