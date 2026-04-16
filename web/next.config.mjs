@@ -16,9 +16,9 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    // In production this env var points to the backend Vercel project URL.
-    // In local dev it points to the Express server running on port 3000.
-    const backend = process.env.BACKEND_INTERNAL_URL ?? "http://localhost:3000";
+    // BACKEND_INTERNAL_URL overrides in local dev (http://localhost:3000).
+    // Falls back to the production backend Vercel project.
+    const backend = process.env.BACKEND_INTERNAL_URL ?? "https://worship-manager-psi.vercel.app";
     return [
       {
         source: "/api/:path*",
